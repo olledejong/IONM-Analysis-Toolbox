@@ -1,3 +1,8 @@
+/**
+ * This file does everything that has to do with the title bar
+ * and the menu bar.
+ */
+
 // REQUIRES
 const customTitlebar = require('custom-electron-titlebar');
 const { remote } = require('electron');
@@ -16,6 +21,12 @@ let MyTitleBar = new customTitlebar.Titlebar({
 });
 MyTitleBar.updateTitle("IONM ANALYSIS TOOLBOX");
 
+
+/**
+ * Adds the classname 'active' to the active menu element
+ *
+ * @type {HTMLElement}
+ */
 // This piece of code listens to the click on menu
 // buttons and changes the color accordingly.
 let taskbar = document.getElementById("taskbar");
