@@ -1,6 +1,7 @@
 const { app, BrowserWindow, screen, fs , dialog} = require('electron');
 const ipcMain = require('electron').ipcMain;
 const exec = require('child_process').exec;
+const log = require('electron-log');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -8,8 +9,6 @@ let window;
 
 // global list which holds the paths of the via a dialog window selected files.
 let tempfilePaths;
-let stndWidth = 1280;
-let stndHeight = 750;
 
 /**
  *                         [ CREATE WINDOW ]
@@ -93,6 +92,7 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
     let types = [
         {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
         ];
+
     // configure the options (allowed types + properties)
     const options = {
         title: 'Select file(s)',
@@ -100,13 +100,17 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
         defaultPath: "D:\\Menno\\NimEclipse",
         properties: ['openFile', "multiSelections"]
         };
+
+    // open the actual dialog with the above options
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
         tempfilePaths = fileNames.filePaths;
         if (fileNames.canceled === true) {
-            console.log("[ main.js ][ file selection cancelled ]")
+            log.info("[ main.js ][ file selection cancelled ]")
         } else {
-            console.log("[ main.js ][ sending selected file names info back to renderer ]");
+            log.info("[ main.js ][ sending selected file names info back to renderer ]");
+
+            // send the filenpaths to the renderer process
             event.sender.send("selected", fileNames.filePaths)
         }
     })
@@ -122,33 +126,36 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
  * @param {object} IpcRendererEvent, contains all information about the event
  */
 ipcMain.on("run-summarize", function runSummarizeCommand(event) {
-    console.log("[ main.js ][ executing summarize command ]");
-    // if (tempfilePaths.length > 1) {
-    //     window.setSize(stndWidth, stndHeight);
-    // }
-    let forLoopExecuted = false;
+    log.info("[ main.js ][ executing summarize command ]");
     let i;
     // issue message to the Renderer process to set result title and loading gif
     event.sender.send('set-title-and-preloader');
+
+    // for every path in tempfilePaths execute the command 'ionm.py summarize [filepath]
     for(i = 0; i < tempfilePaths.length; i++) {
-        forLoopExecuted = true;
-        //console.log('itteration number: ', i);
-        let fraction = (i+1) / tempfilePaths.length;
-        console.log('fraction of jobs done: ', fraction);
+        let fraction = Math.round(((i+1) / tempfilePaths.length) * 100);
+        log.info('[ main.js ][ percentage handled: ', fraction, '% ]');
         let command = 'ionm.py summarize "' + tempfilePaths[i] + '"';
-        //console.log(command);
-        //console.log(tempfilePaths[i]);
         exec(command, {
             cwd: 'D:\\Menno\\IONM\\src'
         }, function(error, stdout, stderr) {
-            console.log("stdout: ", stdout);
-            console.log("stderr: ", stderr);
-            console.log("error: ", error);
-            console.log("sending summarize result back to renderer");
-            //JSON_result.push(createJsonFormat(stdout));
-            let JSONstring = createJsonString(stdout);
+            let summarize_error_message = "An error occurred while retrieving the file summary";
+            if (error !== null) {
+                log.error("[ error ] ", error);
+                event.sender.send('error', summarize_error_message);
+            } else if (stderr !== '') {
+                log.error("[ stderr ] ", stderr);
+                event.sender.send('error', summarize_error_message);
+            } else {
+                log.info("[ stdout ] ", stdout);
 
-            event.sender.send("summarize-result", JSONstring, fraction);
+                // build json string using the command output
+                let JSONstring = createJsonString(stdout);
+
+                // send the json string back to the renderer to be displayed
+                event.sender.send("summarize-result", JSONstring, fraction);
+                log.info("[ main.js ][ sent summarize result back to renderer ]");
+            }
         });
     }
 });
@@ -186,7 +193,7 @@ function createJsonString(stdout) {
         if( filtered[i].startsWith('\t') ) {
             let splitted = filtered[i].trim();
             splitted = splitted.split(/:\s/g);
-            //console.log(splitted[0]);
+            //log.info(splitted[0]);
             JSON_string += "\"" + splitted[0] + "\": \"" + splitted[1] + "\"";
             if (i !== (filtered.length -1 )) {
                 if (!filtered[i + 1].startsWith("\t")) {
@@ -210,11 +217,11 @@ function createJsonString(stdout) {
  * Handles the request for retrieving the python script its version info
  */
 ipcMain.on("get-version-info", function getVersionInfo(event) {
-    console.log("executing version command");
+    log.info("[ main.js ][ executing 'ionm.py version' command ]");
     exec('ionm.py version', {
         cwd: 'D:\\Menno\\IONM\\src'
     }, function(error, stdout, stderr) {
-        console.log("sending information back to renderer");
+        log.info("[ main.js ][ sending 'ionm.py version' information back to renderer ]");
         event.sender.send("version-info", error, stdout, stderr);
     });
 });

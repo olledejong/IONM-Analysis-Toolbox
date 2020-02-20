@@ -6,6 +6,8 @@
 
 // requires
 window.$ = window.jQuery = require('jquery');
+const log = require('electron-log');
+
 
 // globals
 __name__ = "IONM Analysis Toolbox";
@@ -33,7 +35,7 @@ $("#welcome-section").click(function () {
 /**
  * Loads variable content for the [ summarize section ]
  */
-$("#summarize-section").click(function () {
+$("#summarize-section").click( function() {
     //ipcRenderer.send('resize-window', 800, 600);
     variable_content_div.html(
         `<div class="file-upload">

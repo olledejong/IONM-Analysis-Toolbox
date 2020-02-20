@@ -15,8 +15,7 @@ let variable_content = $("#variable-content");
 
 // inform the Main Process that it has to open a file select window
 variable_content.on("click", '.file-selectBtn', function() {
-    console.log("clicked select-files button");
-    ipcRenderer.send("select-file")
+    ipcRenderer.send("select-file");
 });
 
 /**
@@ -84,12 +83,13 @@ ipcRenderer.on('set-title-and-preloader', function (event) {
 
 /**
  * Handles the message from the main process that contains the summarize results
- * for the selected Eclipse files.
+ * for the selected Eclipse files. Appends tables to HTML only AFTER the generateTable
+ * function is done using JavaScript Promises.
  *
  * @param {string} JSON_result
  */
 ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_result, fraction) {
-    console.log("[ summarizeRenderer.js ][ displaySummarizeResults() is being executed ]");
+    log.info("[ summarizeRenderer.js ][ displaySummarizeResults() is being executed ]");
     // parse the JSON string into a JSON object
     let JSON_obj = JSON.parse(JSON_result);
 
@@ -99,13 +99,10 @@ ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_
     // because of JS promises the code between the curly brackets is
     // only executed when the function generateTable() is finished
     generateTable(JSON_obj).then(function appendTableToHTML(result) {
-        console.log(result[0]);
-        console.log(result[1]);
-
         let selector = $('#table-' + result[1]);
-        console.log(selector);
-        selector.append(result[0]);
 
+        selector.append(result[0]);
+        log.info("[ summarizeRenderer.js ][ Appending table rows to table "+ result[1] +" ]");
         // fade out the preloader
         $('.lds-ellipsis').fadeOut();
     });
@@ -149,3 +146,29 @@ function generateTable(JSON_obj) {
         resolve([htmlTableContent, fileName]);
     });
 }
+
+ipcRenderer.on('error', function errorHandler(event, error_message) {
+    $('#variable-content').html(
+        `<div class="file-upload">
+            Using this functionality you're able to retrieve some basic information about the Eclipse file(s)<br>
+            you select. This information includes: path, size, name, date, duration and the modalities.
+            <br>
+            Please select the CSV files you wish to use.
+            <button id="file-selectBtn" class="file-selectBtn">Select file(s)</button>
+            <button class="run-summarize" disabled>RUN</button>
+        </div>`);
+
+    let r = Math.random().toString(36).substring(7);
+    $('.container-after-titlebar').append('<div id="'+ r + '" class="error-msg"><i class="fas fa-times-circle"></i> '+ error_message +'</div>');
+
+    let tempElement = $('#'+r);
+
+    tempElement.animate({
+        right: '+=465', opacity: 1
+    }, 800, function () {
+        tempElement.delay(3500).fadeOut(800, function () {
+            $(this).remove();
+        });
+    });
+
+});
