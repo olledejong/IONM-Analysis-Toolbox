@@ -137,7 +137,8 @@ footer span {
 /* active menu button specific styling */
 .active {
     color: white;
-    background: #c95656;
+    background: #c73f3f;
+    /*background: #c95656;*/
 }
 
 #about-section {
@@ -161,8 +162,8 @@ footer span {
     font-size: 15px;
 }
 
-.about-app td, .about-scripts td {
-    padding: 0 15px 10px 0;
+#about-app td, #about-scripts td {
+    padding: 0 55px 10px 0;
 }
 
 .summarize-table td {
@@ -175,12 +176,13 @@ th {
 }
 
 #about-app, #about-scripts {
+    margin: 10px 0 0 0;
     display: inline-block;
     height: auto;
-    width: calc(50% - 40px);
+    width: calc(50% - 20px);
     background: #dedede;
     border-radius: 2px;
-    padding: 8px 15px;
+    padding: 15px 25px;
 }
 
 #about-app {
@@ -197,7 +199,7 @@ th {
     text-align: left;
     font-size: 16px;
     color: rgb(112, 112, 112);
-    height: 36px;
+    height: 40px;
 }
 
 h1 i {
@@ -248,9 +250,9 @@ h1 i {
 }
 
 h2 {
+    width: fit-content;
     color: rgb(112, 112, 112);
     font-size: 20px;
-    float: top;
     margin: 0;
 }
 
@@ -337,3 +339,47 @@ h2 {
         transform: translate(24px, 0);
     }
 }
+
+
+.info-msg,
+.success-msg,
+.warning-msg,
+.error-msg {
+    position: absolute;
+    right: -455px;
+    top: 35px;
+    z-index: 100;
+    opacity: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: black;
+    width: auto;
+    max-width: 470px;
+    height: auto;
+    margin: 10px 0;
+    padding: 6px;
+    border-radius: 3px 3px 3px 3px;
+}
+.info-msg {
+    color: #059;
+    background-color: #BEF;
+}
+.success-msg {
+    color: #270;
+    background-color: #DFF2BF;
+}
+.warning-msg {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+.error-msg {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+
+/*
+info / error / succes msg icons
+<i class="fas fa-info-circle"></i>
+<i class="fas fa-check"></i>
+<i class="fas fa-times-circle"></i>
+*/
