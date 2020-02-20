@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="html">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../assets/css/main.css"/>
+        <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+              integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+              crossorigin="anonymous">
+    </head>
+    <body>
+        <div id="taskbar">
+            <div class="taskbar-div active" id="welcome-section">
+                <label>Welcome</label>
+            </div>
+            <div class="taskbar-div" id="summarize-section">
+                <label>Summarize</label>
+            </div>
+            <div class="taskbar-div" id="timing-section">
+                <label>Show timing</label>
+            </div>
+            <div class="taskbar-div" id="availability-section">
+                <label>Show availability</label>
+            </div>
+            <div class="taskbar-div" id="convert-section">
+                <label>Convert</label>
+            </div>
+            <div class="taskbar-div" id="compute-section">
+                <label>Compute</label>
+            </div>
+            <div class="taskbar-div" id="evc-section">
+                <label>Extracte EEG / Validate / Combine</label>
+            </div>
+            <div class="taskbar-div" id="classify-section">
+                <label>Classify</label>
+            </div>
+            <div class="taskbar-div" id="about-section">
+                <label>About</label>
+            </div>
+        </div>
+
+        <!-- most important div. it dynamically gets filled with different content all the time. -->
+        <div id="variable-content">
+            <p class="welcome-text">Welcome to the Intraoperative Neurofysiological Monitoring Analysis toolbox!</p>
+        </div>
+        <footer>
+            <span>Developed for the department of Neurosurgery at the UMCG</span>
+            <span id="copyright">&copy; 2020 UMCG</span>
+        </footer>
+    </body>
+
+    <!-- load the scripts-->
+    <script src="createTitlebar.js"></script>
+    <script src="fileSelect.js"></script>
+    <script src="navigation.js"></script>
+    <script src="summarizeRenderer.js"></script>
+</html>

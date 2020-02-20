@@ -1,0 +1,26 @@
+{
+  "name": "ionm-app",
+  "version": "1.0.0",
+  "description": "GUI for usage of IONM tools",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "Olle de Jong",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.0",
+    "custom-electron-titlebar": "^3.2.2-hotfix62",
+    "debug": "^4.1.1",
+    "drag-drop": "^6.0.0",
+    "electron-log": "^4.0.6",
+    "jquery": "^3.4.1",
+    "progressbar.js": "^1.1.0"
+  },
+  "devDependencies": {
+    "electron": "^8.0.0",
+    "electron-packager": "^14.2.0",
+    "jsdom": "^16.1.0"
+  }
+}

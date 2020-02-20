@@ -1,0 +1,339 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+@font-face {
+    font-family: Ubuntu-regular;
+}
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+footer {
+    z-index: 100;
+    position: fixed;
+    height: 20px;
+    width: 100%;
+    background: rgb(132,132,132);
+    font-size: 12px;
+    bottom: 0;
+    overflow: hidden;
+    color: white;
+    opacity: 0.8;
+}
+
+footer span {
+    float: left;
+    padding: 1px 0 1px 8px;
+}
+
+.window-title {
+    letter-spacing: 2.5px;
+    font-weight: 600;
+}
+
+#variable-content {
+    margin-top: 38px;
+    position: relative;
+    padding: 10px 20px 20px 20px;
+    overflow-y: visible;
+}
+
+.welcome-text {
+    margin: 0;
+    width: auto;
+    height: auto;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgb(112, 112, 112)
+}
+
+.file-upload {
+    color: rgb(144,144,144);
+    font-weight: bold;
+}
+
+.file-upload span {
+    font-size: 10px;
+    text-align: center;
+}
+
+.file-selectBtn {
+    background: rgba(179, 57, 57,0.1);
+    font-weight: bold;
+    font-size: 16px;
+    height: 150px;
+    width: 300px;
+    margin-top: 30px;
+    margin-bottom: 3px;
+    position: relative;
+    letter-spacing: 1.5px;
+    overflow: hidden;
+    color: rgba(179, 57, 57,0.8);
+    border: 4px dashed rgba(179, 57, 57,0.8);
+    border-radius: 4px;
+    padding: 4px;
+    display: block;
+    outline: 0;
+    line-height: 140%;
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+    overflow-y: auto;
+}
+
+.example::-webkit-scrollbar {
+    display: none;
+}
+
+.file-selectBtn:hover {
+    transform: translateY(-3px);
+}
+
+/* taskbar section (secondary menu) */
+#taskbar {
+    z-index: 100;
+    letter-spacing: 1.5px;
+    height: 38px;
+    font-size: 14px;
+    font-weight: 600;
+    position: fixed;
+    width: 100%;
+    background: #b33939;
+}
+
+.taskbar-div {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float:left;
+    width: auto;
+    padding: 0 15px 0 15px;
+    height: 100%;
+    position: relative;
+    box-sizing: border-box;
+    /*box-shadow: 1px 0 1px 0 rgba(0,0,0,0.28);*/
+}
+
+.taskbar-div label {
+    cursor: pointer;
+}
+
+.taskbar-div:hover #taskbar {
+    background: #c73f3f;
+}
+
+/* active menu button specific styling */
+.active {
+    color: white;
+    background: #c95656;
+}
+
+#about-section {
+    box-shadow: none;
+    float: right;
+}
+
+#classify-section {
+    box-shadow: none;
+}
+
+.titlebar {
+    cursor: pointer;
+}
+
+.version-info {
+    text-align: left;
+    font-weight: 700;
+    margin: 0;
+    color: rgb(112, 112, 112);
+    font-size: 15px;
+}
+
+.about-app td, .about-scripts td {
+    padding: 0 15px 10px 0;
+}
+
+.summarize-table td {
+    padding: 0 15px 5px 0;
+    font-weight: 600;
+}
+
+th {
+    font-size: 16px;
+}
+
+#about-app, #about-scripts {
+    display: inline-block;
+    height: auto;
+    width: calc(50% - 40px);
+    background: #dedede;
+    border-radius: 2px;
+    padding: 8px 15px;
+}
+
+#about-app {
+    float: left;
+}
+
+#about-scripts {
+    float: right;
+}
+
+#about-app h1, #about-scripts h1 {
+    border-bottom: 1px solid;
+    margin: 0 0 10px 0;
+    text-align: left;
+    font-size: 16px;
+    color: rgb(112, 112, 112);
+    height: 36px;
+}
+
+h1 i {
+    margin: 5px 0 0 0;
+    float: right;
+}
+
+.dev-message {
+    color: rgb(112, 112, 112);
+}
+
+.fa-tv{
+    font-size: 1.2em;
+}
+
+.fa-cogs{
+    font-size: 1.3em;
+}
+
+#summarize-results {
+    margin: 10px 0 0 0;
+    color: rgb(112, 112, 112);
+    position: relative;
+    text-align: left;
+    /*height: 100%;*/
+    width: fit-content;
+}
+
+.summarize-table {
+    display: inline-grid;
+    background: #dcdcdc;
+    border: 2px solid #c0c0c0;
+    padding: 10px;
+    margin: 0 18px 14px 0;
+}
+
+.table-item {
+    width: 200px;
+}
+
+.table-file-name {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+#summarize-results td {
+    font-size: 14px;
+}
+
+h2 {
+    color: rgb(112, 112, 112);
+    font-size: 20px;
+    float: top;
+    margin: 0;
+}
+
+.run-summarize {
+    letter-spacing: 1.5px;
+    width: 100px;
+    background-color: rgb(154, 154, 154);
+    height: 50px;
+    border: 0;
+    color: white;
+    border-radius: 3px;
+    margin: 10px 0 0 0;
+    transition: background-color 0.2s ease-out;
+}
+
+#copyright {
+    float: right;
+    padding: 1px 8px 1px 0;
+}
+
+
+
+
+
+
+
+
+
+/* preloader */
+.lds-ellipsis {
+    top: -13px;
+    right: 15px;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+}
+.lds-ellipsis div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: rgb(112, 112, 112);
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(24px, 0);
+    }
+}
