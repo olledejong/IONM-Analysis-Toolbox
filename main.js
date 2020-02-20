@@ -5,11 +5,18 @@ const exec = require('child_process').exec;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let window;
+
+// global list which holds the paths of the via a dialog window selected files.
 let tempfilePaths;
+let stndWidth = 1280;
+let stndHeight = 750;
 
+/**
+ *                         [ CREATE WINDOW ]
+ * Creates the GUI window based on some variables to be set by developer.
+ * Disable DEV TOOLS window here!
+ */
 function createWindow () {
-    // TODO: Calculate wanted position for "help" window
-
     // get screen size
     //let mainScreen = screen.getPrimaryDisplay();
 
@@ -26,7 +33,6 @@ function createWindow () {
             webSecurity: true,
             nodeIntegration: true,
             disableBlinkFeatures : "Auxclick"
-            // contextIsolation: true
         }
     });
 
@@ -61,10 +67,26 @@ app.on('activate', () => {
     }
 });
 
+/**
+ *                        [ RESIZE BROWSER WINDOW ]
+ * General function for resizing the browser window, can be called from the renderer
+ * process by using ipcRenderer.send('resize-window')
+ *
+ * @param {int} newX
+ * @param {int} newY
+ */
+ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
+   window.setSize(newX, newY);
+});
+
 
 /**
- *                             VERSION INFO
+ *                      [ FILE SELECT AND STORE PATHS ]
+ * This function listens to the 'select-file' message from the renderer process
+ * which opens a dialog where the user can select files. If canceled, do nothing
+ * if copleted, store the pats to files in the array tempfilePaths.
  *
+ * //TODO : GENERALIZE THIS FUNCTION?
  */
 ipcMain.on("select-file", function selectFileAndSendBack(event) {
     // configure which types of files are allowed
@@ -90,35 +112,24 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
     })
 });
 
-/**
- *                             VERSION INFO
- * Handles the request for retrieving the python scripts' version info
- */
-ipcMain.on("get-version-info", function getVersionInfo(event) {
-    console.log("executing version command");
-    exec('ionm.py version', {
-        cwd: 'D:\\Menno\\IONM\\src'
-    }, function(error, stdout, stderr) {
-        console.log("sending information back to renderer");
-        event.sender.send("version-info", error, stdout, stderr);
-    });
-});
 
 /**
- *                              SUMMARIZE
+ *                            [ SUMMARIZE ]
  * Performs commandline commands which retrieve a summary of the basic
  * information about the given ECLIPSE-files. These get sent back to the
  * Renderer process in summarizeRenderer.js
  *
- * @param event IpcRendererEvent, contains all information about the event
+ * @param {object} IpcRendererEvent, contains all information about the event
  */
 ipcMain.on("run-summarize", function runSummarizeCommand(event) {
-    console.log("executing summarize command");
-    //let JSON_result = [];
+    console.log("[ main.js ][ executing summarize command ]");
+    // if (tempfilePaths.length > 1) {
+    //     window.setSize(stndWidth, stndHeight);
+    // }
     let forLoopExecuted = false;
     let i;
     // issue message to the Renderer process to set result title and loading gif
-    event.sender.send('set-title-and-gif');
+    event.sender.send('set-title-and-preloader');
     for(i = 0; i < tempfilePaths.length; i++) {
         forLoopExecuted = true;
         //console.log('itteration number: ', i);
@@ -137,14 +148,14 @@ ipcMain.on("run-summarize", function runSummarizeCommand(event) {
             //JSON_result.push(createJsonFormat(stdout));
             let JSONstring = createJsonString(stdout);
 
-            event.sender.send("summarize-result", JSONstring);
+            event.sender.send("summarize-result", JSONstring, fraction);
         });
     }
 });
 
 
 /**
- *                              SUMMARIZE
+ *                            [ SUMMARIZE ]
  * Generates JSON formatted string for front-end convenience by taking the
  * command line output and logically splitting and processing this.
  *
@@ -192,3 +203,18 @@ function createJsonString(stdout) {
     JSON_string += '}';
     return JSON_string;
 }
+
+
+/**
+ *                           [ VERSION INFO ]
+ * Handles the request for retrieving the python script its version info
+ */
+ipcMain.on("get-version-info", function getVersionInfo(event) {
+    console.log("executing version command");
+    exec('ionm.py version', {
+        cwd: 'D:\\Menno\\IONM\\src'
+    }, function(error, stdout, stderr) {
+        console.log("sending information back to renderer");
+        event.sender.send("version-info", error, stdout, stderr);
+    });
+});
