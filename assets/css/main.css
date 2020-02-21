@@ -12,6 +12,7 @@
     font-family: Ubuntu-regular;
 }
 body {
+    background: #757575;
     padding: 0;
     margin: 0;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -51,17 +52,17 @@ footer span {
 }
 
 .welcome-text {
-    margin: 0;
+    margin: 0 0 10px 0;
     width: auto;
     height: auto;
-    font-weight: bold;
+    font-weight: 400;
     font-size: 20px;
-    color: rgb(112, 112, 112)
+    color: white;
 }
 
 .file-upload {
-    color: rgb(144,144,144);
-    font-weight: bold;
+    color: white;
+    font-weight: 400;
 }
 
 .file-upload span {
@@ -70,7 +71,7 @@ footer span {
 }
 
 .file-selectBtn {
-    background: rgba(179, 57, 57,0.1);
+    background: #cdcdcd1f;
     font-weight: bold;
     font-size: 16px;
     height: 150px;
@@ -80,8 +81,8 @@ footer span {
     position: relative;
     letter-spacing: 1.5px;
     overflow: hidden;
-    color: rgba(179, 57, 57,0.8);
-    border: 4px dashed rgba(179, 57, 57,0.8);
+    color: #cdcdcd;
+    border: 4px dashed #404040;
     border-radius: 4px;
     padding: 4px;
     display: block;
@@ -105,11 +106,12 @@ footer span {
     z-index: 100;
     letter-spacing: 1.5px;
     height: 38px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     position: fixed;
     width: 100%;
-    background: #b33939;
+    background: #404040;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
 .taskbar-div {
@@ -123,22 +125,20 @@ footer span {
     height: 100%;
     position: relative;
     box-sizing: border-box;
-    /*box-shadow: 1px 0 1px 0 rgba(0,0,0,0.28);*/
 }
 
 .taskbar-div label {
     cursor: pointer;
 }
 
-.taskbar-div:hover #taskbar {
-    background: #c73f3f;
+.taskbar-div:hover {
+    background: #757575;
 }
+
 
 /* active menu button specific styling */
 .active {
-    color: white;
-    background: #c73f3f;
-    /*background: #c95656;*/
+    /*color: #FF7D00;*/
 }
 
 #about-section {
@@ -162,8 +162,22 @@ footer span {
     font-size: 15px;
 }
 
-#about-app td, #about-scripts td {
-    padding: 0 55px 10px 0;
+#umcg-logo {
+    height: 100px;
+}
+
+#umcg-logo-div {
+    position: fixed;
+    width: 100%;
+    bottom: 15px;
+}
+
+.version-first-cell {
+    padding: 0 20px 10px 0;
+}
+
+.version-second-cell {
+    padding: 0 0 10px 0;
 }
 
 .summarize-table td {
@@ -176,12 +190,11 @@ th {
 }
 
 #about-app, #about-scripts {
-    margin: 10px 0 0 0;
+    margin: 10px 5px 0 0;
     display: inline-block;
     height: auto;
-    width: calc(50% - 20px);
+    width: calc(50% - 10px);
     background: #dedede;
-    border-radius: 2px;
     padding: 15px 25px;
 }
 
@@ -208,7 +221,7 @@ h1 i {
 }
 
 .dev-message {
-    color: rgb(112, 112, 112);
+    color: white;
 }
 
 .fa-tv{
@@ -221,7 +234,7 @@ h1 i {
 
 #summarize-results {
     margin: 10px 0 0 0;
-    color: rgb(112, 112, 112);
+    color: white;
     position: relative;
     text-align: left;
     /*height: 100%;*/
@@ -249,9 +262,10 @@ h1 i {
     font-size: 14px;
 }
 
-h2 {
+#summarize-result-title {
     width: fit-content;
-    color: rgb(112, 112, 112);
+    color: white;
+    font-weight: 400;
     font-size: 20px;
     margin: 0;
 }
@@ -273,9 +287,43 @@ h2 {
     padding: 1px 8px 1px 0;
 }
 
+#tool-container div {
+    position: relative;
+    background: #dedede;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 1.5px;
+    color: rgb(112, 112, 112);
+    border-radius: 2px;
+    padding: 10px;
+    width: calc(50% - 10px);
+    height: 150px;
+    display: inline-table;
+    border: 4px solid #dedede;
+    margin: 0 0 20px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
 
+#tool-container div h3 {
+    margin: 15px 0 0 0;
+}
 
+#tool-container div:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
 
+#timing-section, #convert-section, #evc-section, #free-slot-section {
+    float: right;
+}
+
+.python-command-p {
+    margin: 4px 4px 10px 4px;
+    position: absolute;
+    font-size: 12px;
+    bottom: 0;
+    font-weight: 500;
+}
 
 
 
@@ -359,7 +407,9 @@ h2 {
     margin: 10px 0;
     padding: 6px;
     border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
 }
+
 .info-msg {
     color: #059;
     background-color: #BEF;

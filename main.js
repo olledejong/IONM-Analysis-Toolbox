@@ -10,6 +10,9 @@ let window;
 // global list which holds the paths of the via a dialog window selected files.
 let tempfilePaths;
 
+// log options configuration
+log.transports.console.format = '{h}:{i}:{s} {text}';
+
 /**
  *                         [ CREATE WINDOW ]
  * Creates the GUI window based on some variables to be set by developer.
@@ -23,8 +26,8 @@ function createWindow () {
     window = new BrowserWindow({
         //width: mainScreen.workArea.width,
         //height: mainScreen.workArea.height,
-        width: 1280,
-        height: 750,
+        width: 730,
+        height: 800,
         icon: __dirname + '/assets/images/icon.svg',
         resizable: false,
         frame: false,
@@ -66,6 +69,7 @@ app.on('activate', () => {
     }
 });
 
+
 /**
  *                        [ RESIZE BROWSER WINDOW ]
  * General function for resizing the browser window, can be called from the renderer
@@ -75,7 +79,9 @@ app.on('activate', () => {
  * @param {int} newY
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
-   window.setSize(newX, newY);
+    log.info('[ main.js ][ resizing window to: ', newX, 'x', newY, 'px ]');
+    window.setMinimumSize(newX, newY)
+    window.setSize(newX, newY);
 });
 
 
@@ -222,6 +228,6 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
         cwd: 'D:\\Menno\\IONM\\src'
     }, function(error, stdout, stderr) {
         log.info("[ main.js ][ sending 'ionm.py version' information back to renderer ]");
-        event.sender.send("version-info", error, stdout, stderr);
+        event.sender.send("script-version-info", error, stdout, stderr);
     });
 });

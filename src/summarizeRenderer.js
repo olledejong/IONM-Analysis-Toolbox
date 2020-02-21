@@ -33,7 +33,7 @@ ipcRenderer.on("selected", function (event, paths) {
         // set text inside the button to selected files
         $(".file-selectBtn").html('The following files were selected:<br>' + finalFileNames);
         run_summarize_button.prop('disabled', false);
-        run_summarize_button.css('background-color', '#b33939');
+        run_summarize_button.css('background-color', '#13b600');
         run_summarize_button.css('cursor', 'pointer');
     }
 });
@@ -73,7 +73,7 @@ variable_content.on("click", '.run-summarize', function() {
  */
 ipcRenderer.on('set-title-and-preloader', function (event) {
     variable_content.html(
-        `<h2>Requested summarized basic information about the selected ECLIPSE-files</h2>
+        `<h2 id="summarize-result-title">Requested summarized basic information about the selected ECLIPSE-files</h2>
          <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
          <div id="summarize-results"></div>`);
     // hide summarize results div untill it actually gets some results

@@ -8,6 +8,9 @@
 window.$ = window.jQuery = require('jquery');
 const log = require('electron-log');
 
+// log options configuration for all renderer processes
+log.transports.console.format = '{h}:{i}:{s} {text}';
+
 
 // globals
 __name__ = "IONM Analysis Toolbox";
@@ -16,33 +19,75 @@ __maintainer__ = "Olle de Jong";
 __contact__ = "['ol.de.jong@st.hanze.nl', 'olledejong@gmail.com']";
 __credits__ = "['Gea Drost', 'Fiete Lange', 'Sebastiaan Dulfer']";
 __version__ = "1.0.0";
-__status__ = "PRODUCTION";
+__status__ = "DEVELOPMENT";
 
 // jQuery Selectors
 let about_section_button = $("#about-section");
 let variable_content_div = $("#variable-content");
+let container_after_titlebar = $('.container-after-titlebar');
+let body = $('body');
 
 
 /**
  * Loads variable content for the [ welcome section ]
  */
 $("#welcome-section").click(function () {
-    variable_content_div.html(
-        `<p class="welcome-text">Welcome to the Intraoperative Neurofysiological Monitoring Analysis toolbox!</p>`
-    );
+    if (variable_content_div.find('#tool-container').length > 0) {
+    } else {
+        ipcRenderer.send('resize-window', 730, 800);
+        variable_content_div.html(
+        `<h1 class="welcome-text">What do you wish to do next?</h1>
+         <div id="tool-container">
+            <div id="summarize-section">
+                <h3>Summarize File(s)</h3>
+                <p>Gain insight into Eclipse files</p>
+                <p class="python-command-p">python command: ionm.py summarize [files]</p>
+            </div>
+            <div id="timing-section">
+                <h3>Show Timing</h3>
+                <p>Gain insight into Eclipse files</p>
+            </div>
+            <div id="availability-section">
+                <h3>Show EEG Availability</h3>
+                <p>Gain insight into Eclipse files</p>
+            </div>
+            <div id="convert-section">
+                <h3>Convert File(s)</h3>
+                <p>Gain insight into Eclipse files</p>
+            </div>
+            <div id="compute-section">
+                <h3>Compute Statistics</h3>
+                <p>Gain insight into Eclipse files</p>
+            </div>
+            <div id="evc-section">
+                <h3>Extract, Validate and Combine</h3>
+                <p>Gain insight into Eclipse files</p>
+            </div>
+            <div id="classify-section">
+                <h3>Classify</h3>
+                <p>Classify signals of file(s) on the presence of F-waves</p>
+            </div>
+            <div id="free-slot-section">
+                <h3>Placeholder</h3>
+                <p>Optional new tool</p>
+            </div>
+         </div>`);
+    }
 });
 
 /**
  * Loads variable content for the [ summarize section ]
  */
-$("#summarize-section").click( function() {
+body.delegate("#summarize-section", "click", function() {
     //ipcRenderer.send('resize-window', 800, 600);
     variable_content_div.html(
         `<div class="file-upload">
+            <p id="file-upload-p">
             Using this functionality you're able to retrieve some basic information about the Eclipse file(s)<br>
             you select. This information includes: path, size, name, date, duration and the modalities.
             <br>
             Please select the CSV files you wish to use.
+            </p>
             <button id="file-selectBtn" class="file-selectBtn">Select file(s)</button>
             <button class="run-summarize" disabled>RUN</button>
         </div>`)
@@ -51,7 +96,7 @@ $("#summarize-section").click( function() {
 /**
  * Loads variable content for the [ timing section ]
  */
-$("#timing-section").click(function () {
+body.delegate('#timing-section', 'click', function () {
     variable_content_div.html(
         `<p class="dev-message">.. timing content ..</p>`
     );
@@ -61,7 +106,7 @@ $("#timing-section").click(function () {
 /**
  * Loads variable content for the [ availability section ]
  */
-$("#availability-section").click(function () {
+body.delegate('#availability-section', 'click', function () {
     variable_content_div.html(
         `<p class="dev-message">.. availability content ..</p>`
     );
@@ -71,7 +116,7 @@ $("#availability-section").click(function () {
 /**
  * Loads variable content for the [ convert section ]
  */
-$("#convert-section").click(function () {
+body.delegate('#convert-section', 'click', function () {
     variable_content_div.html(
         `<p class="dev-message">.. convert content ..</p>`
     );
@@ -81,7 +126,7 @@ $("#convert-section").click(function () {
 /**
  * Loads variable content for the [ compute section ]
  */
-$("#compute-section").click(function () {
+body.delegate('#compute-section', 'click', function () {
     variable_content_div.html(
         `<p class="dev-message">.. compute content ..</p>`
     );
@@ -91,7 +136,7 @@ $("#compute-section").click(function () {
 /**
  * Loads variable content for the [ EVC section ]
  */
-$("#evc-section").click(function () {
+body.delegate('#evc-section', 'click', function () {
     variable_content_div.html(
         `<p class="dev-message">.. EVC content ..</p>`
     );
@@ -101,7 +146,7 @@ $("#evc-section").click(function () {
 /**
  * Loads variable content for the [ classify section ]
  */
-$("#classify-section").click(function () {
+body.delegate('#classify-section', 'click', function () {
     variable_content_div.html(
         `<p class="dev-message">.. classify content ..</p>`
     );
@@ -116,6 +161,7 @@ $("#classify-section").click(function () {
  * info and calls fuction that generates the GUI version info.
  */
 about_section_button.click(function () {
+    ipcRenderer.send('resize-window', 900, 550);
     if(variable_content_div.find('#about-app').length > 0) {
         // when about page already loaded, do not load it again.
     } else {
@@ -124,27 +170,32 @@ about_section_button.click(function () {
 
         // generate skeleton for information to be displayed in
         variable_content_div.html(
-            `<div id="about-app">
-                 <h1>Graphic User Interface - Electron<i class="fas fa-tv"></i></h1>
+            `
+            <div id="about-scripts">
+                 <h1>Python Scripts<i class="fas fa-cogs"></i></h1>
+                 <div id="scripts-version-info" class="version-info">
+                 </div>
+            </div>
+            <div id="about-app">
+                 <h1>Graphic User Interface<i class="fas fa-tv"></i></h1>
                  <div id="app-version-info" class="version-info">
                     <!-- will be filled -->
                  </div>
-             </div>
-             <div id="about-scripts">
-                 <h1>Underlying functionality - Python<i class="fas fa-cogs"></i></h1>
-                 <div id="scripts-version-info" class="version-info">
-                 </div>
-             </div>`);
+            </div>
+            <div id="umcg-logo-div">
+                <img id="umcg-logo" alt="umcg logo" src="../assets/images/umcg_logo_wide.png">
+            </div>
+             `);
 
         let r = Math.random().toString(36).substring(7);
-        $('.container-after-titlebar').append('<div id="'+ r + '" class="info-msg"><i class="fas fa-info-circle"></i> Retrieving version info from the Python script</div>');
+        container_after_titlebar.append('<div id="'+ r + '" class="info-msg"><i class="fas fa-info-circle"></i> Retrieving version info from the script</div>');
 
         let tempElement = $('#'+r);
 
         tempElement.animate({
             right: '+=465', opacity: 1
-        }, 800, function () {
-            tempElement.delay(3500).fadeOut(800, function () {
+        }, 750, function () {
+            tempElement.delay(4000).fadeOut(800, function () {
                 $(this).remove();
             });
         });
@@ -159,33 +210,31 @@ about_section_button.click(function () {
  * looking table and displays this to the user.
  *
  * @param {object} error
- * @param {object} stdOut
+ * @param {object} python_version_info
  * @param {object} stdErr
  */
-ipcRenderer.on("version-info", function (event, error, stdOut, stdErr) {
+ipcRenderer.on("script-version-info", function (event, error, python_version_info, stdErr) {
     let tableHtml = [];
     let i;
-    console.log(error);
-    console.log(stdErr);
 
     // if no errors occurred ..
     if( error === null && stdErr === '') {
         // split version info on every occurrence of '\n'
-        let partList = stdOut.split(/\n/g);
+        let partList = python_version_info.split(/\n/g);
         // remove last redundant element
         partList.pop();
         // loop trough version info list and generate a neat looking table for the front-end
         for (i = 0; i < partList.length; i += 2) {
             let newVal = partList[i].replace(": ", "");
             // add values to the html table string
-            tableHtml.push('<tr><td>' + newVal + '</td><td>' + partList[i + 1] + '</td></tr>');
+            tableHtml.push('<tr><td class="version-first-cell">' + newVal + '</td><td class="version-second-cell">' + partList[i + 1] + '</td></tr>');
         }
     } else {
         // if errors occurred ..
         let r = Math.random().toString(36).substring(7);
-        console.log("[ navigation.js ][ an error occurred while trying to retrieve python version-info ]");
+        log.info("[ navigationRenderer.js ][ an error occurred while trying to retrieve python version-info ]");
         // add error message div to the frontend
-        $('.container-after-titlebar').append('<div id="'+ r + '" class="error-msg"><i class="fas fa-times-circle"></i> An error occurred while trying to retrieve the version-info</div>');
+        container_after_titlebar.append('<div id="'+ r + '" class="error-msg"><i class="fas fa-times-circle"></i> An error occurred while trying to retrieve the version-info</div>');
 
         // temp element id so that always the right message gets animated
         let tempElement = $('#'+r);
@@ -193,8 +242,8 @@ ipcRenderer.on("version-info", function (event, error, stdOut, stdErr) {
         // animate the error message
         tempElement.animate({
            right: '+=465', opacity: 1
-        }, 800, function () {
-            tempElement.delay(3500).fadeOut(800, function () {
+        }, 750, function () {
+            tempElement.delay(4000).fadeOut(800, function () {
                 $(this).remove();
             });
         });
@@ -208,12 +257,11 @@ ipcRenderer.on("version-info", function (event, error, stdOut, stdErr) {
  * note: globals can be found at the top of this file
  */
 function generateElectronAbout() {
-    $("#app-version-info").html(`<tr><td>Name</td><td>${__name__}</td></tr>
-                                <tr><td>Author</td><td>${__author__}</td></tr>
-                                <tr><td>Maintainer</td><td>${__maintainer__}</td></tr>
-                                <tr><td>Contact</td><td>${__contact__}</td></tr>
-                                <tr><td>Credits</td><td>${__credits__}</td></tr>
-                                <tr><td>Version</td><td>${__version__}</td></tr>
-                                <tr><td>Status</td><td>${__status__}</td></tr></p>`)
+    $("#app-version-info").html(`<tr><td class="version-first-cell">Name</td><td class="version-second-cell">${__name__}</td></tr>
+                                <tr><td class="version-first-cell">Author</td><td class="version-second-cell">${__author__}</td></tr>
+                                <tr><td class="version-first-cell">Maintainer</td><td class="version-second-cell">${__maintainer__}</td></tr>
+                                <tr><td class="version-first-cell">Contact</td><td class="version-second-cell">${__contact__}</td></tr>
+                                <tr><td class="version-first-cell">Credits</td><td class="version-second-cell">${__credits__}</td></tr>
+                                <tr><td class="version-first-cell">Version</td><td class="version-second-cell">${__version__}</td></tr>
+                                <tr><td class="version-first-cell">Status</td><td class="version-second-cell">${__status__}</td></tr></p>`)
 }
-

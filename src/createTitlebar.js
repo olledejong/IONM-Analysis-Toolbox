@@ -10,17 +10,16 @@ const ipcRenderer = require('electron').ipcRenderer;
 
 // Create custom title bar and set characteristics
 let MyTitleBar = new customTitlebar.Titlebar({
-    backgroundColor: customTitlebar.Color.fromHex('#b33939'),
+    backgroundColor: customTitlebar.Color.fromHex('#404040'),
     unfocusEffect: false,
     titleHorizontalAlignment: "left",
     minimizable: true,
-    maximizable: true,
-    drag: false,
-    shadow: true,
+    maximizable: false,
+    drag: true,
+    shadow: false,
     icon: '../assets/images/icon.svg'
 });
 MyTitleBar.updateTitle("IONM ANALYSIS TOOLBOX");
-
 
 /**
  * Adds the classname 'active' to the active menu element
