@@ -27,14 +27,29 @@ variable_content.on("click", '.file-selectBtn', function() {
 ipcRenderer.on("selected", function (event, paths) {
     // jQuery selector(s)
     let run_summarize_button = $(".run-summarize");
+    let file_select_button = $(".file-selectBtn");
+
     // only do something if there are actually files are selected
     if(paths.length !== 0) {
         let finalFileNames = generateFilenames(paths);
+
         // set text inside the button to selected files
-        $(".file-selectBtn").html('The following files were selected:<br>' + finalFileNames);
+        file_select_button.html('Selected file(s):<br>' + finalFileNames);
+
+        if ( run_summarize_button.prop('disabled') === true ) {
+            run_summarize_button.animate({
+                left: '20px', opacity: 1
+            }, 800);
+        }
         run_summarize_button.prop('disabled', false);
-        run_summarize_button.css('background-color', '#13b600');
-        run_summarize_button.css('cursor', 'pointer');
+
+    // disable run button when file selection cancelled
+    } else {
+        file_select_button.html('Select file(s)');
+        run_summarize_button.animate({
+            left: '-130px', opacity: 1
+        }, 800);
+        run_summarize_button.prop('disabled', true);
     }
 });
 
@@ -73,7 +88,7 @@ variable_content.on("click", '.run-summarize', function() {
  */
 ipcRenderer.on('set-title-and-preloader', function (event) {
     variable_content.html(
-        `<h2 id="summarize-result-title">Requested summarized basic information about the selected ECLIPSE-files</h2>
+        `<h2 id="summarize-result-title">Resulting summarized information</h2>
          <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
          <div id="summarize-results"></div>`);
     // hide summarize results div untill it actually gets some results

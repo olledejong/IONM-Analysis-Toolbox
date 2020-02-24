@@ -52,37 +52,38 @@ footer span {
 }
 
 .welcome-text {
-    margin: 0 0 10px 0;
+    letter-spacing: 1.5px;
+    margin: 0 0 12px 0;
     width: auto;
     height: auto;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 20px;
     color: white;
 }
 
-.file-upload {
+#summarize-content {
     color: white;
     font-weight: 400;
 }
 
-.file-upload span {
+#summarize-content span {
     font-size: 10px;
     text-align: center;
 }
 
 .file-selectBtn {
-    background: #cdcdcd1f;
-    font-weight: bold;
+    background: rgba(205, 205, 205, 0.27);
+    font-weight: 500;
     font-size: 16px;
     height: 150px;
     width: 300px;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-bottom: 3px;
     position: relative;
     letter-spacing: 1.5px;
     overflow: hidden;
-    color: #cdcdcd;
-    border: 4px dashed #404040;
+    color: white;
+    border: 4px dashed #dedede;
     border-radius: 4px;
     padding: 4px;
     display: block;
@@ -91,6 +92,19 @@ footer span {
     transition: all 0.2s ease-out;
     cursor: pointer;
     overflow-y: auto;
+}
+
+#summarize-content-p {
+    font-weight: 400;
+    width: 100%;
+    letter-spacing: 1px;
+}
+
+
+#summarize-content-h {
+    color: white;
+    font-weight: 500;
+    letter-spacing: 1px;
 }
 
 .example::-webkit-scrollbar {
@@ -180,6 +194,10 @@ footer span {
     padding: 0 0 10px 0;
 }
 
+.summarize-table {
+    color: rgb(112, 112, 112);
+
+}
 .summarize-table td {
     padding: 0 15px 5px 0;
     font-weight: 600;
@@ -271,13 +289,17 @@ h1 i {
 }
 
 .run-summarize {
+    cursor: pointer;
+    position: absolute;
     letter-spacing: 1.5px;
+    left: -110px;
     width: 100px;
-    background-color: rgb(154, 154, 154);
+    background-color: #27ae60;
     height: 50px;
-    border: 0;
+    opacity: 0;
     color: white;
-    border-radius: 3px;
+    border: 0;
+    border-radius: 2px;
     margin: 10px 0 0 0;
     transition: background-color 0.2s ease-out;
 }
@@ -326,9 +348,6 @@ h1 i {
 }
 
 
-
-
-
 /* preloader */
 .lds-ellipsis {
     top: -13px;
@@ -344,7 +363,7 @@ h1 i {
     width: 13px;
     height: 13px;
     border-radius: 50%;
-    background: rgb(112, 112, 112);
+    background: #cdcdcd;
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 .lds-ellipsis div:nth-child(1) {

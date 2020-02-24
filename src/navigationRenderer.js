@@ -9,7 +9,7 @@ window.$ = window.jQuery = require('jquery');
 const log = require('electron-log');
 
 // log options configuration for all renderer processes
-log.transports.console.format = '{h}:{i}:{s} {text}';
+log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 
 
 // globals
@@ -45,23 +45,24 @@ $("#welcome-section").click(function () {
             </div>
             <div id="timing-section">
                 <h3>Show Timing</h3>
-                <p>Gain insight into Eclipse files</p>
+                <p>Plot timestamps of measurements as a function of position in file</p>
             </div>
             <div id="availability-section">
                 <h3>Show EEG Availability</h3>
-                <p>Gain insight into Eclipse files</p>
+                <p>Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
             </div>
             <div id="convert-section">
                 <h3>Convert File(s)</h3>
-                <p>Gain insight into Eclipse files</p>
+                <p>Convert an Eclipse CSV into multiple custom files: one per modality</p>
             </div>
             <div id="compute-section">
                 <h3>Compute Statistics</h3>
-                <p>Gain insight into Eclipse files</p>
+                <p>Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
             </div>
             <div id="evc-section">
                 <h3>Extract, Validate and Combine</h3>
-                <p>Gain insight into Eclipse files</p>
+                <p>click here to expand pathway</p>
+                <p></p>
             </div>
             <div id="classify-section">
                 <h3>Classify</h3>
@@ -71,7 +72,7 @@ $("#welcome-section").click(function () {
                 <h3>Placeholder</h3>
                 <p>Optional new tool</p>
             </div>
-         </div>`);
+        </div>`);
     }
 });
 
@@ -79,14 +80,14 @@ $("#welcome-section").click(function () {
  * Loads variable content for the [ summarize section ]
  */
 body.delegate("#summarize-section", "click", function() {
-    //ipcRenderer.send('resize-window', 800, 600);
+    ipcRenderer.send('resize-window', 800, 460);
     variable_content_div.html(
-        `<div class="file-upload">
-            <p id="file-upload-p">
-            Using this functionality you're able to retrieve some basic information about the Eclipse file(s)<br>
-            you select. This information includes: path, size, name, date, duration and the modalities.
-            <br>
-            Please select the CSV files you wish to use.
+        `<div id="summarize-content">
+            <h3 id="summarize-content-h">Get Eclipse file summary</h3>
+            <p id="summarize-content-p">
+            Using this functionality you're able to retrieve some basic information about the Eclipse file(s)
+            you select. The information in this summary contains for example: path to the file, file size, file name, date of measuring, duration of measurement and the types of modalities.
+            <br><br>Please select the CSV file(s) you wish to summarize.
             </p>
             <button id="file-selectBtn" class="file-selectBtn">Select file(s)</button>
             <button class="run-summarize" disabled>RUN</button>
@@ -161,10 +162,10 @@ body.delegate('#classify-section', 'click', function () {
  * info and calls fuction that generates the GUI version info.
  */
 about_section_button.click(function () {
-    ipcRenderer.send('resize-window', 900, 550);
     if(variable_content_div.find('#about-app').length > 0) {
         // when about page already loaded, do not load it again.
     } else {
+        ipcRenderer.send('resize-window', 900, 550);
         // tell main process to get the python script its version info
         ipcRenderer.send('get-version-info');
 

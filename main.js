@@ -11,7 +11,7 @@ let window;
 let tempfilePaths;
 
 // log options configuration
-log.transports.console.format = '{h}:{i}:{s} {text}';
+log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 
 /**
  *                         [ CREATE WINDOW ]
@@ -20,7 +20,7 @@ log.transports.console.format = '{h}:{i}:{s} {text}';
  */
 function createWindow () {
     // get screen size
-    //let mainScreen = screen.getPrimaryDisplay();
+    //let mainScreen = screen.getPrimaryDisplay();k
 
     // Create the browser window
     window = new BrowserWindow({
@@ -80,7 +80,7 @@ app.on('activate', () => {
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
     log.info('[ main.js ][ resizing window to: ', newX, 'x', newY, 'px ]');
-    window.setMinimumSize(newX, newY)
+    window.setMinimumSize(newX, newY);
     window.setSize(newX, newY);
 });
 
@@ -112,7 +112,8 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
         // if selecting is cancelled, do not send back to renderer
         tempfilePaths = fileNames.filePaths;
         if (fileNames.canceled === true) {
-            log.info("[ main.js ][ file selection cancelled ]")
+            log.info("[ main.js ][ file selection cancelled ]");
+            event.sender.send('selected', fileNames.filePaths)
         } else {
             log.info("[ main.js ][ sending selected file names info back to renderer ]");
 
@@ -132,6 +133,15 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
  * @param {object} IpcRendererEvent, contains all information about the event
  */
 ipcMain.on("run-summarize", function runSummarizeCommand(event) {
+    log.info('aantal selected files: ', tempfilePaths.length);
+    if ( tempfilePaths.length > 2 ) {
+        log.info('[ main.js ][ resizing window ]');
+        window.setMinimumSize(1280, 900);
+        window.setSize(1280, 900);
+    } else {
+        window.setMinimumSize(1280, 550);
+        window.setSize(1280, 550);
+    }
     log.info("[ main.js ][ executing summarize command ]");
     let i;
     // issue message to the Renderer process to set result title and loading gif
@@ -147,13 +157,13 @@ ipcMain.on("run-summarize", function runSummarizeCommand(event) {
         }, function(error, stdout, stderr) {
             let summarize_error_message = "An error occurred while retrieving the file summary";
             if (error !== null) {
-                log.error("[ error ] ", error);
+                log.error("[ main.js ] ", error);
                 event.sender.send('error', summarize_error_message);
             } else if (stderr !== '') {
-                log.error("[ stderr ] ", stderr);
+                log.error("[ main.js ] ", stderr);
                 event.sender.send('error', summarize_error_message);
             } else {
-                log.info("[ stdout ] ", stdout);
+                log.info("[ main.js ] \n", stdout);
 
                 // build json string using the command output
                 let JSONstring = createJsonString(stdout);
