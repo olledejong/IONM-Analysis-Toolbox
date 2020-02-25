@@ -39,58 +39,66 @@ $("#welcome-section").click(function () {
         `<h1 class="welcome-text">What do you wish to do next?</h1>
          <div id="tool-container">
             <div id="summarize-section">
+                <span class="tool-finished">1</span>
                 <h3>Summarize File(s)</h3>
                 <p>Gain insight into Eclipse files</p>
                 <p class="python-command-p">python command: ionm.py summarize [files]</p>
             </div>
             <div id="timing-section">
+                <span class="tool-in-dev">2</span>
                 <h3>Show Timing</h3>
                 <p>Plot timestamps of measurements as a function of position in file</p>
             </div>
             <div id="availability-section">
+                <span class="tool-in-dev">3</span>
                 <h3>Show EEG Availability</h3>
                 <p>Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
             </div>
             <div id="convert-section">
+                <span class="tool-in-dev">4</span>
                 <h3>Convert File(s)</h3>
                 <p>Convert an Eclipse CSV into multiple custom files: one per modality</p>
             </div>
             <div id="compute-section">
+                <span class="tool-in-dev">5</span>
                 <h3>Compute Statistics</h3>
                 <p>Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
             </div>
             <div id="evc-section">
+                <span class="tool-in-dev">6</span>
                 <h3>Extract, Validate and Combine</h3>
                 <p>click here to expand pathway</p>
                 <p></p>
             </div>
             <div id="classify-section">
+                <span class="tool-in-dev">7</span>
                 <h3>Classify</h3>
                 <p>Classify signals of file(s) on the presence of F-waves</p>
             </div>
             <div id="free-slot-section">
+                <span class="tool-in-dev">8</span>
                 <h3>Placeholder</h3>
                 <p>Optional new tool</p>
             </div>
-        </div>`);
+         </div>`);
     }
 });
 
 /**
  * Loads variable content for the [ summarize section ]
  */
-body.delegate("#summarize-section", "click", function() {
-    ipcRenderer.send('resize-window', 800, 460);
+body.delegate("#summarize-section", "click", function setSummarizeContent() {
+    ipcRenderer.send('resize-window', 800, 470);
     variable_content_div.html(
         `<div id="summarize-content">
-            <h3 id="summarize-content-h">Get Eclipse file summary</h3>
+            <h3 id="summarize-content-h">Obtain a summary of the selected file(s) its contents</h3>
             <p id="summarize-content-p">
             Using this functionality you're able to retrieve some basic information about the Eclipse file(s)
             you select. The information in this summary contains for example: path to the file, file size, file name, date of measuring, duration of measurement and the types of modalities.
             <br><br>Please select the CSV file(s) you wish to summarize.
             </p>
             <button id="file-selectBtn" class="file-selectBtn">Select file(s)</button>
-            <button class="run-summarize" disabled>RUN</button>
+            <button class="run-button" id="run-summarize" disabled>RUN</button>
         </div>`)
 });
 
@@ -99,8 +107,16 @@ body.delegate("#summarize-section", "click", function() {
  */
 body.delegate('#timing-section', 'click', function () {
     variable_content_div.html(
-        `<p class="dev-message">.. timing content ..</p>`
-    );
+        `<div id="timing-content">
+            <h3 id="timing-content-h">Generate a timing plot for insight into IONM measurements</h3>
+            <p id="timing-content-p">
+            This will generate a plot showing timestamps at which IONM measurements were made. In the resulting graph 
+            you will see plots in which timestamps of measurements are plotted as a function of the position in file.
+            <br><br>Please select the CSV file(s) you wish to summarize.
+            </p>
+            <button id="file-selectBtn" class="file-selectBtn">Select file(s)</button>
+            <button class="run-button" id="run-timing" disabled>RUN</button>
+        </div>`);
 });
 
 

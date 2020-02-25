@@ -135,23 +135,27 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
  *
  * @param {object} IpcRendererEvent, contains all information about the event
  */
-ipcMain.on("run-summarize", function runSummarizeCommand(event) {
-    log.info('aantal selected files: ', tempfilePaths.length);
+ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
+    // window sizing logic
     if ( tempfilePaths.length > 2 ) {
         log.info('[ main.js ][ resizing window ]');
         window.setMinimumSize(1280, 900);
         window.setSize(1280, 900);
-    } else {
+    } else if ( tempfilePaths.length === 2 ) {
         window.setMinimumSize(1280, 550);
         window.setSize(1280, 550);
+    } else {
+        window.setMinimumSize(800, 550);
+        window.setSize(800, 550);
     }
-    log.info("[ main.js ][ executing summarize command ]");
-    let i;
+
     // issue message to the Renderer process to set result title and loading gif
     event.sender.send('set-title-and-preloader');
 
-    // for every path in tempfilePaths execute the command 'ionm.py summarize [filepath]
-    for(i = 0; i < tempfilePaths.length; i++) {
+    log.info("[ main.js ][ executing summarize command ]");
+
+    // for every path in tempfilePaths execute the command 'ionm.py summarize [filepath]'
+    for(let i = 0; i < tempfilePaths.length; i++) {
         let fraction = Math.round(((i+1) / tempfilePaths.length) * 100);
         log.info('[ main.js ][ percentage handled: ', fraction, '% ]');
         let command = 'ionm.py summarize "' + tempfilePaths[i] + '"';
@@ -159,6 +163,8 @@ ipcMain.on("run-summarize", function runSummarizeCommand(event) {
             cwd: 'D:\\Menno\\IONM\\src'
         }, function(error, stdout, stderr) {
             let summarize_error_message = "An error occurred while retrieving the file summary";
+
+            // if errors occur, send an error message to the renderer process
             if (error !== null) {
                 log.error("[ main.js ] ", error);
                 event.sender.send('error', summarize_error_message);
@@ -230,6 +236,21 @@ function createJsonString(stdout) {
     return JSON_string;
 }
 
+
+/**
+ *                          [ SHOW AVAILABILITY ]
+ *
+ */
+ipcMain.on('run-timing', function executeShowTimingCommand(event) {
+    let pathsString = '"' + tempfilePaths.join('" "') + '"';
+    let command = 'ionm.py show_timing ' + pathsString;
+    log.info(pathsString);
+    exec(command, {
+        cwd: 'D:\\Menno\\IONM\\src'
+    }, function(error, stdout, stderr) {
+        // none
+    })
+});
 
 /**
  *                           [ VERSION INFO ]

@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="../assets/css/main.css"/>
         <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+
         <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
               integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
@@ -14,27 +15,6 @@
             <div class="taskbar-div active" id="welcome-section">
                 <label>Home</label>
             </div>
-            <!--            <div class="taskbar-div" id="summarize-section">-->
-<!--                <label>Summarize</label>-->
-<!--            </div>-->
-<!--            <div class="taskbar-div" id="timing-section">-->
-<!--                <label>Show timing</label>-->
-<!--            </div>-->
-<!--            <div class="taskbar-div" id="availability-section">-->
-<!--                <label>Show availability</label>-->
-<!--            </div>-->
-<!--            <div class="taskbar-div" id="convert-section">-->
-<!--                <label>Convert</label>-->
-<!--            </div>-->
-<!--            <div class="taskbar-div" id="compute-section">-->
-<!--                <label>Compute</label>-->
-<!--            </div>-->
-<!--            <div class="taskbar-div" id="evc-section">-->
-<!--                <label>Extracte EEG / Validate / Combine</label>-->
-<!--            </div>-->
-<!--            <div class="taskbar-div" id="classify-section">-->
-<!--                <label>Classify</label>-->
-<!--            </div>-->
             <div class="taskbar-div" id="about-section">
                 <label>About</label>
             </div>
@@ -45,36 +25,44 @@
             <h1 class="welcome-text">Welcome, please select a tool to get started</h1>
             <div id="tool-container">
                 <div id="summarize-section">
+                    <span class="tool-finished">1</span>
                     <h3>Summarize File(s)</h3>
                     <p>Gain insight into Eclipse files</p>
                     <p class="python-command-p">python command: ionm.py summarize [files]</p>
                 </div>
                 <div id="timing-section">
+                    <span class="tool-in-dev">2</span>
                     <h3>Show Timing</h3>
                     <p>Plot timestamps of measurements as a function of position in file</p>
                 </div>
                 <div id="availability-section">
+                    <span class="tool-in-dev">3</span>
                     <h3>Show EEG Availability</h3>
                     <p>Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
                 </div>
                 <div id="convert-section">
+                    <span class="tool-in-dev">4</span>
                     <h3>Convert File(s)</h3>
                     <p>Convert an Eclipse CSV into multiple custom files: one per modality</p>
                 </div>
                 <div id="compute-section">
+                    <span class="tool-in-dev">5</span>
                     <h3>Compute Statistics</h3>
                     <p>Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
                 </div>
                 <div id="evc-section">
+                    <span class="tool-in-dev">6</span>
                     <h3>Extract, Validate and Combine</h3>
                     <p>click here to expand pathway</p>
                     <p></p>
                 </div>
                 <div id="classify-section">
+                    <span class="tool-in-dev">7</span>
                     <h3>Classify</h3>
                     <p>Classify signals of file(s) on the presence of F-waves</p>
                 </div>
                 <div id="free-slot-section">
+                    <span class="tool-in-dev">8</span>
                     <h3>Placeholder</h3>
                     <p>Optional new tool</p>
                 </div>
@@ -86,4 +74,6 @@
     <script src="titlebarRenderer.js"></script>
     <script src="navigationRenderer.js"></script>
     <script src="summarizeRenderer.js"></script>
+    <script src="timingRenderer.js"></script>
+    <script src="fileSelectRenderer.js"></script>
 </html>

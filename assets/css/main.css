@@ -61,15 +61,6 @@ footer span {
     color: white;
 }
 
-#summarize-content {
-    color: white;
-    font-weight: 400;
-}
-
-#summarize-content span {
-    font-size: 10px;
-    text-align: center;
-}
 
 .file-selectBtn {
     background: rgba(205, 205, 205, 0.27);
@@ -94,14 +85,16 @@ footer span {
     overflow-y: auto;
 }
 
-#summarize-content-p {
+#summarize-content-p, #timing-content-p {
     font-weight: 400;
     width: 100%;
     letter-spacing: 1px;
 }
 
 
-#summarize-content-h {
+#summarize-content-h, #timing-content-h {
+    margin: 0 0 10px 0;
+    text-align: center;
     color: white;
     font-weight: 500;
     letter-spacing: 1px;
@@ -288,7 +281,7 @@ h1 i {
     margin: 0;
 }
 
-.run-summarize {
+.run-button {
     cursor: pointer;
     position: absolute;
     letter-spacing: 1.5px;
@@ -334,6 +327,25 @@ h1 i {
 #tool-container div:hover {
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
+
+.tool-finished {
+    font-weight: 500;
+    font-size: 18px;
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    color: forestgreen;
+}
+
+.tool-in-dev {
+    font-weight: 500;
+    font-size: 18px;
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    color: #d20000;
+}
+
 
 #timing-section, #convert-section, #evc-section, #free-slot-section {
     float: right;
