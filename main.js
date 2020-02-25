@@ -80,8 +80,11 @@ app.on('activate', () => {
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
     log.info('[ main.js ][ resizing window to: ', newX, 'x', newY, 'px ]');
-    window.setMinimumSize(newX, newY);
-    window.setSize(newX, newY);
+    let currentWindowSize = window.getSize();
+    if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
+        window.setMinimumSize(newX, newY);
+        window.setSize(newX, newY);
+    }
 });
 
 
