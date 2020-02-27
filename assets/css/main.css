@@ -63,36 +63,76 @@ footer span {
 
 
 .file-selectBtn {
-    background: rgba(205, 205, 205, 0.27);
+    height: 100%;
+    background: #00796B;
+    line-height: 22px;
     font-weight: 500;
     font-size: 16px;
-    height: 150px;
-    width: 300px;
-    margin-top: 20px;
-    margin-bottom: 3px;
+    width: 40%;
     position: relative;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     overflow: hidden;
     color: white;
-    border: 4px dashed #dedede;
-    border-radius: 4px;
-    padding: 4px;
-    display: block;
+    /*border-right: 4px solid #cdcdcd;*/
+    /*border-left: 0;*/
+    /*border-bottom: 0;*/
+    /*border-top: 0;*/
+    border: 0;
     outline: 0;
-    line-height: 140%;
     transition: all 0.2s ease-out;
     cursor: pointer;
     overflow-y: auto;
 }
 
-#summarize-content-p, #timing-content-p {
+#convert-content, #timing-content, #summarize-content {
+    margin-top: 8px;
+}
+
+.content-description-container {
+    padding: 10px 15px 15px 15px;
+    background: #404040;
+    /* border: 4px solid #cdcdcd; */
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
+#file-upload-container {
+    /* border-radius: 4px; */
+    /* border: 4px solid #cdcdcd; */
+    margin-top: 15px;
+    width: 100%;
+    height: 140px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.12), 0 1px 6px rgba(0,0,0,0.24);
+}
+
+#selected-filename-container {
+    overflow: scroll;
+    background: #404040;
+    float: right;
+    transition: all 0.2s ease-out;
+    position: relative;
+    width: 60%;
+    height: 100%;
+}
+
+#selected-filenames {
+    width: fit-content;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    letter-spacing: 1.5px;
+    color: white;
+    left: 50%;
+    top: 50%;
+}
+
+
+#summarize-content-p, #timing-content-p, #convert-content-p {
     font-weight: 400;
     width: 100%;
     letter-spacing: 1px;
 }
 
 
-#summarize-content-h, #timing-content-h {
+#summarize-content-h, #timing-content-h, #convert-content-h {
     margin: 0 0 10px 0;
     text-align: center;
     color: white;
@@ -105,7 +145,13 @@ footer span {
 }
 
 .file-selectBtn:hover {
-    transform: translateY(-3px);
+    /*transform: translateY(-3px);*/
+    width: 41.5%;
+}
+
+.file-selectBtn:hover + #selected-filename-container{
+    /*transform: translateY(-3px);*/
+    width: 58.5%;
 }
 
 /* taskbar section (secondary menu) */
@@ -285,16 +331,17 @@ h1 i {
     cursor: pointer;
     position: absolute;
     letter-spacing: 1.5px;
-    left: -110px;
+    float: right;
     width: 100px;
-    background-color: #27ae60;
+    background-color: #00796B;
     height: 50px;
     opacity: 0;
     color: white;
+    outline: none;
+    right: -100px;
+    bottom: 0;
     border: 0;
-    border-radius: 2px;
-    margin: 10px 0 0 0;
-    transition: background-color 0.2s ease-out;
+    transition: all 400ms ease-out;
 }
 
 #copyright {
@@ -302,7 +349,7 @@ h1 i {
     padding: 1px 8px 1px 0;
 }
 
-#tool-container div {
+    #tool-container div {
     position: relative;
     background: #dedede;
     cursor: pointer;
@@ -325,25 +372,35 @@ h1 i {
 }
 
 #tool-container div:hover {
+    transform: translateY(-2px);
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 .tool-finished {
     font-weight: 500;
-    font-size: 18px;
+    font-size: 15px;
     position: absolute;
-    left: 8px;
-    top: 4px;
+    right: 6px;
+    top: 2px;
     color: forestgreen;
 }
 
 .tool-in-dev {
     font-weight: 500;
+    font-size: 14px;
+    position: absolute;
+    right: 6px;
+    top: 2px;
+    color: #9F6000;
+}
+
+.tool-number {
     font-size: 18px;
+    font-weight: 500;
     position: absolute;
     left: 8px;
     top: 4px;
-    color: #d20000;
+    color: rgb(112,112,112);
 }
 
 

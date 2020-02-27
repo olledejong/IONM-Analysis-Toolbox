@@ -11,30 +11,40 @@ variable_content.on("click", '.file-selectBtn', function() {
  */
 ipcRenderer.on("selected", function (event, paths) {
     // jQuery selector(s)
-    let run_summarize_button = $(".run-button");
+    let run_button = $(".run-button");
     let file_select_button = $(".file-selectBtn");
+    let selected_filenames_p = $('#selected-filenames');
 
     // only do something if there are actually files are selected
     if(paths.length !== 0) {
         let finalFileNames = generateFilenames(paths);
 
         // set text inside the button to selected files
-        file_select_button.html('Selected file(s):<br>' + finalFileNames);
+        selected_filenames_p.html(finalFileNames);
 
-        if ( run_summarize_button.prop('disabled') === true ) {
-            run_summarize_button.animate({
-                left: '20px', opacity: 1
-            }, 800);
+        // show run button and enable it
+        if ( run_button.prop('disabled') === true ) {
+            // run_button.stop().animate({
+            //     top: '0', opacity: 1
+            // }, 1000);
+            run_button.css({
+                'right': '0',
+                'opacity' : '1'
+            });
         }
-        run_summarize_button.prop('disabled', false);
+        run_button.prop('disabled', false);
 
-        // disable run button when file selection cancelled
+    // disable run button when file selection cancelled
     } else {
-        file_select_button.html('Select file(s)');
-        run_summarize_button.animate({
-            left: '-130px', opacity: 1
-        }, 800);
-        run_summarize_button.prop('disabled', true);
+        selected_filenames_p.html('No files selected');
+        run_button.css({
+            'right': '-100px',
+            'opacity' : '0'
+        });
+        // run_button.stop().animate({
+        //     top: '-60px', opacity: 1
+        // }, 1000);
+        run_button.prop('disabled', true);
     }
 });
 
@@ -45,11 +55,22 @@ ipcRenderer.on("selected", function (event, paths) {
  * @returns {string} a filename followed by a html linebreak
  */
 function generateFilenames(paths) {
-    let fileNameString = []; let i;
-    for (i = 0; i < paths.length; i++) {
+    let fileNameList = [];
+    // loop through list of filepaths
+    for (let i = 0; i < paths.length; i++) {
         let lastIndex = paths[i].lastIndexOf('\\');
         let substring = paths[i].substring((lastIndex + 1), paths[i].length);
-        fileNameString.push(substring);
+        // after every two filenames push a linebreak, but dont do this for the first element
+        if( (i % 2) !== 0 && (i !== 0) ) {
+            fileNameList.push(substring);
+            fileNameList.push('<br>');
+            log.info('modulo ',i, ' is 0')
+        } else if ( paths.length !== 1 ) {
+            fileNameList.push(substring);
+            fileNameList.push('&nbsp;&nbsp;&nbsp;&nbsp;');
+        } else {
+            fileNameList.push(substring);
+        }
     }
-    return fileNameString.join("<br>");
+    return fileNameList.join('');
 }

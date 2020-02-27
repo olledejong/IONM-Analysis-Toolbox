@@ -25,44 +25,49 @@
             <h1 class="welcome-text">Welcome, please select a tool to get started</h1>
             <div id="tool-container">
                 <div id="summarize-section">
-                    <span class="tool-finished">1</span>
+                    <span class="tool-number">1</span>
                     <h3>Summarize File(s)</h3>
                     <p>Gain insight into Eclipse files</p>
                     <p class="python-command-p">python command: ionm.py summarize [files]</p>
+                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="timing-section">
-                    <span class="tool-in-dev">2</span>
+                    <span class="tool-number">2</span>
                     <h3>Show Timing</h3>
                     <p>Plot timestamps of measurements as a function of position in file</p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="availability-section">
-                    <span class="tool-in-dev">3</span>
+                    <span class="tool-number">3</span>
                     <h3>Show EEG Availability</h3>
                     <p>Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="convert-section">
-                    <span class="tool-in-dev">4</span>
+                    <span class="tool-number">4</span>
                     <h3>Convert File(s)</h3>
                     <p>Convert an Eclipse CSV into multiple custom files: one per modality</p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="compute-section">
-                    <span class="tool-in-dev">5</span>
+                    <span class="tool-number">5</span>
                     <h3>Compute Statistics</h3>
                     <p>Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="evc-section">
-                    <span class="tool-in-dev">6</span>
+                    <span class="tool-number">6</span>
                     <h3>Extract, Validate and Combine</h3>
                     <p>click here to expand pathway</p>
-                    <p></p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="classify-section">
-                    <span class="tool-in-dev">7</span>
+                    <span class="tool-number">7</span>
                     <h3>Classify</h3>
                     <p>Classify signals of file(s) on the presence of F-waves</p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="free-slot-section">
-                    <span class="tool-in-dev">8</span>
                     <h3>Placeholder</h3>
                     <p>Optional new tool</p>
                 </div>
@@ -76,4 +81,5 @@
     <script src="summarizeRenderer.js"></script>
     <script src="timingRenderer.js"></script>
     <script src="fileSelectRenderer.js"></script>
+    <script src="convertRenderer.js"></script>
 </html>
