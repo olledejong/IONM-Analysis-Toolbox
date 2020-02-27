@@ -238,7 +238,7 @@ function createJsonString(stdout) {
 
 
 /**
- *                          [ SHOW AVAILABILITY ]
+ *                          [ SHOW TIMING ]
  *
  */
 ipcMain.on('run-timing', function executeShowTimingCommand(event) {
@@ -251,6 +251,27 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
         // none
     })
 });
+
+
+/**
+ *                          [ CONVERT FILE(S) ]
+ *
+ */
+ipcMain.on('run-convert', function executeConvertCommand(event) {
+    let pathsString = '"' + tempfilePaths.join('" "') + '"';
+    let command = 'ionm.py convert ' + pathsString;
+    log.info('executing convert command');
+    log.info(pathsString);
+    exec(command, {
+        cwd: 'D:\\Menno\\IONM\\src'
+    }, function(error, stdout, stderr) {
+        log.info('finished: ', stdout);
+        log.info('finished: ', stderr);
+        log.info('finished: ', error);
+    });
+
+});
+
 
 /**
  *                           [ VERSION INFO ]
