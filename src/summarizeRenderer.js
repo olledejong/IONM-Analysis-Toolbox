@@ -30,7 +30,7 @@ variable_content.on("click", '#run-summarize', function() {
  * message 'set-title-and-preloader'. The result page skeleton
  * and preloader will be set.
  */
-ipcRenderer.on('set-title-and-preloader', function (event) {
+ipcRenderer.on('set-title-and-preloader-summarize', function (event) {
     variable_content.html(
         `<h2 id="summarize-result-title">Resulting summarized information</h2>
          <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>

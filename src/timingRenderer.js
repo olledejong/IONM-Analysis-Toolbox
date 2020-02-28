@@ -5,7 +5,6 @@ const ChartJs = require('chart.js');
 // jQuery selectors
 let variableContent = $("#variable-content");
 
-// jQuery selectors
 /**
  * On clicking the RUN button on the summarize page, the page
  * will be cleared to be later filled with the skeleton for
@@ -14,40 +13,58 @@ let variableContent = $("#variable-content");
  * command.
  */
 variableContent.on("click", '#run-timing', function() {
-    variableContent.html('<canvas id="line-chart" width="800" height="450"></canvas>');
+    variable_content.html('');
     ipcRenderer.send("run-timing");
+});
 
-    new Chart($('#line-chart'), {
+
+/**
+ * This function is executed when the main process sends the
+ * message 'set-title-and-preloader'. The result page skeleton
+ * and preloader will be set.
+ */
+ipcRenderer.on('set-title-and-preloader-timing', function (event) {
+    variableContent.html(
+        `<h2 id="summarize-result-title">Resulting summarized information</h2>
+         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+         <div id="timing-results"></div>`);
+    // hide summarize results div untill it actually gets some results
+    $('#timing-results').hide();
+});
+
+
+ipcRenderer.on('timing-result', function (event, timing_result) {
+    log.info('timing result in renderer: ', timing_result);
+    log.info(typeof timing_result);
+
+    $('#timing-results').html('<canvas id="myChart"></canvas>');
+    let myChart = $('#myChart');
+
+    let modalities = timing_result['modalities'];
+    let timestamps = timing_result['timestamps'];
+    let indices = timing_result['indices'];
+    let unique_modalities = timing_result['unique_modalities'];
+    let colors = timing_result['colors'];
+    log.info('mod: ', modalities);
+    log.info('tim: ', timestamps);
+    log.info('ind: ', indices);
+    log.info('uni: ', unique_modalities);
+    log.info('col: ', colors);
+
+    let massPopChart = new Chart(myChart, {
         type: 'scatter',
         data: {
             datasets: [{
                 label: 'Scatter Dataset',
-                borderColor: '#c00a00',
-                backgroundColor: '#c00a00',
                 data: [{
-                    x: 5,
-                    y: 4
+                    x: -10,
+                    y: 0
                 }, {
-                    x: 2,
-                    y: 14
-                }, {
-                    x: 4,
-                    y: 12
-                }, {
-                    x: 2,
+                    x: 0,
                     y: 10
                 }, {
-                    x: 3,
-                    y: 4
-                }, {
-                    x: 3,
+                    x: 10,
                     y: 5
-                }, {
-                    x: 3,
-                    y: 8
-                }, {
-                    x: 6,
-                    y: 12
                 }]
             }]
         },
@@ -60,27 +77,5 @@ variableContent.on("click", '#run-timing', function() {
             }
         }
     });
-
-    Chart.plugins.register({
-        beforeDraw: function(chartInstance) {
-            var ctx = chartInstance.chart.ctx;
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, chartInstance.chart.width, chartInstance.chart.height);
-        }
-    })
+    $('.lds-ellipsis').fadeOut();
 });
-
-/**
- * This function is executed when the main process sends the
- * message 'set-title-and-preloader'. The result page skeleton
- * and preloader will be set.
- */
-ipcRenderer.on('set-title-and-preloader', function (event) {
-    variableContent.html(
-        `<h2 id="summarize-result-title">Resulting summarized information</h2>
-         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-         <div id="summarize-results"></div>`);
-    // hide summarize results div untill it actually gets some results
-    $('#summarize-results').hide();
-});
-
