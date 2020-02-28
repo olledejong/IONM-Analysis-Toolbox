@@ -10,6 +10,9 @@ let window;
 // global list which holds the paths of the via a dialog window selected files.
 let tempfilePaths;
 
+// [CHANGE THIS TO WHERE YOUR IONM PYTHON PROJECT IS LOCATED]
+pythonSrcDirectory = 'D:\\Menno\\IONM\\src';
+
 // log options configuration
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 
@@ -29,7 +32,7 @@ function createWindow () {
         width: 730,
         height: 800,
         icon: __dirname + '/assets/images/icon.svg',
-        resizable: false,
+        resizable: true,
         frame: false,
         webPreferences: {
             webSecurity: true,
@@ -79,7 +82,7 @@ app.on('activate', () => {
  * @param {int} newY
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
-    log.info('[ main.js ][ resizing window to: ', newX, 'x', newY, 'px ]');
+    log.info('[ resizeBrowserWindow ][ resizing window to: ', newX, 'x', newY, 'px ]');
     let currentWindowSize = window.getSize();
     if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
         window.setMinimumSize(newX, newY);
@@ -115,10 +118,10 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
         // if selecting is cancelled, do not send back to renderer
         tempfilePaths = fileNames.filePaths;
         if (fileNames.canceled === true) {
-            log.info("[ main.js ][ file selection cancelled ]");
+            log.info("[ selectFileAndSendBack ][ file selection cancelled ]");
             event.sender.send('selected', fileNames.filePaths)
         } else {
-            log.info("[ main.js ][ sending selected file names info back to renderer ]");
+            log.info("[ selectFileAndSendBack ][ sending selected file names info back to renderer ]");
 
             // send the filenpaths to the renderer process
             event.sender.send("selected", fileNames.filePaths)
@@ -138,48 +141,48 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
 ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // window sizing logic
     if ( tempfilePaths.length > 2 ) {
-        log.info('[ main.js ][ resizing window ]');
-        window.setMinimumSize(1280, 900);
-        window.setSize(1280, 900);
+        log.info('[ executeSummarizeCommand ][ resizing window ]');
+        window.setMinimumSize(1220, 900);
+        window.setSize(1220, 900);
     } else if ( tempfilePaths.length === 2 ) {
-        window.setMinimumSize(1280, 550);
-        window.setSize(1280, 550);
+        window.setMinimumSize(1220, 550);
+        window.setSize(1220, 550);
     } else {
         window.setMinimumSize(800, 550);
         window.setSize(800, 550);
     }
 
     // issue message to the Renderer process to set result title and loading gif
-    event.sender.send('set-title-and-preloader');
+    event.sender.send('set-title-and-preloader-summarize');
 
-    log.info("[ main.js ][ executing summarize command ]");
+    log.info("[ executeSummarizeCommand ][ executing summarize command ]");
 
     // for every path in tempfilePaths execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < tempfilePaths.length; i++) {
         let fraction = Math.round(((i+1) / tempfilePaths.length) * 100);
-        log.info('[ main.js ][ percentage handled: ', fraction, '% ]');
+        log.info('[ executeSummarizeCommand ][ percentage handled: ', fraction, '% ]');
         let command = 'ionm.py summarize "' + tempfilePaths[i] + '"';
         exec(command, {
-            cwd: 'D:\\Menno\\IONM\\src'
+            cwd: pythonSrcDirectory
         }, function(error, stdout, stderr) {
             let summarize_error_message = "An error occurred while retrieving the file summary";
 
             // if errors occur, send an error message to the renderer process
             if (error !== null) {
-                log.error("[ main.js ] ", error);
+                log.error("[ executeSummarizeCommand ] ", error);
                 event.sender.send('error', summarize_error_message);
             } else if (stderr !== '') {
-                log.error("[ main.js ] ", stderr);
+                log.error("[ executeSummarizeCommand ] ", stderr);
                 event.sender.send('error', summarize_error_message);
             } else {
-                log.info("[ main.js ] \n", stdout);
+                log.info("[ executeSummarizeCommand ] \n", stdout);
 
                 // build json string using the command output
                 let JSONstring = createJsonString(stdout);
 
                 // send the json string back to the renderer to be displayed
                 event.sender.send("summarize-result", JSONstring, fraction);
-                log.info("[ main.js ][ sent summarize result back to renderer ]");
+                log.info("[ executeSummarizeCommand ][ sent summarize result back to renderer ]");
             }
         });
     }
@@ -242,13 +245,23 @@ function createJsonString(stdout) {
  *
  */
 ipcMain.on('run-timing', function executeShowTimingCommand(event) {
+    window.setMinimumSize(800, 530);
+    window.setSize(800, 530);
+
+    event.sender.send('set-title-and-preloader-timing');
+
     let pathsString = '"' + tempfilePaths.join('" "') + '"';
     let command = 'ionm.py show_timing ' + pathsString;
     log.info(pathsString);
     exec(command, {
-        cwd: 'D:\\Menno\\IONM\\src'
+        cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        // none
+        log.info('show_timing finished');
+        log.info('stdout: ', stdout);
+        log.info('stderr: ', stderr);
+        log.info('error: ', error);
+        //log.info('json parsed!: ', JSON.parse(stdout));
+        event.sender.send('timing-result', JSON.parse(stdout));
     })
 });
 
@@ -258,17 +271,20 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
  *
  */
 ipcMain.on('run-convert', function executeConvertCommand(event) {
-    let pathsString = '"' + tempfilePaths.join('" "') + '"';
-    let command = 'ionm.py convert ' + pathsString;
-    log.info('executing convert command');
-    log.info(pathsString);
-    exec(command, {
-        cwd: 'D:\\Menno\\IONM\\src'
-    }, function(error, stdout, stderr) {
-        log.info('finished: ', stdout);
-        log.info('finished: ', stderr);
-        log.info('finished: ', error);
-    });
+    // let pathsString = '"' + tempfilePaths.join('" "') + '"';
+    // let command = 'ionm.py gui_convert ' + pathsString;
+    log.info('[ main.js - executeConvertCommand ][ executing convert command ]');
+    // log.info(pathsString);
+    for(let i = 0; i < tempfilePaths.length; i++) {
+        let command = 'ionm.py gui_convert "' + tempfilePaths[i] + '"';
+        exec(command, {
+            cwd: pythonSrcDirectory
+        }, function (error, stdout, stderr) {
+            log.info(stdout);
+            log.info('[ executeConvertCommand ][ convert command completed ]');
+            event.sender.send('convert-result', JSON.parse(stdout));
+        });
+    }
 
 });
 
@@ -278,11 +294,11 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
  * Handles the request for retrieving the python script its version info
  */
 ipcMain.on("get-version-info", function getVersionInfo(event) {
-    log.info("[ main.js ][ executing 'ionm.py version' command ]");
+    log.info("[ getVersionInfo ][ executing 'ionm.py version' command ]");
     exec('ionm.py version', {
-        cwd: 'D:\\Menno\\IONM\\src'
+        cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        log.info("[ main.js ][ sending 'ionm.py version' information back to renderer ]");
+        log.info("[ getVersionInfo ][ sending 'ionm.py version' information back to renderer ]");
         event.sender.send("script-version-info", error, stdout, stderr);
     });
 });

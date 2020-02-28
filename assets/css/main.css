@@ -51,7 +51,7 @@ footer span {
     overflow-y: visible;
 }
 
-.welcome-text {
+#welcome-text {
     letter-spacing: 1.5px;
     margin: 0 0 12px 0;
     width: auto;
@@ -233,10 +233,6 @@ footer span {
     padding: 0 0 10px 0;
 }
 
-.summarize-table {
-    color: rgb(112, 112, 112);
-
-}
 .summarize-table td {
     padding: 0 15px 5px 0;
     font-weight: 600;
@@ -303,7 +299,9 @@ h1 i {
     background: #dcdcdc;
     border: 2px solid #c0c0c0;
     padding: 10px;
-    margin: 0 18px 14px 0;
+    margin: 0 10px 14px 0;
+    width: calc(50% - 10px);
+    color: rgb(112, 112, 112);
 }
 
 .table-item {
@@ -349,7 +347,7 @@ h1 i {
     padding: 1px 8px 1px 0;
 }
 
-    #tool-container div {
+#tool-container div {
     position: relative;
     background: #dedede;
     cursor: pointer;
@@ -368,12 +366,21 @@ h1 i {
 }
 
 #tool-container div h3 {
-    margin: 15px 0 0 0;
+    margin: 8px 10px 0 10px;
 }
 
 #tool-container div:hover {
     transform: translateY(-2px);
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+#settings-icon {
+    font-size: 22px;
+    font-weight: 500;
+    position: absolute;
+    right: 4px;
+    top: 2px;
+    color: rgb(112,112,112);
 }
 
 .tool-finished {
@@ -404,7 +411,7 @@ h1 i {
 }
 
 
-#timing-section, #convert-section, #evc-section, #free-slot-section {
+#timing-section, #convert-section, #evc-section, #settings-section {
     float: right;
 }
 
@@ -483,7 +490,7 @@ h1 i {
 .error-msg {
     position: absolute;
     right: -455px;
-    top: 35px;
+    top: 38px;
     z-index: 100;
     opacity: 0;
     font-size: 16px;
@@ -493,7 +500,7 @@ h1 i {
     max-width: 470px;
     height: auto;
     margin: 10px 0;
-    padding: 6px;
+    padding: 6px 10px;
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
 }

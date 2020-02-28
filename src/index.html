@@ -3,8 +3,6 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="../assets/css/main.css"/>
-        <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-
         <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
               integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
@@ -22,7 +20,7 @@
 
         <!-- most important div. it dynamically gets filled with different content all the time. -->
         <div id="variable-content">
-            <h1 class="welcome-text">Welcome, please select a tool to get started</h1>
+            <h1 id="welcome-text"></h1>
             <div id="tool-container">
                 <div id="summarize-section">
                     <span class="tool-number">1</span>
@@ -67,9 +65,10 @@
                     <p>Classify signals of file(s) on the presence of F-waves</p>
                     <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
-                <div id="free-slot-section">
-                    <h3>Placeholder</h3>
-                    <p>Optional new tool</p>
+                <div id="settings-section">
+                    <span id="settings-icon"><i class="fas fa-cog"></i></span>
+                    <h3>Settings</h3>
+                    <p>Change the database here. You can also set the modalities of the active database here</p>
                 </div>
             </div>
         </div>

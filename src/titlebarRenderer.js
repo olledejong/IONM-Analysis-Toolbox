@@ -8,6 +8,7 @@ const customTitlebar = require('custom-electron-titlebar');
 const { remote } = require('electron');
 const ipcRenderer = require('electron').ipcRenderer;
 
+
 // Create custom title bar and set characteristics
 let MyTitleBar = new customTitlebar.Titlebar({
     backgroundColor: customTitlebar.Color.fromHex('#404040'),
@@ -20,6 +21,7 @@ let MyTitleBar = new customTitlebar.Titlebar({
     icon: '../assets/images/icon.svg'
 });
 MyTitleBar.updateTitle("IONM ANALYSIS TOOLBOX");
+
 
 /**
  * Adds the classname 'active' to the active menu element

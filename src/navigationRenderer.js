@@ -7,6 +7,10 @@
 // requires
 window.$ = window.jQuery = require('jquery');
 const log = require('electron-log');
+// os username
+const username = require("os").userInfo().username.toUpperCase();
+
+log.info();
 
 // log options configuration for all renderer processes
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
@@ -28,6 +32,9 @@ let container_after_titlebar = $('.container-after-titlebar');
 let body = $('body');
 
 
+// set welcome message using the username from the OS
+$('#welcome-text').html('Welcome, '+ username +', please select a tool to get started');
+
 /**
  * Loads variable content for the [ welcome section ]
  */
@@ -36,7 +43,7 @@ $("#welcome-section").click(function () {
     } else {
         ipcRenderer.send('resize-window', 730, 800);
         variable_content_div.html(
-        `<h1 class="welcome-text">What do you wish to do next?</h1>
+        `<h1 id="welcome-text">What do you wish to do next?</h1>
          <div id="tool-container">
             <div id="summarize-section">
                 <span class="tool-number">1</span>
@@ -81,19 +88,21 @@ $("#welcome-section").click(function () {
                 <p>Classify signals of file(s) on the presence of F-waves</p>
                 <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
             </div>
-            <div id="free-slot-section">
-                <h3>Placeholder</h3>
-                <p>Optional new tool</p>
+            <div id="settings-section">
+                <span id="settings-icon"><i class="fas fa-cog"></i></span>
+                <h3>Settings</h3>
+                <p>Change the database here. You can also set the modalities of the active database here</p>
             </div>
         </div>`);
     }
 });
 
+
 /**
  * Loads variable content for the [ summarize section ]
  */
 body.delegate("#summarize-section", "click", function () {
-    ipcRenderer.send('resize-window', 800, 450);
+    ipcRenderer.send('resize-window', 700, 450);
     variable_content_div.html(
         `<div id="summarize-content">
             <div id="summarize-content-description" class="content-description-container">
@@ -113,6 +122,7 @@ body.delegate("#summarize-section", "click", function () {
             </div>
         </div>`)
 });
+
 
 /**
  * Loads variable content for the [ timing section ]
@@ -200,6 +210,15 @@ body.delegate('#classify-section', 'click', function () {
     showDevMessage()
 });
 
+
+/**
+ * Loads variable content for the [ settings section ]
+ */
+body.delegate('#settings-section', 'click', function () {
+    showDevMessage()
+});
+
+
 /**
  * Loads variable content for the [ about section ]
  *
@@ -253,6 +272,7 @@ about_section_button.click(function () {
     generateElectronAboutInfo();
 });
 
+
 /**
  * Parses the version info coming from the main process into a neat
  * looking table and displays this to the user.
@@ -300,6 +320,7 @@ ipcRenderer.on("script-version-info", function (event, error, python_version_inf
     $("#scripts-version-info").html(tableHtml);
 });
 
+
 /**
  * Generates and sets the version info for this Electron application
  * note: globals can be found at the top of this file
@@ -314,12 +335,13 @@ function generateElectronAboutInfo() {
                                 <tr><td class="version-first-cell">Status</td><td class="version-second-cell">${__status__}</td></tr></p>`)
 }
 
+
 /**
  * Displays temporary message to show that that functionality has not been implemented yet.
  */
 function showDevMessage() {
     let hash = Math.random().toString(36).substring(7);
-    $('.container-after-titlebar').append('<div id="'+ hash + '" class="warning-msg"><i class="fas fa-exclamation-triangle"></i> This tool has not been fully implemented yet</div>');
+    container_after_titlebar.append('<div id="'+ hash + '" class="warning-msg"><i class="fas fa-exclamation-triangle"></i> This tool has not been fully implemented yet</div>');
 
     let tempElement = $('#'+hash);
 
