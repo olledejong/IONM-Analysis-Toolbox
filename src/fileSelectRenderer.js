@@ -1,6 +1,6 @@
 // inform the Main Process that it has to open a file select window
 variable_content.on("click", '.file-selectBtn', function() {
-    ipcRenderer.send("select-file", "");
+    ipcRenderer.send("select-csv-file");
 });
 
 /**
@@ -24,9 +24,6 @@ ipcRenderer.on("selected", function (event, paths) {
 
         // show run button and enable it
         if ( run_button.prop('disabled') === true ) {
-            // run_button.stop().animate({
-            //     top: '0', opacity: 1
-            // }, 1000);
             run_button.css({
                 'right': '0',
                 'opacity' : '1'
@@ -41,9 +38,6 @@ ipcRenderer.on("selected", function (event, paths) {
             'right': '-100px',
             'opacity' : '0'
         });
-        // run_button.stop().animate({
-        //     top: '-60px', opacity: 1
-        // }, 1000);
         run_button.prop('disabled', true);
     }
 });

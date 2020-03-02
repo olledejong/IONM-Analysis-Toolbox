@@ -300,7 +300,7 @@ h1 i {
     border: 2px solid #c0c0c0;
     padding: 10px;
     margin: 0 10px 14px 0;
-    width: calc(50% - 10px);
+    /*width: calc(50% - 10px);*/
     color: rgb(112, 112, 112);
 }
 
@@ -423,6 +423,101 @@ h1 i {
     font-weight: 500;
 }
 
+.settings-content {
+    margin-top: 4px;
+    height: 500px;
+    display: inline-block;
+    width: calc(50% - 10px);
+    background: #404040;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
+.settings-content h1 {
+    padding: 5px 15px 5px 15px;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+#modality-settings {
+    float: right;
+}
+
+.database-button {
+    margin-top: 10px;
+    display: block;
+    cursor: pointer;
+    letter-spacing: 2px;
+    bottom: 0;
+    padding: 20px;
+    border-radius: 2px;
+    background-color: #00796B;
+    border: 0;
+    color: white;
+    outline: none;
+    transition: all 400ms ease-out;
+}
+
+#database-settings-inner {
+    justify-content: center;
+    position: relative;
+    height: 460px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#set-database-path {
+    margin-top: 5px;
+    width: fit-content;
+    height: fit-content;
+    max-width: 550px;
+    padding: 20px;
+    position: absolute;
+    background: #404040;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
+#set-database-path h4 {
+    color: orange;
+    text-align: left;
+    font-size: 18px;
+    margin: -10px 0 5px 0;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+#database-path {
+    font-size: 15px;
+    overflow-y: auto;
+    display: block;
+    border-radius: 2px;
+    padding: 15px;
+    min-height: 50px;
+    background: white;
+    color: #404040;
+    font-weight: 500;
+    letter-spacing: 1px;
+    height: fit-content;
+    min-width: 350px;
+    text-align: center;
+}
+
+#database-path-p {
+    text-align: left;
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+#select-database {
+    float: left;
+}
+
+#set-database {
+    float: right;
+}
 
 /* preloader */
 .lds-ellipsis {
@@ -490,7 +585,7 @@ h1 i {
 .error-msg {
     position: absolute;
     right: -455px;
-    top: 38px;
+    top: 35px;
     z-index: 100;
     opacity: 0;
     font-size: 16px;

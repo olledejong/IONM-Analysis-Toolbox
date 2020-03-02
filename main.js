@@ -7,8 +7,9 @@ const log = require('electron-log');
 // be closed automatically when the JavaScript object is garbage collected.
 let window;
 
-// global list which holds the paths of the via a dialog window selected files.
-let tempfilePaths;
+// global list which holds the paths of the via a dialog window selected csv files.
+let tempCSVpaths;
+let tempDBpath;
 
 // [CHANGE THIS TO WHERE YOUR IONM PYTHON PROJECT IS LOCATED]
 pythonSrcDirectory = 'D:\\Menno\\IONM\\src';
@@ -22,13 +23,8 @@ log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
  * Disable DEV TOOLS window here!
  */
 function createWindow () {
-    // get screen size
-    //let mainScreen = screen.getPrimaryDisplay();k
-
     // Create the browser window
     window = new BrowserWindow({
-        //width: mainScreen.workArea.width,
-        //height: mainScreen.workArea.height,
         width: 730,
         height: 800,
         icon: __dirname + '/assets/images/icon.svg',
@@ -92,19 +88,18 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
 
 
 /**
- *                      [ FILE SELECT AND STORE PATHS ]
- * This function listens to the 'select-file' message from the renderer process
+ *                      [ FILE SELECT AND STORE CSV PATHS ]
+ * This function listens to the 'select-csv-file' message from the renderer process
  * which opens a dialog where the user can select files. If canceled, do nothing
- * if copleted, store the pats to files in the array tempfilePaths.
+ * if completed, store the paths to files in the array tempCSVpaths.
  *
  * //TODO : GENERALIZE THIS FUNCTION?
  */
-ipcMain.on("select-file", function selectFileAndSendBack(event) {
+ipcMain.on("select-csv-file", function selectCSVfileAndSendBack(event) {
     // configure which types of files are allowed
     let types = [
         {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
         ];
-
     // configure the options (allowed types + properties)
     const options = {
         title: 'Select file(s)',
@@ -112,18 +107,47 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
         defaultPath: "D:\\Menno\\NimEclipse",
         properties: ['openFile', "multiSelections"]
         };
-
     // open the actual dialog with the above options
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
-        tempfilePaths = fileNames.filePaths;
+        tempCSVpaths = fileNames.filePaths;
         if (fileNames.canceled === true) {
             log.info("[ selectFileAndSendBack ][ file selection cancelled ]");
             event.sender.send('selected', fileNames.filePaths)
         } else {
             log.info("[ selectFileAndSendBack ][ sending selected file names info back to renderer ]");
+            event.sender.send("selected", fileNames.filePaths)
+        }
+    })
+});
 
-            // send the filenpaths to the renderer process
+/**
+ *                      [ FILE SELECT AND STORE DB PATH ]
+ * This function listens to the 'select-db-file' message from the renderer process
+ * which opens a dialog where the user can select a databases file (accdb). If canceled, do nothing
+ * if completed, store the paths to files in the array tempCSVpaths.
+ */
+ipcMain.on("select-db-file", function selectDBfileAndSendBack(event) {
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['accdb'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select database',
+        filters: types,
+        defaultPath: "D:\\Menno",
+        properties: ['openFile']
+    };
+    // open the actual dialog with the above options
+    dialog.showOpenDialog(window, options).then(fileNames => {
+        // if selecting is cancelled, do not send back to renderer
+        tempDBpath = fileNames.filePaths;
+        if (fileNames.canceled === true) {
+            log.info("[ selectDBfileAndSendBack ][ file selection cancelled ]");
+            event.sender.send('selected', fileNames.filePaths)
+        } else {
+            log.info("[ selectDBfileAndSendBack ][ sending selected database file info back to renderer ]");
             event.sender.send("selected", fileNames.filePaths)
         }
     })
@@ -131,7 +155,7 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
 
 
 /**
- *                            [ SUMMARIZE ]
+ *                            [ SUMMARIZE (1 of 2) ]
  * Performs commandline commands which retrieve a summary of the basic
  * information about the given ECLIPSE-files. These get sent back to the
  * Renderer process in summarizeRenderer.js
@@ -140,11 +164,11 @@ ipcMain.on("select-file", function selectFileAndSendBack(event) {
  */
 ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // window sizing logic
-    if ( tempfilePaths.length > 2 ) {
+    if ( tempCSVpaths.length > 2 ) {
         log.info('[ executeSummarizeCommand ][ resizing window ]');
         window.setMinimumSize(1220, 900);
         window.setSize(1220, 900);
-    } else if ( tempfilePaths.length === 2 ) {
+    } else if ( tempCSVpaths.length === 2 ) {
         window.setMinimumSize(1220, 550);
         window.setSize(1220, 550);
     } else {
@@ -157,11 +181,11 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
 
     log.info("[ executeSummarizeCommand ][ executing summarize command ]");
 
-    // for every path in tempfilePaths execute the command 'ionm.py summarize [filepath]'
-    for(let i = 0; i < tempfilePaths.length; i++) {
-        let fraction = Math.round(((i+1) / tempfilePaths.length) * 100);
+    // for every path in tempCSVpaths execute the command 'ionm.py summarize [filepath]'
+    for(let i = 0; i < tempCSVpaths.length; i++) {
+        let fraction = Math.round(((i+1) / tempCSVpaths.length) * 100);
         log.info('[ executeSummarizeCommand ][ percentage handled: ', fraction, '% ]');
-        let command = 'ionm.py summarize "' + tempfilePaths[i] + '"';
+        let command = 'ionm.py summarize "' + tempCSVpaths[i] + '"';
         exec(command, {
             cwd: pythonSrcDirectory
         }, function(error, stdout, stderr) {
@@ -190,7 +214,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
 
 
 /**
- *                            [ SUMMARIZE ]
+ *                            [ SUMMARIZE (2 of 2) ]
  * Generates JSON formatted string for front-end convenience by taking the
  * command line output and logically splitting and processing this.
  *
@@ -250,7 +274,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
 
     event.sender.send('set-title-and-preloader-timing');
 
-    let pathsString = '"' + tempfilePaths.join('" "') + '"';
+    let pathsString = '"' + tempCSVpaths.join('" "') + '"';
     let command = 'ionm.py show_timing ' + pathsString;
     log.info(pathsString);
     exec(command, {
@@ -271,21 +295,19 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
  *
  */
 ipcMain.on('run-convert', function executeConvertCommand(event) {
-    // let pathsString = '"' + tempfilePaths.join('" "') + '"';
-    // let command = 'ionm.py gui_convert ' + pathsString;
     log.info('[ main.js - executeConvertCommand ][ executing convert command ]');
-    // log.info(pathsString);
-    for(let i = 0; i < tempfilePaths.length; i++) {
-        let command = 'ionm.py gui_convert "' + tempfilePaths[i] + '"';
+
+    event.sender.send('set-title-and-preloader-convert');
+
+    for(let i = 0; i < tempCSVpaths.length; i++) {
+        let command = 'ionm.py gui_convert "' + tempCSVpaths[i] + '"';
         exec(command, {
             cwd: pythonSrcDirectory
         }, function (error, stdout, stderr) {
-            log.info(stdout);
             log.info('[ executeConvertCommand ][ convert command completed ]');
             event.sender.send('convert-result', JSON.parse(stdout));
         });
     }
-
 });
 
 
@@ -300,5 +322,31 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
     }, function(error, stdout, stderr) {
         log.info("[ getVersionInfo ][ sending 'ionm.py version' information back to renderer ]");
         event.sender.send("script-version-info", error, stdout, stderr);
+    });
+});
+
+
+/**
+ *                            [ SETTINGS ]
+ * Handles the retrieving of the current settings
+ *
+ */
+ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
+    exec('ionm.py gui_get_database', {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        log.info("[ getDatabaseSettings ][ sending database settings back to renderer ]");
+        log.info("[ getDatabaseSettings ][ current database: ", stdout);
+        event.sender.send("current-database-settings", stdout);
+    });
+});
+
+ipcMain.on("get-database-settings", function getModalitySettings(event) {
+    exec('ionm.py gui_get_modalities', {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        log.info("[ getModalitySettings ][ sending modality settings back to renderer ]");
+        log.info("[ getModalitySettings ][ modalities: ", stdout);
+        event.sender.send("current-modality-settings", stdout);
     });
 });

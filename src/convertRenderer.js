@@ -12,43 +12,57 @@ let varContent = $("#variable-content");
  * command.
  */
 varContent.on("click", '#run-convert', function() {
-    varContent.html('clicked');
     ipcRenderer.send("run-convert");
 });
 
+
+/**
+ * This function is executed when the main process sends the
+ * message 'set-title-and-preloader-convert'. The result page skeleton
+ * and preloader will be set.
+ */
+ipcRenderer.on('set-title-and-preloader-convert', function () {
+    varContent.html(
+        `<h2 id="summarize-result-title">Convert results</h2>
+         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+         <div id="summarize-results"></div>`);
+    // hide summarize results div untill it actually gets some results
+    $('#summarize-results').hide();
+});
 
 /**
  * This function gets called by the main renderer for every file that the user wants to convert.
  * It shows confirmation or informative error messages to the user so that he/she knows what
  * to do next.
  */
-ipcRenderer.on('convert-result', function (event, convert_output) {
+ipcRenderer.on('convert-result', function displayConvertResultContent(event, convert_output) {
     let rndmHash = Math.random().toString(36).substring(7);
-    // this iteration of the convert command succeeded | if it has a success message
-    if (convert_output.hasOwnProperty('succes-msg')) {
-        $('.container-after-titlebar').append('<div id="'+ rndmHash + '" class="success-msg"><i class="fas fa-check"></i>&nbsp;&nbsp;'+ convert_output['succes-msg'] +'</div>');
-        let tempElement = $('#'+rndmHash);
 
-        // animate the succes message
-        tempElement.animate({
-            right: '+=465', opacity: 1
-        }, 800, function () {
-            tempElement.delay(3500).fadeOut(800, function () {
-                $(this).remove();
-            });
-        });
-    // this iteration of the convert command did not succeed | if it doesnt have a success message
+    // calculate the extra needed top offset
+    let extraTopOffset = getNumberOfActiveNotifications() * 40;
+
+    // if iteration has a success message in it
+    if (convert_output.hasOwnProperty('succes-msg')) {
+        $('.container-after-titlebar').append('<div id="' + rndmHash + '" class="success-msg"><i class="fas fa-check"></i>&nbsp;&nbsp;' + convert_output['succes-msg'] + '</div>');
+    // if iteration does not contain success message
     } else {
         $('.container-after-titlebar').append('<div id="'+ rndmHash + '" class="error-msg"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;'+ convert_output['short-error-msg'] +'</div>');
-        let tempElement = $('#'+rndmHash);
-
-        // animate the error message
-        tempElement.animate({
-            right: '+=465', opacity: 1
-        }, 800, function () {
-            tempElement.delay(3500).fadeOut(800, function () {
-                $(this).remove();
-            });
-        });
     }
+    let tempNotiElement = $('#'+rndmHash);
+    tempNotiElement.css('top', '+=' + extraTopOffset);
+
+    // animate the message
+    tempNotiElement.animate({
+        right: '+=465', opacity: 1
+    }, 800, function () {
+        tempNotiElement.delay(6000).fadeOut(800, function () {
+            $(this).remove();
+        });
+    });
+
+    $('.lds-ellipsis').fadeOut();
 });
+
+function getNumberOfActiveNotifications() {
+    return $('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length
+}

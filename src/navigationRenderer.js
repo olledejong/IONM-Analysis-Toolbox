@@ -154,7 +154,7 @@ body.delegate('#timing-section', 'click', function () {
  * Loads variable content for the [ availability section ]
  */
 body.delegate('#availability-section', 'click', function () {
-    showDevMessage()
+    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
 });
 
 
@@ -191,7 +191,7 @@ body.delegate('#convert-section', 'click', function () {
  * Loads variable content for the [ compute section ]
  */
 body.delegate('#compute-section', 'click', function () {
-    showDevMessage()
+    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
 });
 
 
@@ -199,7 +199,7 @@ body.delegate('#compute-section', 'click', function () {
  * Loads variable content for the [ EVC section ]
  */
 body.delegate('#evc-section', 'click', function () {
-    showDevMessage()
+    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
 });
 
 
@@ -207,7 +207,7 @@ body.delegate('#evc-section', 'click', function () {
  * Loads variable content for the [ classify section ]
  */
 body.delegate('#classify-section', 'click', function () {
-    showDevMessage()
+    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
 });
 
 
@@ -215,7 +215,23 @@ body.delegate('#classify-section', 'click', function () {
  * Loads variable content for the [ settings section ]
  */
 body.delegate('#settings-section', 'click', function () {
-    showDevMessage()
+    ipcRenderer.send('resize-window', 1200, 600);
+    ipcRenderer.send('get-database-settings');
+    ipcRenderer.send('get-modality-settings');
+    variable_content_div.html(
+       `<div id="set-database-path">
+            <h4>Configure the database</h4>
+            <p id="database-path-p">
+                The currently configured database is displayed within the white box. Select and
+                set the the database you wish to work with.
+                
+            </p>
+            <p id="database-path"></p>
+            <button class="database-button" id="select-database" disabled>SELECT</button>
+            <button class="database-button" id="set-database" disabled>SET DATABASE</button>
+        </div>
+        `);
+    showNotification('info', 'Retrieving current configured database path')
 });
 
 
@@ -225,7 +241,7 @@ body.delegate('#settings-section', 'click', function () {
  * Following a click on the about button, its variable content will be displayed.
  * Eventually two tables will be created.
  * This function tells the main process to retrieve the python script its version
- * info and calls fuction that generates the GUI version info.
+ * info and calls function that generates the GUI version info.
  */
 about_section_button.click(function () {
     if(variable_content_div.find('#about-app').length > 0) {
@@ -253,21 +269,8 @@ about_section_button.click(function () {
                 <img id="umcg-logo" alt="umcg logo" src="../assets/images/umcg_logo_wide.png">
             </div>
              `);
-
-        let r = Math.random().toString(36).substring(7);
-        container_after_titlebar.append('<div id="'+ r + '" class="info-msg"><i class="fas fa-info-circle"></i> Retrieving version info from the script</div>');
-
-        let tempElement = $('#'+r);
-
-        tempElement.animate({
-            right: '+=465', opacity: 1
-        }, 750, function () {
-            tempElement.delay(4000).fadeOut(800, function () {
-                $(this).remove();
-            });
-        });
+        showNotification('info', 'Retrieving version info from the script')
     }
-
     // generate the info that tells you stuff about this electron app
     generateElectronAboutInfo();
 });
@@ -299,22 +302,9 @@ ipcRenderer.on("script-version-info", function (event, error, python_version_inf
         }
     } else {
         // if errors occurred ..
-        let r = Math.random().toString(36).substring(7);
         log.info("[ navigationRenderer.js ][ an error occurred while trying to retrieve python version-info ]");
-        // add error message div to the frontend
-        container_after_titlebar.append('<div id="'+ r + '" class="error-msg"><i class="fas fa-times-circle"></i> An error occurred while trying to retrieve the version-info</div>');
-
-        // temp element id so that always the right message gets animated
-        let tempElement = $('#'+r);
-
-        // animate the error message
-        tempElement.animate({
-           right: '+=465', opacity: 1
-        }, 750, function () {
-            tempElement.delay(4000).fadeOut(800, function () {
-                $(this).remove();
-            });
-        });
+        // show informative notification
+        showNotification('error','An error occurred while trying to retrieve the version-info')
     }
 
     $("#scripts-version-info").html(tableHtml);
@@ -335,20 +325,36 @@ function generateElectronAboutInfo() {
                                 <tr><td class="version-first-cell">Status</td><td class="version-second-cell">${__status__}</td></tr></p>`)
 }
 
-
 /**
- * Displays temporary message to show that that functionality has not been implemented yet.
+ * General function for generating and animating notification (toast) messages
+ * @param type
+ * @param message
  */
-function showDevMessage() {
-    let hash = Math.random().toString(36).substring(7);
-    container_after_titlebar.append('<div id="'+ hash + '" class="warning-msg"><i class="fas fa-exclamation-triangle"></i> This tool has not been fully implemented yet</div>');
+function showNotification(type, message) {
+    let r = Math.random().toString(36).substring(7);
 
-    let tempElement = $('#'+hash);
+    // check for existing notification messages, add extra top offset if one or more already exist
+    let extraTopOffset = ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) * 40;
 
-    tempElement.animate({
+    // add notification element to page according to type
+    if (type === 'error') {
+        container_after_titlebar.append('<div id="'+ r + '" class="error-msg"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
+    } else if (type === 'info') {
+        container_after_titlebar.append('<div id="'+ r + '" class="info-msg"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
+    } else if (type === 'success') {
+        container_after_titlebar.append('<div id="'+ r + '" class="success-msg"><i class="fas fa-check"></i>&nbsp;&nbsp;'+ message + '</div>');
+    } else {
+        container_after_titlebar.append('<div id="'+ r + '" class="warning-msg"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;'+ message + '</div>');
+    }
+
+    let tempNotificationElement = $('#'+r);
+    tempNotificationElement.css('top', '+=' + extraTopOffset);
+
+    // animate the error message
+    tempNotificationElement.animate({
         right: '+=465', opacity: 1
-    }, 800, function () {
-        tempElement.delay(3500).fadeOut(800, function () {
+    }, 750, function () {
+        tempNotificationElement.delay(5000).fadeOut(800, function () {
             $(this).remove();
         });
     });

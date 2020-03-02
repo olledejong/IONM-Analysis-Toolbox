@@ -20,7 +20,7 @@ variableContent.on("click", '#run-timing', function() {
 
 /**
  * This function is executed when the main process sends the
- * message 'set-title-and-preloader'. The result page skeleton
+ * message 'set-title-and-preloader-timing'. The result page skeleton
  * and preloader will be set.
  */
 ipcRenderer.on('set-title-and-preloader-timing', function (event) {
