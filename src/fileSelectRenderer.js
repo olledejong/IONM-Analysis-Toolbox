@@ -1,7 +1,19 @@
 // inform the Main Process that it has to open a file select window
-variable_content.on("click", '.file-selectBtn', function() {
-    ipcRenderer.send("select-csv-file");
+variable_content.on("click", '.csv-select-btn', function() {
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select file(s)',
+        filters: types,
+        defaultPath: "D:\\Menno\\NimEclipse",
+        properties: ['openFile', "multiSelections"]
+    };
+    ipcRenderer.send("select-file", options);
 });
+
 
 /**
  * Receive the information of the selected files via message "selected"
@@ -12,7 +24,7 @@ variable_content.on("click", '.file-selectBtn', function() {
 ipcRenderer.on("selected", function (event, paths) {
     // jQuery selector(s)
     let run_button = $(".run-button");
-    let file_select_button = $(".file-selectBtn");
+    let file_select_button = $(".csv-select-btn");
     let selected_filenames_p = $('#selected-filenames');
 
     // only do something if there are actually files are selected
@@ -41,6 +53,7 @@ ipcRenderer.on("selected", function (event, paths) {
         run_button.prop('disabled', true);
     }
 });
+
 
 /**
  * For every absolute path in the given array, this function returns

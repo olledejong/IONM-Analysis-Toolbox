@@ -91,66 +91,24 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
 
 
 /**
- *                      [ FILE SELECT AND STORE CSV PATHS ]
+ *                      [ FILE SELECT AND STORE PATHS ]
  * This function listens to the 'select-csv-file' message from the renderer process
  * which opens a dialog where the user can select files. If canceled, do nothing
- * if completed, store the paths to files in the array tempCSVpaths.
+ * if completed, store the paths to files in the array selectedFileHolder.
  *
- * //TODO : GENERALIZE THIS FUNCTION?
+ * @param event
+ * @param options
  */
-ipcMain.on("select-csv-file", function selectCSVfileAndSendBack(event) {
-    // configure which types of files are allowed
-    let types = [
-        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
-        ];
-    // configure the options (allowed types + properties)
-    const options = {
-        title: 'Select file(s)',
-        filters: types,
-        defaultPath: "D:\\Menno\\NimEclipse",
-        properties: ['openFile', "multiSelections"]
-        };
+ipcMain.on("select-file", function selectFileAndSendBack(event, options) {
     // open the actual dialog with the above options
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
-        tempCSVpaths = fileNames.filePaths;
+        selectedFileHolder = fileNames.filePaths;
         if (fileNames.canceled === true) {
-            log.info("[ selectFileAndSendBack ][ file selection cancelled ]");
+            log.info("[ selectFileAndSendBack ][ File selection cancelled ]");
             event.sender.send('selected', fileNames.filePaths)
         } else {
-            log.info("[ selectFileAndSendBack ][ sending selected file names info back to renderer ]");
-            event.sender.send("selected", fileNames.filePaths)
-        }
-    })
-});
-
-/**
- *                      [ FILE SELECT AND STORE DB PATH ]
- * This function listens to the 'select-db-file' message from the renderer process
- * which opens a dialog where the user can select a databases file (accdb). If canceled, do nothing
- * if completed, store the paths to files in the array tempCSVpaths.
- */
-ipcMain.on("select-db-file", function selectDBfileAndSendBack(event) {
-    // configure which types of files are allowed
-    let types = [
-        {name: 'Only extensions allowed:', extensions: ['accdb'] }
-    ];
-    // configure the options (allowed types + properties)
-    const options = {
-        title: 'Select database',
-        filters: types,
-        defaultPath: "D:\\Menno",
-        properties: ['openFile']
-    };
-    // open the actual dialog with the above options
-    dialog.showOpenDialog(window, options).then(fileNames => {
-        // if selecting is cancelled, do not send back to renderer
-        tempDBpath = fileNames.filePaths;
-        if (fileNames.canceled === true) {
-            log.info("[ selectDBfileAndSendBack ][ file selection cancelled ]");
-            event.sender.send('selected', fileNames.filePaths)
-        } else {
-            log.info("[ selectDBfileAndSendBack ][ sending selected database file info back to renderer ]");
+            log.info("[ selectFileAndSendBack ][ Sending file path(s) to renderer ]");
             event.sender.send("selected", fileNames.filePaths)
         }
     })
