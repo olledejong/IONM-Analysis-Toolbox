@@ -43,7 +43,7 @@ $("#welcome-section").click(function () {
     } else {
         ipcRenderer.send('resize-window', 730, 800);
         variable_content_div.html(
-        `<h1 id="welcome-text">What do you wish to do next?</h1>
+        `<h1 id="welcome-text">Hi ` + username + `, what do you wish to do next?</h1>
          <div id="tool-container">
             <div id="summarize-section">
                 <span class="tool-number">1</span>
@@ -102,7 +102,7 @@ $("#welcome-section").click(function () {
  * Loads variable content for the [ summarize section ]
  */
 body.delegate("#summarize-section", "click", function () {
-    ipcRenderer.send('resize-window', 700, 450);
+    ipcRenderer.send('resize-window', 750, 460);
     variable_content_div.html(
         `<div id="summarize-content">
             <div id="summarize-content-description" class="content-description-container">
@@ -114,7 +114,7 @@ body.delegate("#summarize-section", "click", function () {
                 </p>
             </div>
             <div id="file-upload-container">
-                <button id="file-selectBtn" class="file-selectBtn">Click to select</button>
+                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
                 <div id="selected-filename-container">
                     <p id="selected-filenames">No files selected</p>
                     <button class="run-button" id="run-summarize" disabled>RUN</button>
@@ -140,7 +140,7 @@ body.delegate('#timing-section', 'click', function () {
                 </p>
             </div>
             <div id="file-upload-container">
-                <button id="file-selectBtn" class="file-selectBtn">Click to select</button>
+                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
                 <div id="selected-filename-container">
                     <p id="selected-filenames">No files selected</p>
                     <button class="run-button" id="run-timing" disabled>RUN</button>
@@ -176,7 +176,7 @@ body.delegate('#convert-section', 'click', function () {
                 </p>
             </div>
             <div id="file-upload-container">
-                <button id="file-selectBtn" class="file-selectBtn">Click to select</button>
+                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
                 <div id="selected-filename-container">
                     <p id="selected-filenames">No files selected</p>
                     <button class="run-button" id="run-convert" disabled>RUN</button>
@@ -247,7 +247,7 @@ about_section_button.click(function () {
     if(variable_content_div.find('#about-app').length > 0) {
         // when about page already loaded, do not load it again.
     } else {
-        ipcRenderer.send('resize-window', 900, 550);
+        ipcRenderer.send('resize-window', 1070, 540);
         // tell main process to get the python script its version info
         ipcRenderer.send('get-version-info');
 
@@ -255,12 +255,13 @@ about_section_button.click(function () {
         variable_content_div.html(
             `
             <div id="about-scripts">
-                 <h1>Python Scripts<i class="fas fa-cogs"></i></h1>
+                 <h1>Python Project</h1>
                  <div id="scripts-version-info" class="version-info">
+                    <!-- will be filled -->
                  </div>
             </div>
             <div id="about-app">
-                 <h1>Graphic User Interface<i class="fas fa-tv"></i></h1>
+                 <h1>Graphical User Interface</h1>
                  <div id="app-version-info" class="version-info">
                     <!-- will be filled -->
                  </div>
@@ -284,27 +285,18 @@ about_section_button.click(function () {
  * @param {object} python_version_info
  * @param {object} stdErr
  */
-ipcRenderer.on("script-version-info", function (event, error, python_version_info, stdErr) {
+ipcRenderer.on("script-version-info", function (event, python_version_info) {
     let tableHtml = [];
     let i;
 
-    // if no errors occurred ..
-    if( error === null && stdErr === '') {
-        // split version info on every occurrence of '\n'
-        let partList = python_version_info.split(/\n/g);
-        // remove last redundant element
-        partList.pop();
-        // loop trough version info list and generate a neat looking table for the front-end
-        for (i = 0; i < partList.length; i += 2) {
-            let newVal = partList[i].replace(": ", "");
-            // add values to the html table string
-            tableHtml.push('<tr><td class="version-first-cell">' + newVal + '</td><td class="version-second-cell">' + partList[i + 1] + '</td></tr>');
-        }
-    } else {
-        // if errors occurred ..
-        log.info("[ navigationRenderer.js ][ an error occurred while trying to retrieve python version-info ]");
-        // show informative notification
-        showNotification('error','An error occurred while trying to retrieve the version-info')
+    let partList = python_version_info.split(/\n/g);
+    // remove last redundant element
+    partList.pop();
+    // loop trough version info list and generate a neat looking table for the front-end
+    for (i = 0; i < partList.length; i += 2) {
+        let newVal = partList[i].replace(": ", "");
+        // add values to the html table string
+        tableHtml.push('<tr><td class="version-first-cell">' + newVal + '</td><td class="version-second-cell">' + partList[i + 1] + '</td></tr>');
     }
 
     $("#scripts-version-info").html(tableHtml);
@@ -326,7 +318,7 @@ function generateElectronAboutInfo() {
 }
 
 /**
- * General function for generating and animating notification (toast) messages
+ * General function for generating and animating notification (toast) messages for this renderer
  * @param type
  * @param message
  */
@@ -353,7 +345,7 @@ function showNotification(type, message) {
     // animate the error message
     tempNotificationElement.animate({
         right: '+=465', opacity: 1
-    }, 750, function () {
+    }, 800, function () {
         tempNotificationElement.delay(5000).fadeOut(800, function () {
             $(this).remove();
         });

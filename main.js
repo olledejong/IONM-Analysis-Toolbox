@@ -1,4 +1,4 @@
-const { app, BrowserWindow, screen, fs , dialog} = require('electron');
+const { app, BrowserWindow, dialog} = require('electron');
 const ipcMain = require('electron').ipcMain;
 const exec = require('child_process').exec;
 const log = require('electron-log');
@@ -8,8 +8,7 @@ const log = require('electron-log');
 let window;
 
 // global list which holds the paths of the via a dialog window selected csv files.
-let tempCSVpaths;
-let tempDBpath;
+let selectedFileHolder;
 
 // [CHANGE THIS TO WHERE YOUR IONM PYTHON PROJECT IS LOCATED]
 pythonSrcDirectory = 'D:\\Menno\\IONM\\src';
@@ -79,10 +78,14 @@ app.on('activate', () => {
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
     log.info('[ resizeBrowserWindow ][ resizing window to: ', newX, 'x', newY, 'px ]');
-    let currentWindowSize = window.getSize();
-    if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
-        window.setMinimumSize(newX, newY);
-        window.setSize(newX, newY);
+    try {
+        let currentWindowSize = window.getSize();
+        if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
+            window.setMinimumSize(newX, newY);
+            window.setSize(newX, newY);
+        }
+    } catch (e) {
+        event.sender.send('error', 'Something went wrong while trying to resize the browser window')
     }
 });
 
@@ -164,11 +167,11 @@ ipcMain.on("select-db-file", function selectDBfileAndSendBack(event) {
  */
 ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // window sizing logic
-    if ( tempCSVpaths.length > 2 ) {
+    if ( selectedFileHolder.length > 2 ) {
         log.info('[ executeSummarizeCommand ][ resizing window ]');
         window.setMinimumSize(1220, 900);
         window.setSize(1220, 900);
-    } else if ( tempCSVpaths.length === 2 ) {
+    } else if ( selectedFileHolder.length === 2 ) {
         window.setMinimumSize(1220, 550);
         window.setSize(1220, 550);
     } else {
@@ -181,11 +184,9 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
 
     log.info("[ executeSummarizeCommand ][ executing summarize command ]");
 
-    // for every path in tempCSVpaths execute the command 'ionm.py summarize [filepath]'
-    for(let i = 0; i < tempCSVpaths.length; i++) {
-        let fraction = Math.round(((i+1) / tempCSVpaths.length) * 100);
-        log.info('[ executeSummarizeCommand ][ percentage handled: ', fraction, '% ]');
-        let command = 'ionm.py summarize "' + tempCSVpaths[i] + '"';
+    // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
+    for(let i = 0; i < selectedFileHolder.length; i++) {
+        let command = 'ionm.py summarize "' + selectedFileHolder[i] + '"';
         exec(command, {
             cwd: pythonSrcDirectory
         }, function(error, stdout, stderr) {
@@ -193,20 +194,15 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
 
             // if errors occur, send an error message to the renderer process
             if (error !== null) {
-                log.error("[ executeSummarizeCommand ] ", error);
                 event.sender.send('error', summarize_error_message);
             } else if (stderr !== '') {
-                log.error("[ executeSummarizeCommand ] ", stderr);
                 event.sender.send('error', summarize_error_message);
             } else {
-                log.info("[ executeSummarizeCommand ] \n", stdout);
-
                 // build json string using the command output
                 let JSONstring = createJsonString(stdout);
 
                 // send the json string back to the renderer to be displayed
                 event.sender.send("summarize-result", JSONstring, fraction);
-                log.info("[ executeSummarizeCommand ][ sent summarize result back to renderer ]");
             }
         });
     }
@@ -274,18 +270,20 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
 
     event.sender.send('set-title-and-preloader-timing');
 
-    let pathsString = '"' + tempCSVpaths.join('" "') + '"';
+    let pathsString = '"' + selectedFileHolder.join('" "') + '"';
     let command = 'ionm.py show_timing ' + pathsString;
     log.info(pathsString);
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        log.info('show_timing finished');
-        log.info('stdout: ', stdout);
-        log.info('stderr: ', stderr);
-        log.info('error: ', error);
-        //log.info('json parsed!: ', JSON.parse(stdout));
-        event.sender.send('timing-result', JSON.parse(stdout));
+        let errorMessage = "An error occurred while trying to run the show_timing command";
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('timing-result', JSON.parse(stdout));
+        }
     })
 });
 
@@ -299,13 +297,19 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
 
     event.sender.send('set-title-and-preloader-convert');
 
-    for(let i = 0; i < tempCSVpaths.length; i++) {
-        let command = 'ionm.py gui_convert "' + tempCSVpaths[i] + '"';
+    for(let i = 0; i < selectedFileHolder.length; i++) {
+        let command = 'ionm.py gui_convert "' + selectedFileHolder[i] + '"';
         exec(command, {
             cwd: pythonSrcDirectory
         }, function (error, stdout, stderr) {
-            log.info('[ executeConvertCommand ][ convert command completed ]');
-            event.sender.send('convert-result', JSON.parse(stdout));
+            let errorMessage = "An error occurred while trying to run the convert command";
+            if (error !== null) {
+                event.sender.send('error', errorMessage);
+            } else if (stderr !== '') {
+                event.sender.send('error', errorMessage);
+            } else {
+                event.sender.send('convert-result', JSON.parse(stdout));
+            }
         });
     }
 });
@@ -320,33 +324,56 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
     exec('ionm.py version', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        log.info("[ getVersionInfo ][ sending 'ionm.py version' information back to renderer ]");
-        event.sender.send("script-version-info", error, stdout, stderr);
+        let errorMessage = "An error occurred while retrieving the python version info";
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send("script-version-info", stdout);
+        }
     });
 });
 
 
 /**
- *                            [ SETTINGS ]
- * Handles the retrieving of the current settings
- *
+ *                          [ SETTINGS (1 of 2) ]
+ * Handles the retrieving of the current database settings (for now only DB path).
+ * This is done by calling the ionm.py function gui_get_database
  */
 ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
     exec('ionm.py gui_get_database', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        log.info("[ getDatabaseSettings ][ sending database settings back to renderer ]");
-        log.info("[ getDatabaseSettings ][ current database: ", stdout);
-        event.sender.send("current-database-settings", stdout);
+        let errorMessage = "An error occurred while retrieving the database path";
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send("current-database-settings", stdout);
+        }
     });
 });
 
-ipcMain.on("get-database-settings", function getModalitySettings(event) {
+/**
+ *                          [ SETTINGS (2 of 2) ]
+ * Handles the retrieving of the current modality settings.
+ * This is done by calling the ionm.py function gui_get_modalities
+ */
+ipcMain.on("get-modality-settings", function getModalitySettings(event) {
     exec('ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        log.info("[ getModalitySettings ][ sending modality settings back to renderer ]");
-        log.info("[ getModalitySettings ][ modalities: ", stdout);
-        event.sender.send("current-modality-settings", stdout);
+        let errorMessage = "An error occurred while retrieving the existing modalities";
+
+        // if errors occur, send an error message to the renderer process
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send("current-modality-settings", stdout);
+        }
     });
 });

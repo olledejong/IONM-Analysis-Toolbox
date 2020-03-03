@@ -46,7 +46,7 @@ footer span {
 
 #variable-content {
     margin-top: 38px;
-    position: relative;
+    position: absolute;
     padding: 10px 20px 20px 20px;
     overflow-y: visible;
 }
@@ -62,9 +62,9 @@ footer span {
 }
 
 
-.file-selectBtn {
+.csv-select-btn {
     height: 100%;
-    background: #00796B;
+    background: #ff8c00cf;
     line-height: 22px;
     font-weight: 500;
     font-size: 16px;
@@ -84,7 +84,7 @@ footer span {
     overflow-y: auto;
 }
 
-#convert-content, #timing-content, #summarize-content {
+#convert-content, #timing-content, #summarize-content, #settings-content {
     margin-top: 8px;
 }
 
@@ -134,8 +134,8 @@ footer span {
 
 #summarize-content-h, #timing-content-h, #convert-content-h {
     margin: 0 0 10px 0;
-    text-align: center;
-    color: white;
+    text-align: left;
+    color: darkorange;
     font-weight: 500;
     letter-spacing: 1px;
 }
@@ -144,12 +144,12 @@ footer span {
     display: none;
 }
 
-.file-selectBtn:hover {
+.csv-select-btn:hover {
     /*transform: translateY(-3px);*/
     width: 41.5%;
 }
 
-.file-selectBtn:hover + #selected-filename-container{
+.csv-select-btn:hover + #selected-filename-container{
     /*transform: translateY(-3px);*/
     width: 58.5%;
 }
@@ -209,9 +209,9 @@ footer span {
 
 .version-info {
     text-align: left;
-    font-weight: 700;
+    font-weight: 400;
+    letter-spacing: 1px;
     margin: 0;
-    color: rgb(112, 112, 112);
     font-size: 15px;
 }
 
@@ -246,9 +246,13 @@ th {
     margin: 10px 5px 0 0;
     display: inline-block;
     height: auto;
+    min-width: 505px;
     width: calc(50% - 10px);
-    background: #dedede;
+    background: #404040;
     padding: 15px 25px;
+    color: white;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+    border-radius: 4px;
 }
 
 #about-app {
@@ -260,11 +264,13 @@ th {
 }
 
 #about-app h1, #about-scripts h1 {
-    border-bottom: 1px solid;
+    font-weight: 600;
+    border-bottom: 1px solid white;
+    letter-spacing: 1.5px;
     margin: 0 0 10px 0;
+    color: darkorange;
     text-align: left;
     font-size: 16px;
-    color: rgb(112, 112, 112);
     height: 40px;
 }
 
@@ -296,12 +302,11 @@ h1 i {
 
 .summarize-table {
     display: inline-grid;
-    background: #dcdcdc;
-    border: 2px solid #c0c0c0;
-    padding: 10px;
+    background: #404040;
+    padding: 10px 0 10px 10px;
     margin: 0 10px 14px 0;
-    /*width: calc(50% - 10px);*/
-    color: rgb(112, 112, 112);
+    color: white;
+    letter-spacing: 1px;
 }
 
 .table-item {
@@ -311,6 +316,8 @@ h1 i {
 .table-file-name {
     margin: 0 0 5px 0;
     font-size: 16px;
+    letter-spacing: 1.5px;
+    color: darkorange;
 }
 
 #summarize-results td {
@@ -405,8 +412,8 @@ h1 i {
     font-size: 18px;
     font-weight: 500;
     position: absolute;
-    left: 8px;
-    top: 4px;
+    left: 5px;
+    top: 0;
     color: rgb(112,112,112);
 }
 
@@ -423,35 +430,15 @@ h1 i {
     font-weight: 500;
 }
 
-.settings-content {
-    margin-top: 4px;
-    height: 500px;
-    display: inline-block;
-    width: calc(50% - 10px);
-    background: #404040;
-    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
-}
-
-.settings-content h1 {
-    padding: 5px 15px 5px 15px;
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: 1px;
-}
-
-#modality-settings {
-    float: right;
-}
-
 .database-button {
-    margin-top: 10px;
-    display: block;
+    margin-top: 14px;
+    display: inline-block;
     cursor: pointer;
     letter-spacing: 2px;
     bottom: 0;
     padding: 20px;
     border-radius: 2px;
-    background-color: #00796B;
+    background-color: #ff8c00cf;
     border: 0;
     color: white;
     outline: none;
@@ -467,13 +454,10 @@ h1 i {
     align-items: center;
 }
 
-#set-database-path {
-    margin-top: 5px;
-    width: fit-content;
-    height: fit-content;
-    max-width: 550px;
+#set-database-path, #set-modalities {
+    border-radius: 4px;
     padding: 20px;
-    position: absolute;
+    position: relative;
     background: #404040;
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
@@ -483,7 +467,7 @@ h1 i {
     text-align: left;
     font-size: 18px;
     margin: -10px 0 5px 0;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 1px;
 }
 
@@ -503,7 +487,7 @@ h1 i {
     text-align: center;
 }
 
-#database-path-p {
+#database-path-p, #set-modalities-p {
     text-align: left;
     font-size: 16px;
     margin: 0 0 8px 0;
@@ -511,12 +495,10 @@ h1 i {
     letter-spacing: 1px;
 }
 
-#select-database {
-    float: left;
-}
-
 #set-database {
     float: right;
+    background: #ccc;
+    color: #404040;
 }
 
 /* preloader */
@@ -592,7 +574,7 @@ h1 i {
     font-weight: 600;
     color: black;
     width: auto;
-    max-width: 470px;
+    max-width: 530px;
     height: auto;
     margin: 10px 0;
     padding: 6px 10px;

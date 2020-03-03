@@ -32,8 +32,7 @@ variable_content.on("click", '#run-summarize', function() {
  */
 ipcRenderer.on('set-title-and-preloader-summarize', function (event) {
     variable_content.html(
-        `<h2 id="summarize-result-title">Resulting summarized information</h2>
-         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        `<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
          <div id="summarize-results"></div>`);
     // hide summarize results div untill it actually gets some results
     $('#summarize-results').hide();
@@ -105,31 +104,3 @@ function generateTable(JSON_obj) {
         resolve([htmlTableContent, fileName]);
     });
 }
-
-ipcRenderer.on('error', function errorHandler(event, error_message) {
-    // TODO: Make function work for all errors
-
-    $('#variable-content').html(
-        `<div class="file-upload">
-            Using this functionality you're able to retrieve some basic information about the Eclipse file(s)<br>
-            you select. This information includes: path, size, name, date, duration and the modalities.
-            <br>
-            Please select the CSV files you wish to use.
-            <button id="file-selectBtn" class="file-selectBtn">Select file(s)</button>
-            <button class="run-button" id="run-summarize" disabled>RUN</button>
-        </div>`);
-
-    let r = Math.random().toString(36).substring(7);
-    $('.container-after-titlebar').append('<div id="'+ r + '" class="error-msg"><i class="fas fa-times-circle"></i> '+ error_message +'</div>');
-
-    let tempElement = $('#'+r);
-
-    tempElement.animate({
-        right: '+=465', opacity: 1
-    }, 800, function () {
-        tempElement.delay(3500).fadeOut(800, function () {
-            $(this).remove();
-        });
-    });
-
-});
