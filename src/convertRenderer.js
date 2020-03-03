@@ -39,7 +39,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
     let rndmHash = Math.random().toString(36).substring(7);
 
     // calculate the extra needed top offset
-    let extraTopOffset = getNumberOfActiveNotifications() * 40;
+    let extraTopOffset = ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) * 40;
 
     // if iteration has a success message in it
     if (convert_output.hasOwnProperty('succes-msg')) {
@@ -62,7 +62,3 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
 
     $('.lds-ellipsis').fadeOut();
 });
-
-function getNumberOfActiveNotifications() {
-    return $('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length
-}

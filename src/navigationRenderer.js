@@ -215,23 +215,32 @@ body.delegate('#classify-section', 'click', function () {
  * Loads variable content for the [ settings section ]
  */
 body.delegate('#settings-section', 'click', function () {
+    // tell main process to resize the window, and to retrieve the current settings
     ipcRenderer.send('resize-window', 1200, 600);
     ipcRenderer.send('get-database-settings');
     ipcRenderer.send('get-modality-settings');
     variable_content_div.html(
-       `<div id="set-database-path">
-            <h4>Configure the database</h4>
-            <p id="database-path-p">
-                The currently configured database is displayed within the white box. Select and
-                set the the database you wish to work with.
-                
-            </p>
-            <p id="database-path"></p>
-            <button class="database-button" id="select-database" disabled>SELECT</button>
-            <button class="database-button" id="set-database" disabled>SET DATABASE</button>
+       `<div id="settings-content">
+            <div id="set-database-path">
+                <h4>Configure the database</h4>
+                <p id="database-path-p">
+                    The currently configured database is displayed within the white box. Select and
+                    set the the database you wish to work with.
+                </p>
+                <p id="database-path"></p>
+                <button class="database-button" id="select-database-btn">SELECT</button>
+                <button class="database-button" id="set-database" disabled>SET DATABASE</button>
+            </div>
+            <div id="set-modalities">
+                <h4>Configure the modalities</h4>
+                <p id="set-modalities-p">
+                    The currently in the active database configured modalities are displayed in the table.
+                    Add modalities to your liking.
+                </p>
+            </div>
         </div>
         `);
-    showNotification('info', 'Retrieving current configured database path')
+    showNotification('info', 'Retrieving configured modalities and the currently active database');
 });
 
 

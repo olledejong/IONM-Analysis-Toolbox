@@ -462,8 +462,47 @@ h1 i {
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
-#set-database-path h4 {
-    color: orange;
+#set-database-path {
+    max-width: calc(40% - 10px);
+    float: left;
+}
+
+#set-modalities {
+    max-width: calc(60% - 10px);
+    float: right;
+}
+
+#modalities-table {
+    margin: 15px 0 0 0;
+    width: 100%;
+    border-spacing: 0;
+}
+
+#modalities-table td {
+    letter-spacing: 1.5px;
+    padding: 7px 5px 8px 10px;
+}
+
+#modalities-table th {
+    border: 0;
+    color: #404040;
+    text-align: left;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 7px 5px 8px 10px;
+    letter-spacing: 1.5px;
+}
+
+#modalities-table-hrow {
+    background: #ccc;
+}
+
+#modalities-table tr:nth-child(odd) td {
+    background: #4e4e4e;
+}
+
+#set-database-path h4, #set-modalities h4 {
+    color: darkorange;
     text-align: left;
     font-size: 18px;
     margin: -10px 0 5px 0;
