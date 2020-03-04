@@ -162,7 +162,7 @@ body.delegate('#availability-section', 'click', function () {
  * Loads variable content for the [ convert section ]
  */
 body.delegate('#convert-section', 'click', function () {
-    ipcRenderer.send('resize-window', 800, 450);
+    ipcRenderer.send('resize-window', 800, 460);
     variable_content_div.html(
         `<div id="convert-content">
             <div id="convert-content-description" class="content-description-container">
@@ -216,27 +216,44 @@ body.delegate('#classify-section', 'click', function () {
  */
 body.delegate('#settings-section', 'click', function () {
     // tell main process to resize the window, and to retrieve the current settings
-    ipcRenderer.send('resize-window', 1200, 600);
+    ipcRenderer.send('resize-window', 1200, 730);
     ipcRenderer.send('get-database-settings');
     ipcRenderer.send('get-modality-settings');
     variable_content_div.html(
        `<div id="settings-content">
-            <div id="set-database-path">
-                <h4>Configure the database</h4>
-                <p id="database-path-p">
-                    The currently configured database is displayed within the white box. Select and
-                    set the the database you wish to work with.
-                </p>
-                <p id="database-path"></p>
-                <button class="database-button" id="select-database-btn">SELECT</button>
-                <button class="database-button" id="set-database" disabled>SET DATABASE</button>
+            <div id="small-tools">
+                <div id="set-database-path" class="small-tool">
+                    <h4>Select and set database</h4>
+                    <p id="database-path-p">
+                        The currently configured database is displayed within the white box. Select and
+                        set the the database you wish to work with.
+                    </p>
+                    <p class="database-path"></p>
+                    <button class="settings-button" id="select-database-btn">SELECT</button>
+                    <button class="settings-button" id="set-database" disabled>SET DATABASE</button>
+                </div>
+                <div id="configure-database" class="small-tool">
+                    <h4>Setup the currently set database</h4>
+                    <p id="database-path-p">
+                        The currently set database path is displayed within the white box. If this database
+                        is new, or if you would like to reset it for any reason, you can do that here.<br>
+                        <span class="important-span">NOTE:</span>&nbsp;Be very thoughtful when using this
+                        tool. If you (mistakenly) setup a database which is already in use and potentially
+                        full of data, you <span class="important-span">will</span> delete all of its content.
+                    </p>
+                    <p class="database-path"></p>
+                    <button class="settings-button" id="setup-database" disabled>SETUP DATABASE</button>
+                </div>
             </div>
             <div id="set-modalities">
                 <h4>Configure the modalities</h4>
                 <p id="set-modalities-p">
                     The currently in the active database configured modalities are displayed in the table.
-                    Add modalities to your liking.
+                    Add modalities to your liking.<br>
+                    <span class="important-span">NOTE:</span>&nbsp;Be very accurate when you fill out the 
+                    new modalities, do not make any spelling mistakes!
                 </p>
+                <button class="settings-button" id="add-new-modality">ADD MODALITY</button>
             </div>
         </div>
         `);

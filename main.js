@@ -295,7 +295,7 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
 
 
 /**
- *                          [ SETTINGS (1 of 2) ]
+ *                          [ SETTINGS (1 of 3) ]
  * Handles the retrieving of the current database settings (for now only DB path).
  * This is done by calling the ionm.py function gui_get_database
  */
@@ -315,7 +315,7 @@ ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
 });
 
 /**
- *                          [ SETTINGS (2 of 2) ]
+ *                          [ SETTINGS (2 of 3) ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -332,6 +332,35 @@ ipcMain.on("get-modality-settings", function getModalitySettings(event) {
             event.sender.send('error', errorMessage);
         } else {
             event.sender.send("current-modality-settings", stdout);
+        }
+    });
+});
+
+/**
+ *                          [ SETTINGS (3 of 3) ]
+ * Handles the retrieving of the current modality settings.
+ * This is done by calling the ionm.py function gui_get_modalities
+ */
+ipcMain.on('set-database', function (event) {
+    log.info('to be set database path: ', selectedFileHolder);
+    // only one file can end up here, but it still is in a list
+    let new_database_path = selectedFileHolder[0];
+    log.info(new_database_path);
+
+    let command = 'ionm.py gui_set_database "' + new_database_path + '"';
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = "An error occurred while trying to set the database";
+
+        // if errors occur, send an error message to the renderer process
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send("database-set-successful", stdout);
         }
     });
 });

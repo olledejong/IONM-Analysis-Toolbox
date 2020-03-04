@@ -73,10 +73,7 @@ footer span {
     letter-spacing: 2px;
     overflow: hidden;
     color: white;
-    /*border-right: 4px solid #cdcdcd;*/
-    /*border-left: 0;*/
-    /*border-bottom: 0;*/
-    /*border-top: 0;*/
+    border-radius: 4px 0 0 4px;
     border: 0;
     outline: 0;
     transition: all 0.2s ease-out;
@@ -89,9 +86,9 @@ footer span {
 }
 
 .content-description-container {
-    padding: 10px 15px 15px 15px;
+    padding: 12px 20px 20px 20px;
     background: #404040;
-    /* border: 4px solid #cdcdcd; */
+    border-radius: 4px;
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
@@ -105,6 +102,7 @@ footer span {
 }
 
 #selected-filename-container {
+    border-radius: 0 4px 4px 0;
     overflow: scroll;
     background: #404040;
     float: right;
@@ -338,7 +336,7 @@ h1 i {
     letter-spacing: 1.5px;
     float: right;
     width: 100px;
-    background-color: #00796B;
+    background-color: #ff8c00cf;
     height: 50px;
     opacity: 0;
     color: white;
@@ -430,7 +428,7 @@ h1 i {
     font-weight: 500;
 }
 
-.database-button {
+.settings-button {
     margin-top: 14px;
     display: inline-block;
     cursor: pointer;
@@ -454,7 +452,7 @@ h1 i {
     align-items: center;
 }
 
-#set-database-path, #set-modalities {
+.small-tool, #set-modalities {
     border-radius: 4px;
     padding: 20px;
     position: relative;
@@ -462,14 +460,20 @@ h1 i {
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
-#set-database-path {
-    max-width: calc(40% - 10px);
-    float: left;
-}
-
 #set-modalities {
+    transition: all 0.2s ease-out;
     max-width: calc(60% - 10px);
     float: right;
+}
+
+#configure-database {
+    margin: 20px 0 0 0;
+}
+
+#small-tools {
+    position: relative;
+    width: calc(40% - 10px);
+    float: left;
 }
 
 #modalities-table {
@@ -494,14 +498,14 @@ h1 i {
 }
 
 #modalities-table-hrow {
-    background: #ccc;
+    background: white;
 }
 
 #modalities-table tr:nth-child(odd) td {
     background: #4e4e4e;
 }
 
-#set-database-path h4, #set-modalities h4 {
+.small-tool h4, #set-modalities h4 {
     color: darkorange;
     text-align: left;
     font-size: 18px;
@@ -510,7 +514,7 @@ h1 i {
     letter-spacing: 1px;
 }
 
-#database-path {
+.database-path {
     font-size: 15px;
     overflow-y: auto;
     display: block;
@@ -536,8 +540,18 @@ h1 i {
 
 #set-database {
     float: right;
+    cursor: auto;
     background: #ccc;
     color: #404040;
+}
+
+#add-modality {
+    opacity: 0;
+    width: calc(60% - 10px);
+    float: right;
+    height: auto;
+    margin: -130px 0 0 0;
+    z-index: -5;
 }
 
 /* preloader */
@@ -644,3 +658,8 @@ info / error / succes msg icons
 <i class="fas fa-check"></i>
 <i class="fas fa-times-circle"></i>
 */
+
+.important-span {
+    font-weight: 800;
+    color: darkorange;
+}

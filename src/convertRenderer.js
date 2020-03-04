@@ -23,11 +23,11 @@ varContent.on("click", '#run-convert', function() {
  */
 ipcRenderer.on('set-title-and-preloader-convert', function () {
     varContent.html(
-        `<h2 id="summarize-result-title">Convert results</h2>
+        `<h2 id="convert-result-title">Convert results</h2>
          <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-         <div id="summarize-results"></div>`);
+         <div id="convert-results"></div>`);
     // hide summarize results div untill it actually gets some results
-    $('#summarize-results').hide();
+    $('#convert-results').hide();
 });
 
 /**
@@ -48,6 +48,10 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
     } else {
         $('.container-after-titlebar').append('<div id="'+ rndmHash + '" class="error-msg"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;'+ convert_output['short-error-msg'] +'</div>');
     }
+
+    $('#convert-results').html(convert_output['error-msg']).show();
+    $('#convert-results').append(convert_output['unknown-modalities']);
+
     let tempNotiElement = $('#'+rndmHash);
     tempNotiElement.css('top', '+=' + extraTopOffset);
 
