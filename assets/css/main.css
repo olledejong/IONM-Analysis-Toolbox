@@ -514,7 +514,7 @@ h1 i {
     letter-spacing: 1px;
 }
 
-.database-path {
+.database-path, input[type='text'] {
     font-size: 15px;
     overflow-y: auto;
     display: block;
@@ -556,12 +556,11 @@ h1 i {
 
 /* preloader */
 .lds-ellipsis {
-    top: -13px;
+    top: 55px;
     right: 15px;
-    display: inline-block;
     width: 80px;
     height: 80px;
-    position: absolute;
+    position: fixed;
 }
 .lds-ellipsis div {
     position: absolute;
@@ -613,7 +612,7 @@ h1 i {
     }
 }
 
-
+/* toast notifications */
 .info-msg,
 .success-msg,
 .warning-msg,
@@ -663,3 +662,70 @@ info / error / succes msg icons
     font-weight: 800;
     color: darkorange;
 }
+
+/* radio buttons */
+label.radio {
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+label.radio input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+label.radio span {
+    padding: 10px 14px;
+    border: 3px solid #EEE;
+    display: inline-block;
+    color: white;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+label.radio input:checked + span {
+    background: #56565663;
+    border-color: darkorange;
+    color: darkorange;
+}
+
+.radio-container {
+    margin: 0 21px 0 0;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+#modality-input, #description-input {
+    min-width: auto;
+    padding: 5px;
+    border: 0;
+    margin: 0 0 10px;
+    display: inline;
+    font-weight: 600;
+}
+
+#description-input {
+    width: 70%;
+    margin: 0 0 0 5px;
+}
+
+#modality-input {
+    width: calc(30% - 10px);
+}
+
+#submit-new-modality {
+    padding: 16px;
+    margin: 0;
+    background: #ccc;
+    color: #404040;
+    cursor: auto;
+    float: right;
+    display: inline-block;
+}
+
+#hide-modality-form {
+    float: right;
+    display: none;
+}
+

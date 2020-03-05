@@ -23,5 +23,4 @@ ipcRenderer.on('error', function errorHandler(event, error_message) {
             $(this).remove();
         });
     });
-
 });

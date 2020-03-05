@@ -148,7 +148,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
         exec(command, {
             cwd: pythonSrcDirectory
         }, function(error, stdout, stderr) {
-            let summarize_error_message = "An error occurred while retrieving the file summary";
+            let summarize_error_message = "An error occurred while summarizing one or more files";
 
             // if errors occur, send an error message to the renderer process
             if (error !== null) {
@@ -160,7 +160,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
                 let JSONstring = createJsonString(stdout);
 
                 // send the json string back to the renderer to be displayed
-                event.sender.send("summarize-result", JSONstring, fraction);
+                event.sender.send("summarize-result", JSONstring);
             }
         });
     }
@@ -295,7 +295,7 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
 
 
 /**
- *                          [ SETTINGS (1 of 3) ]
+ *                          [ SETTINGS (1 of 4) ]
  * Handles the retrieving of the current database settings (for now only DB path).
  * This is done by calling the ionm.py function gui_get_database
  */
@@ -315,7 +315,7 @@ ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
 });
 
 /**
- *                          [ SETTINGS (2 of 3) ]
+ *                          [ SETTINGS (2 of 4) ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -327,21 +327,28 @@ ipcMain.on("get-modality-settings", function getModalitySettings(event) {
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
-            event.sender.send('error', errorMessage);
+            if (error.toString().indexOf('modalities niet vinden') >= 0) {
+                errorMessage = "The database is not setup yet, please do that first!";
+            }
+            event.sender.send('current-modality-settings', errorMessage);
         } else if (stderr !== '') {
+            if (stderr.toString().indexOf('modalities niet vinden') >= 0) {
+                errorMessage = "The database is not setup yet, please do that first!";
+            }
             event.sender.send('error', errorMessage);
         } else {
+            log.info('type of modality output: ',typeof stdout);
             event.sender.send("current-modality-settings", stdout);
         }
     });
 });
 
 /**
- *                          [ SETTINGS (3 of 3) ]
+ *                          [ SETTINGS (3 of 4) ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
-ipcMain.on('set-database', function (event) {
+ipcMain.on('set-database', function setDatabasePath(event) {
     log.info('to be set database path: ', selectedFileHolder);
     // only one file can end up here, but it still is in a list
     let new_database_path = selectedFileHolder[0];
@@ -364,3 +371,65 @@ ipcMain.on('set-database', function (event) {
         }
     });
 });
+
+
+/**
+ *                          [ SETTINGS (4 of 4) ]
+ * Handles the retrieving of the current modality settings.
+ * This is done by calling the ionm.py function gui_get_modalities
+ */
+ipcMain.on('set-new-modality', function setModality(event, modality_name, type, strategy, description) {
+    log.info('to be set modality: ', modality_name, type, strategy, description);
+
+    let command = 'ionm.py gui_set_modality -n "' + modality_name + '" -t "'+ type + '" -s "' + strategy + '" -d "' + description + '"';
+    log.info(command);
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = "An error occurred while trying to set the modality";
+
+        // if errors occur, send an error message to the renderer process
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+            log.error(error);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send("set-modality-successful", stdout);
+        }
+    });
+});
+
+
+ipcMain.on('showConfirmationBox', function (event, options) {
+    dialog.showMessageBox(window, options).then(r => {
+        if (r.response !== 0) {
+            event.sender.send('cancelled')
+        } else {
+            // showNotification('info', 'Setting up the datbase');
+            setupDatabase(event)
+        }
+    })
+});
+
+
+function setupDatabase(event) {
+    // TODO WRITE THIS FUNCTION, note: no database path needed since its already defined in config.ini
+    exec('ionm.py gui_setup', {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = "An error occurred while trying to setup the database";
+
+        // if errors occur, send an error message to the renderer process
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+            log.error(error);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send("database-setup-successful", stdout);
+        }
+    });
+}

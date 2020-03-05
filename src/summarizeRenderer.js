@@ -46,7 +46,7 @@ ipcRenderer.on('set-title-and-preloader-summarize', function (event) {
  *
  * @param {string} JSON_result
  */
-ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_result, fraction) {
+ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_result) {
     log.info("[ summarizeRenderer.js ][ displaySummarizeResults() is being executed ]");
     // parse the JSON string into a JSON object
     let JSON_obj = JSON.parse(JSON_result);

@@ -216,7 +216,7 @@ body.delegate('#classify-section', 'click', function () {
  */
 body.delegate('#settings-section', 'click', function () {
     // tell main process to resize the window, and to retrieve the current settings
-    ipcRenderer.send('resize-window', 1200, 730);
+    ipcRenderer.send('resize-window', 1200, 850);
     ipcRenderer.send('get-database-settings');
     ipcRenderer.send('get-modality-settings');
     variable_content_div.html(
@@ -235,14 +235,14 @@ body.delegate('#settings-section', 'click', function () {
                 <div id="configure-database" class="small-tool">
                     <h4>Setup the currently set database</h4>
                     <p id="database-path-p">
-                        The currently set database path is displayed within the white box. If this database
-                        is new, or if you would like to reset it for any reason, you can do that here.<br>
+                        ONLY FOR EMPTY DATABASES! The currently set database path is displayed within 
+                        the white box. Click on the button to setup the database.<br>
                         <span class="important-span">NOTE:</span>&nbsp;Be very thoughtful when using this
                         tool. If you (mistakenly) setup a database which is already in use and potentially
                         full of data, you <span class="important-span">will</span> delete all of its content.
                     </p>
                     <p class="database-path"></p>
-                    <button class="settings-button" id="setup-database" disabled>SETUP DATABASE</button>
+                    <button class="settings-button" id="setup-database">SETUP DATABASE</button>
                 </div>
             </div>
             <div id="set-modalities">
@@ -254,6 +254,33 @@ body.delegate('#settings-section', 'click', function () {
                     new modalities, do not make any spelling mistakes!
                 </p>
                 <button class="settings-button" id="add-new-modality">ADD MODALITY</button>
+                <button class="settings-button" id="hide-modality-form">HIDE FORM</button>
+            </div>
+            <!-- add new modality form-->
+            <div class="small-tool" id="add-modality">
+                <input id="modality-input" type="text" placeholder="MODALITY" required>
+                <input id="description-input" type="text" placeholder="DESCRIPTION (Optional)">
+                <div class="radio-container" id="type-radios">
+                    <label class="radio">
+                      <input type="radio" id="triggered" name="type" value="TRIGGERED" checked="checked">
+                      <span>TRIGGERED</span>
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="free-running" name="type" value="FREE_RUNNING">
+                      <span>FREE-RUNNING</span>
+                    </label>
+                </div>
+                <div class="radio-container" id="strategy-radios">
+                    <label class="radio">
+                      <input type="radio" id="direct" name="strategy" value="DIRECT" checked="checked">
+                      <span>DIRECT</span>
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="average" name="strategy" value="AVERAGE">
+                      <span>AVERAGE</span>
+                    </label>
+                </div>
+                <button class="settings-button" id="submit-new-modality" disabled>SUBMIT</button>
             </div>
         </div>
         `);
