@@ -122,7 +122,7 @@ ipcRenderer.on('database-set-successful', function () {
     ipcRenderer.send('get-modality-settings');
     ipcRenderer.send('get-database-settings');
 
-    showNotification('success', 'Successfully set the new database path');
+    showNotification('success', 'Successfully set the database path');
     showNotification('info', 'Updating the modalities');
 });
 

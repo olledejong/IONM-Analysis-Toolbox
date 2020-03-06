@@ -45,6 +45,7 @@ footer span {
 }
 
 #variable-content {
+    min-width: 100%;
     margin-top: 38px;
     position: absolute;
     padding: 10px 20px 20px 20px;
@@ -81,7 +82,7 @@ footer span {
     overflow-y: auto;
 }
 
-#convert-content, #timing-content, #summarize-content, #settings-content {
+#convert-content, #timing-content, #summarize-content, #settings-content, #convert-results {
     margin-top: 8px;
 }
 
@@ -322,7 +323,7 @@ h1 i {
     font-size: 14px;
 }
 
-#summarize-result-title {
+#summarize-result-title, #convert-result-title {
     width: fit-content;
     color: white;
     font-weight: 400;
@@ -554,6 +555,49 @@ h1 i {
     z-index: -5;
 }
 
+/* add modality AFTER convert */
+.add-modality-after-convert {
+    position: relative;
+    padding: 15px 0 15px 0;
+}
+
+.add-modality-after-convert h1, .failed-convert-form h1 {
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: white;
+    text-align: left;
+    font-size: 16px;
+    height: 40px;
+}
+
+.add-modality-btn-container div {
+    margin:0;
+}
+
+.add-modality-btn-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.failed-convert-form {
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+    border: 6px solid #404040;
+    background: #565656;
+    border-radius: 4px;
+}
+
+.failed-convert-form h1 {
+    padding: 8px 20px;
+    font-size: 18px;
+}
+
+#add-modality-form-div {
+    background: #404040;
+    width: 40%;
+    padding: 5px 25px;
+}
+
+
 /* preloader */
 .lds-ellipsis {
     top: 55px;
@@ -721,6 +765,15 @@ label.radio input:checked + span {
     color: #404040;
     cursor: auto;
     float: right;
+    display: inline-block;
+}
+
+#submit-all-modalities {
+    padding: 16px;
+    margin: 6px 0 17px 0;
+     background: #ccc;
+    color: #404040;
+    cursor: auto;
     display: inline-block;
 }
 

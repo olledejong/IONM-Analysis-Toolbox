@@ -233,13 +233,14 @@ body.delegate('#settings-section', 'click', function () {
                     <button class="settings-button" id="set-database" disabled>SET DATABASE</button>
                 </div>
                 <div id="configure-database" class="small-tool">
-                    <h4>Setup the currently set database</h4>
+                    <h4>Setup the (new) database</h4>
                     <p id="database-path-p">
-                        ONLY FOR EMPTY DATABASES! The currently set database path is displayed within 
+                        ONLY FOR NEW AND EMPTY DATABASES! The currently set database path is displayed within 
                         the white box. Click on the button to setup the database.<br>
                         <span class="important-span">NOTE:</span>&nbsp;Be very thoughtful when using this
                         tool. If you (mistakenly) setup a database which is already in use and potentially
-                        full of data, you <span class="important-span">will</span> delete all of its content.
+                        full of data, you <span class="important-span">will</span> delete all of its content 
+                        or corrupt the database.
                     </p>
                     <p class="database-path"></p>
                     <button class="settings-button" id="setup-database">SETUP DATABASE</button>
@@ -383,13 +384,13 @@ function showNotification(type, message) {
 
     // add notification element to page according to type
     if (type === 'error') {
-        container_after_titlebar.append('<div id="'+ r + '" class="error-msg"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
+        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="error-msg"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
     } else if (type === 'info') {
-        container_after_titlebar.append('<div id="'+ r + '" class="info-msg"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
+        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="info-msg"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
     } else if (type === 'success') {
-        container_after_titlebar.append('<div id="'+ r + '" class="success-msg"><i class="fas fa-check"></i>&nbsp;&nbsp;'+ message + '</div>');
+        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="success-msg"><i class="fas fa-check"></i>&nbsp;&nbsp;'+ message + '</div>');
     } else {
-        container_after_titlebar.append('<div id="'+ r + '" class="warning-msg"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;'+ message + '</div>');
+        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="warning-msg"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;'+ message + '</div>');
     }
 
     let tempNotificationElement = $('#'+r);

@@ -252,7 +252,6 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
  */
 ipcMain.on('run-convert', function executeConvertCommand(event) {
     log.info('[ main.js - executeConvertCommand ][ executing convert command ]');
-
     event.sender.send('set-title-and-preloader-convert');
 
     for(let i = 0; i < selectedFileHolder.length; i++) {
@@ -262,8 +261,10 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
         }, function (error, stdout, stderr) {
             let errorMessage = "An error occurred while trying to run the convert command";
             if (error !== null) {
+                log.info(error);
                 event.sender.send('error', errorMessage);
             } else if (stderr !== '') {
+                log.info(stderr);
                 event.sender.send('error', errorMessage);
             } else {
                 event.sender.send('convert-result', JSON.parse(stdout));
