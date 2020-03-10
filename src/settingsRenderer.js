@@ -220,7 +220,6 @@ function resetModalityForm() {
  */
 variable_content.on('change', '#add-modality',  function checkIfFormComplete() {
     let submit_new_modality = $('#submit-new-modality');
-    log.info('CHANGE!');
     if ( $('#modality-input').val().length > 0) {
         submit_new_modality.css('background', '#ff8c00cf');
         submit_new_modality.css('color', 'white');
@@ -232,14 +231,6 @@ variable_content.on('change', '#add-modality',  function checkIfFormComplete() {
         submit_new_modality.css('cursor', 'auto');
         submit_new_modality.prop('disabled', true)
     }
-});
-
-/**
- * When the storing of the modalities was successful it will run this
- * function.
- */
-ipcRenderer.on('set-modality-successful', function () {
-    showNotification('success', 'Successfully stored stored the modality in the database')
 });
 
 

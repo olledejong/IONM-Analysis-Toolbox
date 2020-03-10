@@ -28,12 +28,11 @@ __status__ = "DEVELOPMENT";
 // jQuery Selectors
 let about_section_button = $("#about-section");
 let variable_content_div = $("#variable-content");
-let container_after_titlebar = $('.container-after-titlebar');
 let body = $('body');
 
 
 // set welcome message using the username from the OS
-$('#welcome-text').html('Welcome, '+ username +', please select a tool to get started');
+$('#welcome-text').html(`Welcome, ${username}, please select a tool to get started`);
 
 /**
  * Loads variable content for the [ welcome section ]
@@ -68,7 +67,7 @@ $("#welcome-section").click(function () {
                 <span class="tool-number">4</span>
                 <h3>Convert File(s)</h3>
                 <p>Convert an Eclipse CSV into multiple custom files: one per modality</p>
-                <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
+                <span class="tool-finished"><i class="fas fa-check"></i></span>
             </div>
             <div id="compute-section">
                 <span class="tool-number">5</span>
@@ -162,7 +161,7 @@ body.delegate('#availability-section', 'click', function () {
  * Loads variable content for the [ convert section ]
  */
 body.delegate('#convert-section', 'click', function () {
-    ipcRenderer.send('resize-window', 800, 460);
+    ipcRenderer.send('resize-window', 800, 690);
     variable_content_div.html(
         `<div id="convert-content">
             <div id="convert-content-description" class="content-description-container">
@@ -170,8 +169,17 @@ body.delegate('#convert-section', 'click', function () {
                 <p id="convert-content-p">
                     This tool is a preprocess tool to eventually compute the statistics of the Eclipse files. 
                     It will convert Eclipse CSV files into multiple custom files: one separate file per modality. 
-                    As mentioned, the statistics can be computed for one or more of these converted files. These statistics 
-                    will be stored in the IONM database.
+                    <br><br>
+                    All the modalities that the file, or files, contain should be already in the known modalities table. If not,
+                    the converting of the file that contains unknown modalities will fail. Don't worry, this is not a disaster! If
+                    this occurs, forms will appear where you can fill out the needed information. Since the names are given already
+                    it isn't that big of a deal to fill out the forms. After you're done, simply click the 'submit all' button to
+                    insert the new modalities into the modalities table. Since you came here to convert files, you can re-run the
+                    convert task for all the files that initially failed.
+                    <br><br>
+                    As mentioned, the statistics can be computed for one or more of these converted files. On the output page there
+                    will also be an option to immediately run the compute step. Select the files you wish to compute the statistic of 
+                    from a list of successfully convert files. 
                     <br><br>Please select the CSV file(s) you wish to convert.
                 </p>
             </div>
@@ -369,39 +377,4 @@ function generateElectronAboutInfo() {
                                 <tr><td class="version-first-cell">Credits</td><td class="version-second-cell">${__credits__}</td></tr>
                                 <tr><td class="version-first-cell">Version</td><td class="version-second-cell">${__version__}</td></tr>
                                 <tr><td class="version-first-cell">Status</td><td class="version-second-cell">${__status__}</td></tr></p>`)
-}
-
-/**
- * General function for generating and animating notification (toast) messages for this renderer
- * @param type
- * @param message
- */
-function showNotification(type, message) {
-    let r = Math.random().toString(36).substring(7);
-
-    // check for existing notification messages, add extra top offset if one or more already exist
-    let extraTopOffset = ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) * 40;
-
-    // add notification element to page according to type
-    if (type === 'error') {
-        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="error-msg"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
-    } else if (type === 'info') {
-        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="info-msg"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;'+ message + '</div>');
-    } else if (type === 'success') {
-        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="success-msg"><i class="fas fa-check"></i>&nbsp;&nbsp;'+ message + '</div>');
-    } else {
-        container_after_titlebar.append('<div id="'+ r + '" class="toast" class="warning-msg"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;'+ message + '</div>');
-    }
-
-    let tempNotificationElement = $('#'+r);
-    tempNotificationElement.css('top', '+=' + extraTopOffset);
-
-    // animate the error message
-    tempNotificationElement.animate({
-        right: '+=465', opacity: 1
-    }, 800, function () {
-        tempNotificationElement.delay(5000).fadeOut(800, function () {
-            $(this).remove();
-        });
-    });
 }

@@ -80,25 +80,25 @@ function generateTable(JSON_obj) {
         let fileName = decodedFilePath.substring((decodedFilePath.lastIndexOf('\\') + 1) , ).replace(/\./g, '-');
 
         // create an unique table element
-        $('#summarize-results').append('<table class="summarize-table" id="table-' + fileName + '"></table>');
+        $('#summarize-results').append(`<table class="summarize-table" id="table-${fileName}"></table>`);
 
         // create the first three rows which are always there
         htmlTableContent.push('<tr class="table-file-name"><th>' + fileName + '</th></tr>');
-        htmlTableContent.push('<tr><td class="table-item">' + Object.keys(JSON_obj)[0] + '</td><td>'+ decodedFilePath +'</td></tr>');
-        htmlTableContent.push('<tr><td class="table-item">' + Object.keys(JSON_obj)[1] + '</td><td>'+ JSON_obj['File size'] +'</td></tr>');
+        htmlTableContent.push(`<tr><td class="table-item">${Object.keys(JSON_obj)[0]}</td><td>${decodedFilePath}</td></tr>`);
+        htmlTableContent.push(`<tr><td class="table-item">${Object.keys(JSON_obj)[1]}</td><td>${JSON_obj['File size']}</td></tr>`);
 
         // for every instance in the meta object, build a row with its key and its value
         for(let i=0; i < Object.keys(JSON_obj.meta).length; i++) {
             let key = Object.keys(JSON_obj.meta)[i];
             let value = JSON_obj['meta'][Object.keys(JSON_obj.meta)[i]];
-            htmlTableContent.push('<tr><td class="table-item">'+ key + '</td><td>' + value + '</td></tr>')
+            htmlTableContent.push(`<tr><td class="table-item">${key}</td><td>${value}</td></tr>`)
         }
 
         // for every instance in the modalities object, build a row with its key and its value
         for(let j=0; j < Object.keys(JSON_obj['modalities']).length; j++) {
             let key = Object.keys(JSON_obj['modalities'])[j];
             let value = JSON_obj['modalities'][Object.keys(JSON_obj['modalities'])[j]];
-            htmlTableContent.push('<tr><td class="table-item">'+ key + '</td><td>' + value + '</td></tr>')
+            htmlTableContent.push(`<tr><td class="table-item">${key}</td><td>${value}</td></tr>`)
         }
 
         resolve([htmlTableContent, fileName]);

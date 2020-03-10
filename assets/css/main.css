@@ -94,8 +94,6 @@ footer span {
 }
 
 #file-upload-container {
-    /* border-radius: 4px; */
-    /* border: 4px solid #cdcdcd; */
     margin-top: 15px;
     width: 100%;
     height: 140px;
@@ -195,7 +193,6 @@ footer span {
 
 #about-section {
     box-shadow: none;
-    float: right;
 }
 
 #classify-section {
@@ -555,10 +552,21 @@ h1 i {
     z-index: -5;
 }
 
+/*#add-modality .radio-container {*/
+/*    margin: 0;*/
+/*}*/
+
 /* add modality AFTER convert */
 .add-modality-after-convert {
+    background: #404040;
     position: relative;
-    padding: 15px 0 15px 0;
+    display: inline-block;
+    width: calc(50% - 32px);
+    border-radius: 4px;
+    margin: 16px;
+    padding: 18px;
+    float: left;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
 .add-modality-after-convert h1, .failed-convert-form h1 {
@@ -571,12 +579,14 @@ h1 i {
 }
 
 .add-modality-btn-container div {
-    margin:0;
+    width: 40%;
+    margin: 0;
 }
 
 .add-modality-btn-container {
-    display: flex;
-    justify-content: space-between;
+    margin: 8px 0 0 0;
+    display: block;
+    justify-content: space-evenly;
 }
 
 .failed-convert-form {
@@ -592,19 +602,21 @@ h1 i {
 }
 
 #add-modality-form-div {
-    background: #404040;
-    width: 40%;
-    padding: 5px 25px;
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    height: fit-content;
 }
 
 
 /* preloader */
 .lds-ellipsis {
-    top: 55px;
-    right: 15px;
+    top: 8px;
+    right: 4px;
     width: 80px;
     height: 80px;
     position: fixed;
+    z-index: 999;
 }
 .lds-ellipsis div {
     position: absolute;
@@ -721,12 +733,14 @@ label.radio input {
     pointer-events: none;
 }
 label.radio span {
+    margin: 0 0 6px 0;
     padding: 10px 14px;
     border: 3px solid #EEE;
-    display: inline-block;
+    display: block;
     color: white;
     border-radius: 3px;
     text-transform: uppercase;
+    text-align: center;
 }
 label.radio input:checked + span {
     background: #56565663;
@@ -735,7 +749,6 @@ label.radio input:checked + span {
 }
 
 .radio-container {
-    margin: 0 21px 0 0;
     border-radius: 4px;
     display: inline-block;
 }
@@ -750,31 +763,47 @@ label.radio input:checked + span {
 }
 
 #description-input {
-    width: 70%;
-    margin: 0 0 0 5px;
+    width: 100%;
 }
 
 #modality-input {
-    width: calc(30% - 10px);
+    width: 100%;
 }
 
 #submit-new-modality {
+    left: 50%;
+    position: absolute;
     padding: 16px;
-    margin: 0;
+    margin: 0 0 26px 0;
     background: #ccc;
     color: #404040;
     cursor: auto;
-    float: right;
     display: inline-block;
+    transform: translateX(-50%);
+}
+
+#failed-converts-actions {
+    clear: left;
 }
 
 #submit-all-modalities {
+    float: left;
     padding: 16px;
-    margin: 6px 0 17px 0;
-     background: #ccc;
+    margin: 16px;
+    background: #ff8c00cf;
+    color: white;
+    cursor: pointer;
+    display: block;
+}
+
+#rerun-failed-converts {
+    float: right;
+    padding: 16px;
+    margin: 16px;
+    background: #cccccc;
     color: #404040;
     cursor: auto;
-    display: inline-block;
+    display: block;
 }
 
 #hide-modality-form {
@@ -782,3 +811,38 @@ label.radio input:checked + span {
     display: none;
 }
 
+#failed-converts {
+    font-weight: 600;
+    width: fit-content;
+    background: #404040;
+    margin: 16px 16px 4px 16px;
+    border-radius: 4px;
+    padding: 15px 15px 20px 15px;
+    letter-spacing: 1.5px;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
+#failed-converts h1 {
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: darkorange;
+    margin: 0 0 5px;
+}
+
+#failed-converts tr, #failed-converts-p {
+    margin: 4px 0 0 0;
+}
+
+#failed-converts-p {
+    color: darkorange;
+}
+
+#failed-converts td {
+    padding: 0 30px 0 0;
+}
+
+#strategy-radios {
+    float: right
+}

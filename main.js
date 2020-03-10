@@ -144,7 +144,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
 
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < selectedFileHolder.length; i++) {
-        let command = 'ionm.py summarize "' + selectedFileHolder[i] + '"';
+        let command = `ionm.py summarize "${selectedFileHolder[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
         }, function(error, stdout, stderr) {
@@ -229,7 +229,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     event.sender.send('set-title-and-preloader-timing');
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
-    let command = 'ionm.py show_timing ' + pathsString;
+    let command = `ionm.py show_timing ${pathsString}`;
     log.info(pathsString);
     exec(command, {
         cwd: pythonSrcDirectory
@@ -255,7 +255,38 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
     event.sender.send('set-title-and-preloader-convert');
 
     for(let i = 0; i < selectedFileHolder.length; i++) {
-        let command = 'ionm.py gui_convert "' + selectedFileHolder[i] + '"';
+        let command = `ionm.py gui_convert "${selectedFileHolder[i]}"`;
+        exec(command, {
+            cwd: pythonSrcDirectory
+        }, function (error, stdout, stderr) {
+            let errorMessage = "An error occurred while trying to run the convert command";
+            if (error !== null) {
+                log.info(error);
+                event.sender.send('error', errorMessage);
+            } else if (stderr !== '') {
+                log.info(stderr);
+                event.sender.send('error', errorMessage);
+            } else {
+                event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
+            }
+        });
+    }
+});
+
+
+/**
+ *                          [ RE-RUN CONVERT ]
+ * When an initial convert task fails, the user will be asked to insert the modalities
+ * via forms because of which the convert failed. After this, the user gets the option
+ * to re-run the convert command using the file-paths of the files that weren't correctly
+ * converted in the first place.
+ */
+ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedConvertFilePaths) {
+    log.info('[ main.js - executeReRunConvertCommand ][ re-running the convert command using the filepaths of the converts that failed]');
+    event.sender.send('set-title-and-preloader-convert');
+
+    for(let i = 0; i < failedConvertFilePaths.length; i++) {
+        let command = `ionm.py gui_convert "${failedConvertFilePaths[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
         }, function (error, stdout, stderr) {
@@ -375,14 +406,14 @@ ipcMain.on('set-database', function setDatabasePath(event) {
 
 
 /**
- *                          [ SETTINGS (4 of 4) ]
+ *               [ SETTINGS (4 of 4)  /  OR AFTER FAILED CONVERT ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
-ipcMain.on('set-new-modality', function setModality(event, modality_name, type, strategy, description) {
-    log.info('to be set modality: ', modality_name, type, strategy, description);
+ipcMain.on('set-new-modality', function setModality(event, name, type, strategy) {
+    log.info('to be set modality: ', name, type, strategy);
 
-    let command = 'ionm.py gui_set_modality -n "' + modality_name + '" -t "'+ type + '" -s "' + strategy + '" -d "' + description + '"';
+    let command = `ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
     log.info(command);
     exec(command, {
         cwd: pythonSrcDirectory
@@ -397,7 +428,7 @@ ipcMain.on('set-new-modality', function setModality(event, modality_name, type, 
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send("set-modality-successful", stdout);
+            event.sender.send("set-modality-successful", name);
         }
     });
 });
