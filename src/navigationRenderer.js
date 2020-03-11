@@ -3,14 +3,16 @@
  * Following a click event the accompanying variable content
  * will be displayed to the user.
  */
-
 // requires
 window.$ = window.jQuery = require('jquery');
 const log = require('electron-log');
+console.log = log.log;
+
+// hide preloader
+$('.lds-ellipsis').hide();
+
 // os username
 const username = require("os").userInfo().username.toUpperCase();
-
-log.info();
 
 // log options configuration for all renderer processes
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
@@ -165,7 +167,7 @@ body.delegate('#convert-section', 'click', function () {
     variable_content_div.html(
         `<div id="convert-content">
             <div id="convert-content-description" class="content-description-container">
-                <h3 id="convert-content-h">Convert Eclipse CSV files(s) into a custom format</h3>
+                <h3 id="convert-content-h">Convert Eclipse CSV file(s) into a custom format</h3>
                 <p id="convert-content-p">
                     This tool is a preprocess tool to eventually compute the statistics of the Eclipse files. 
                     It will convert Eclipse CSV files into multiple custom files: one separate file per modality. 
@@ -190,7 +192,6 @@ body.delegate('#convert-section', 'click', function () {
                     <button class="run-button" id="run-convert" disabled>RUN</button>
                 </div>
             </div>
-<!--            <button class="run-button" id="run-convert" disabled>RUN</button>-->
         </div>`);
 });
 
@@ -199,7 +200,24 @@ body.delegate('#convert-section', 'click', function () {
  * Loads variable content for the [ compute section ]
  */
 body.delegate('#compute-section', 'click', function () {
-    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
+    ipcRenderer.send('resize-window', 800, 500);
+    variable_content_div.html(
+        `<div id="compute-content">
+            <div id="compute-content-description" class="content-description-container">
+                <h3 id="compute-content-h">Compute the statistics of converted Eclipse files</h3>
+                <p id="compute-content-p">
+                    It will compute the statistics and store these inside the database.
+                    <br><br>Please select the CSV file(s) you wish to compute the statistics of.
+                </p>
+            </div>
+            <div id="file-upload-container">
+                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
+                <div id="selected-filename-container">
+                    <p id="selected-filenames">No files selected</p>
+                    <button class="run-button" id="run-compute" disabled>RUN</button>
+                </div>
+            </div>
+        </div>`);
 });
 
 

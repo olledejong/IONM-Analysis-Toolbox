@@ -2,6 +2,15 @@ const { app, BrowserWindow, dialog} = require('electron');
 const ipcMain = require('electron').ipcMain;
 const exec = require('child_process').exec;
 const log = require('electron-log');
+console.log = log.log;
+const isDev = require('electron-is-dev');
+
+// check what environment you're running in
+if (isDev) {
+    log.info('Running in development');
+} else {
+    log.info('Running in production');
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -26,6 +35,7 @@ function createWindow () {
     window = new BrowserWindow({
         width: 730,
         height: 800,
+        title: 'IONM Analysis Toolbox',
         icon: __dirname + '/assets/images/icon.svg',
         resizable: true,
         frame: false,
@@ -283,7 +293,7 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
  */
 ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedConvertFilePaths) {
     log.info('[ main.js - executeReRunConvertCommand ][ re-running the convert command using the filepaths of the converts that failed]');
-    event.sender.send('set-title-and-preloader-convert');
+    event.sender.send('set-preloader-rerun-convert');
 
     for(let i = 0; i < failedConvertFilePaths.length; i++) {
         let command = `ionm.py gui_convert "${failedConvertFilePaths[i]}"`;
@@ -298,12 +308,39 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
                 log.info(stderr);
                 event.sender.send('error', errorMessage);
             } else {
-                event.sender.send('convert-result', JSON.parse(stdout));
+                event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
             }
         });
     }
 });
 
+
+/**
+ *                          [ COMPUTE FILE(S) ]
+ *
+ */
+ipcMain.on('run-compute', function executeComputeCommand(event) {
+    log.info('[ main.js - executeComputeCommand ][ executing compute command ]');
+    event.sender.send('set-title-and-preloader-compute');
+
+    for(let i = 0; i < selectedFileHolder.length; i++) {
+        let command = `ionm.py compute -f "${selectedFileHolder[i]}" -s all`;
+        exec(command, {
+            cwd: pythonSrcDirectory
+        }, function (error, stdout, stderr) {
+            let errorMessage = "An error occurred while trying to run the compute command";
+            if (error !== null) {
+                log.info(error);
+                event.sender.send('error', errorMessage);
+            } else if (stderr !== '') {
+                log.info(stderr);
+                event.sender.send('error', errorMessage);
+            } else {
+                event.sender.send('compute-result', stdout, selectedFileHolder[i]);
+            }
+        });
+    }
+});
 
 /**
  *                           [ VERSION INFO ]

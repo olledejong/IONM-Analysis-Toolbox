@@ -24,9 +24,9 @@ variableContent.on("click", '#run-timing', function() {
  * and preloader will be set.
  */
 ipcRenderer.on('set-title-and-preloader-timing', function (event) {
+    $('.lds-ellipsis').show('fast');
     variableContent.html(
-        `<h2 id="summarize-result-title">Resulting summarized information</h2>
-         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        `<h2 id="summarize-result-title">Resulting timing plots</h2>
          <div id="timing-results"></div>`);
     // hide summarize results div untill it actually gets some results
     $('#timing-results').hide();
@@ -77,5 +77,5 @@ ipcRenderer.on('timing-result', function (event, timing_result) {
             }
         }
     });
-    $('.lds-ellipsis').fadeOut();
+    $('.lds-ellipsis').hide('fast');
 });

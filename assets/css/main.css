@@ -59,6 +59,7 @@ footer span {
     height: auto;
     font-weight: 500;
     font-size: 20px;
+    text-shadow: 1px 2px 0 #404040;
     color: white;
 }
 
@@ -82,7 +83,7 @@ footer span {
     overflow-y: auto;
 }
 
-#convert-content, #timing-content, #summarize-content, #settings-content, #convert-results {
+#convert-content, #compute-content, #timing-content, #summarize-content, #settings-content, #convert-results {
     margin-top: 8px;
 }
 
@@ -122,14 +123,14 @@ footer span {
 }
 
 
-#summarize-content-p, #timing-content-p, #convert-content-p {
+#summarize-content-p, #timing-content-p, #convert-content-p, #compute-content-p {
     font-weight: 400;
     width: 100%;
     letter-spacing: 1px;
 }
 
 
-#summarize-content-h, #timing-content-h, #convert-content-h {
+#summarize-content-h, #timing-content-h, #convert-content-h, #compute-content-h {
     margin: 0 0 10px 0;
     text-align: left;
     color: darkorange;
@@ -673,7 +674,7 @@ h1 i {
 .success-msg,
 .warning-msg,
 .error-msg {
-    position: absolute;
+    position: fixed;
     right: -455px;
     top: 35px;
     z-index: 100;
@@ -811,18 +812,18 @@ label.radio input:checked + span {
     display: none;
 }
 
-#failed-converts {
+#failed-converts, #succeeded-converts {
     font-weight: 600;
     width: fit-content;
     background: #404040;
     margin: 16px 16px 4px 16px;
     border-radius: 4px;
-    padding: 15px 15px 20px 15px;
+    padding: 10px 15px 20px 15px;
     letter-spacing: 1.5px;
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
-#failed-converts h1 {
+#failed-converts h1, #succeeded-converts h1 {
     text-align: left;
     font-size: 17px;
     font-weight: 700;
@@ -831,15 +832,28 @@ label.radio input:checked + span {
     margin: 0 0 5px;
 }
 
-#failed-converts tr, #failed-converts-p {
-    margin: 4px 0 0 0;
+#failed-converts h1 i , #succeeded-converts h1 i {
+    margin: 2px -4px 0 0;
+    float: right
 }
 
-#failed-converts-p {
+#failed-converts h1 i {
+    color: #d8222c;
+}
+
+#succeeded-converts h1 i {
+    color: #270;
+}
+
+#failed-converts tr, #failed-converts-p, #succeeded-converts tr, #succeeded-converts-p {
+    margin: 10px 0 0 0;
+}
+
+#failed-converts-p, #succeeded-converts-p {
     color: darkorange;
 }
 
-#failed-converts td {
+#failed-converts td, #succeeded-converts td {
     padding: 0 30px 0 0;
 }
 

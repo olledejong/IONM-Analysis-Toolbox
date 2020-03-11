@@ -31,9 +31,8 @@ variable_content.on("click", '#run-summarize', function() {
  * and preloader will be set.
  */
 ipcRenderer.on('set-title-and-preloader-summarize', function (event) {
-    variable_content.html(
-        `<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-         <div id="summarize-results"></div>`);
+    $('.lds-ellipsis').show()
+    variable_content.html(`<div id="summarize-results"></div>`);
     // hide summarize results div untill it actually gets some results
     $('#summarize-results').hide();
 });
@@ -62,7 +61,7 @@ ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_
         selector.append(result[0]);
         log.info("[ summarizeRenderer.js ][ Appending table rows to table "+ result[1] +" ]");
         // fade out the preloader
-        $('.lds-ellipsis').fadeOut();
+        $('.lds-ellipsis').hide('fast')
     });
 });
 

@@ -27,15 +27,22 @@ varContent.on("click", '#run-convert', function() {
  * and preloader will be set.
  */
 ipcRenderer.on('set-title-and-preloader-convert', function () {
+    $('.lds-ellipsis').show();
     varContent.html(
-        `<!--<h2 id="convert-result-title">Convert results</h2>-->
-         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-         <div id="convert-results">
-            <div id="add-modality-form-div">
+        `<div id="convert-results">
+            <div id="success-and-run-compute">
                 <div id="succeeded-converts">
+                    <h1>Succeeded converts<i class="fas fa-check"></i></h1>
+                    <p id="succeeded-converts-p">
+                        In the future below might appear a form per succeeded convert for the purpose of immediately computing
+                        the convert files their statistics.<br>
+                        This is currently in development
+                    </p>
                 </div>
+            </div>
+            <div id="add-modality-form-div">
                 <div id="failed-converts">
-                    <h1>Failed converts</h1>
+                    <h1>Failed converts<i class="fas fa-times-circle"></i></h1>
                     <p id="failed-converts-p">
                         Below you see a form for every unique modality encountered that is not present in the modalities table. 
                         Make alterations where needed and hit the 'submit all' button to insert the modalities into the database.
@@ -51,6 +58,17 @@ ipcRenderer.on('set-title-and-preloader-convert', function () {
     $('#succeeded-converts').hide();
     $('#failed-converts').hide();
     $('#add-modality-form-div').hide();
+    $('#success-and-run-compute').hide();
+});
+
+
+ipcRenderer.on('set-preloader-rerun-convert', function () {
+    $('.lds-ellipsis').show();
+    $('#add-modality-form-div').animate({
+        opacity: 0
+    }, 800, function () {
+        $(this).remove();
+    })
 });
 
 
@@ -67,7 +85,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
 
     // output parts
     let file_name = convert_output['file-name'];
-    let success_msg = convert_output['succes-msg'];
+    let success_msg = convert_output['success-msg'];
     let short_error_msg = convert_output['short-error-msg'];
     let error_msg = convert_output['error-msg'];
     let unknown_modalities = convert_output['unknown-modalities'];
@@ -76,14 +94,17 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
     let extraTopOffset = ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) * 40;
 
     // if iteration has a success message in it
-    if (convert_output.hasOwnProperty('succes-msg')) {
-        log.info('succeeded: ', file_name);
-        showNotification('success', success_msg);
+    if (convert_output.hasOwnProperty('success-msg')) {
+        $(`<tr><td class="failed-name-td">` + file_name +`</td><td class="err-msg-td">`+ success_msg +`</td><td class="file-path-td">`+ filePathOfRun +`</td></tr><br>`).insertBefore('#succeeded-converts-p');
+        $('#succeeded-converts').show();
+        $('#success-and-run-compute').show();
 
+        showNotification('success', success_msg);
+        convert_results.show();
     // if iteration does not contain success message
     } else {
         failedConvertFilePaths.push(filePathOfRun);
-        $(`<tr><td class="failed-name-td">` + file_name +`</td><td class="err-msg-td">`+ error_msg +`</td><td class="file-path-td">`+ filePathOfRun +`</td></tr>`).insertBefore('#failed-converts-p');
+        $(`<tr><td class="failed-name-td">` + file_name +`</td><td class="err-msg-td">`+ error_msg +`</td><td class="file-path-td">`+ filePathOfRun +`</td></tr><br>`).insertBefore('#failed-converts-p');
         $('#add-modality-form-div').show();
         $('#failed-converts').show();
         let existingAddModalityForms = [];
@@ -120,7 +141,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
         });
     });
 
-    $('.lds-ellipsis').delay(3000).fadeOut();
+    $('.lds-ellipsis').delay(1000).hide('fast');
 });
 
 
