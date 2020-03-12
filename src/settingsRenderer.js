@@ -7,6 +7,9 @@ let var_cont = $("#variable-content");
 // globals
 let currentDatabase;
 
+// set the start path of the file select window
+defaultDatabasePath = "D:\\Menno\\NimEclipse\\NS\\test";
+
 
 ipcRenderer.on('current-database-settings', function (event, database_settings) {
     $('.database-path').html(database_settings.replace(/"/g, ''));
@@ -52,7 +55,6 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
 
             // for every key (modality), create a row which will hold its information
             for (let i = 0; i < Object.keys(parsed).length; i++) {
-                log.info(Object.keys(parsed)[i]);
                 let rndmHash = Math.random().toString(36).substring(7);
                 $('#modalities-table').append('<tr id="row-' + rndmHash + '"><td>' + Object.keys(parsed)[i] + '</td></tr>');
 
@@ -89,7 +91,7 @@ variable_content.on("click", '#select-database-btn', function() {
     const options = {
         title: 'Select database',
         filters: types,
-        defaultPath: "D:\\Menno\\NimEclipse\\NS\\test",
+        defaultPath: defaultDatabasePath,
         properties: ['openFile']
     };
     ipcRenderer.send("select-file", options);
@@ -102,7 +104,7 @@ variable_content.on("click", '#select-database-btn', function() {
  * database path in the config.ini file in the Python project
  */
 var_cont.on("click", '#set-database', function() {
-    showNotification('info', 'Setting the database path');
+    showNotification('info', 'Setting the database path..');
     ipcRenderer.send("set-database");
 
     let set_database = $('#set-database');
@@ -123,7 +125,7 @@ ipcRenderer.on('database-set-successful', function () {
     ipcRenderer.send('get-database-settings');
 
     showNotification('success', 'Successfully set the database path');
-    showNotification('info', 'Updating the modalities');
+    showNotification('info', 'Updating the modalities..');
 });
 
 
@@ -133,8 +135,6 @@ ipcRenderer.on('database-set-successful', function () {
  * the dynamic content 'options'
  */
 variable_content.on("click", '#add-new-modality', function() {
-
-    log.info('add clicked');
     ipcRenderer.send('resize-window', 1200, 800);
 
     // animate the modality form
@@ -245,6 +245,7 @@ variable_content.on('click', '#setup-database', function () {
         message: "Are you sure about setting up the following database?\n"+ currentDatabase
     };
     ipcRenderer.send('showConfirmationBox', options)
+    showNotification('info', 'Setting up the database..');
 });
 
 
@@ -252,5 +253,5 @@ ipcRenderer.on('database-setup-successful', function () {
     showNotification('success', 'Successfully setup the database');
     // update the modalities
     ipcRenderer.send('get-modality-settings');
-    showNotification('info', 'Updating the modalities');
+    showNotification('info', 'Updating the modalities..');
 });

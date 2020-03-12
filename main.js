@@ -87,7 +87,7 @@ app.on('activate', () => {
  * @param {int} newY
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
-    log.info('[ resizeBrowserWindow ][ resizing window to: ', newX, 'x', newY, 'px ]');
+    log.info('[ resizeBrowserWindow ][ resizing window to: ', newX, 'px wide and ', newY, 'px high ]');
     try {
         let currentWindowSize = window.getSize();
         if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
@@ -136,7 +136,6 @@ ipcMain.on("select-file", function selectFileAndSendBack(event, options) {
 ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // window sizing logic
     if ( selectedFileHolder.length > 2 ) {
-        log.info('[ executeSummarizeCommand ][ resizing window ]');
         window.setMinimumSize(1220, 900);
         window.setSize(1220, 900);
     } else if ( selectedFileHolder.length === 2 ) {
@@ -240,7 +239,6 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
     let command = `ionm.py show_timing ${pathsString}`;
-    log.info(pathsString);
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -250,7 +248,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
         } else if (stderr !== '') {
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send('timing-result', JSON.parse(stdout));
+            event.sender.send('timing-result', /*JSON.parse(stdout)*/);
         }
     })
 });
@@ -271,10 +269,10 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
         }, function (error, stdout, stderr) {
             let errorMessage = "An error occurred while trying to run the convert command";
             if (error !== null) {
-                log.info(error);
+                log.error(error);
                 event.sender.send('error', errorMessage);
             } else if (stderr !== '') {
-                log.info(stderr);
+                log.error(stderr);
                 event.sender.send('error', errorMessage);
             } else {
                 event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
@@ -302,10 +300,10 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
         }, function (error, stdout, stderr) {
             let errorMessage = "An error occurred while trying to run the convert command";
             if (error !== null) {
-                log.info(error);
+                log.error(error);
                 event.sender.send('error', errorMessage);
             } else if (stderr !== '') {
-                log.info(stderr);
+                log.error(stderr);
                 event.sender.send('error', errorMessage);
             } else {
                 event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
@@ -323,23 +321,23 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
     log.info('[ main.js - executeComputeCommand ][ executing compute command ]');
     event.sender.send('set-title-and-preloader-compute');
 
-    for(let i = 0; i < selectedFileHolder.length; i++) {
-        let command = `ionm.py compute -f "${selectedFileHolder[i]}" -s all`;
-        exec(command, {
-            cwd: pythonSrcDirectory
-        }, function (error, stdout, stderr) {
-            let errorMessage = "An error occurred while trying to run the compute command";
-            if (error !== null) {
-                log.info(error);
-                event.sender.send('error', errorMessage);
-            } else if (stderr !== '') {
-                log.info(stderr);
-                event.sender.send('error', errorMessage);
-            } else {
-                event.sender.send('compute-result', stdout, selectedFileHolder[i]);
-            }
-        });
-    }
+    let pathsString = '"' + selectedFileHolder.join('" "') + '"';
+    let command = `ionm.py compute -f ${pathsString} -s all`;
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function (error, stdout, stderr) {
+        let errorMessage = "An error occurred while trying to run the compute command";
+        if (error !== null) {
+            log.error(error);
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('compute-result', stdout, selectedFileHolder);
+        }
+    });
+
 });
 
 /**
@@ -406,7 +404,6 @@ ipcMain.on("get-modality-settings", function getModalitySettings(event) {
             }
             event.sender.send('error', errorMessage);
         } else {
-            log.info('type of modality output: ',typeof stdout);
             event.sender.send("current-modality-settings", stdout);
         }
     });
@@ -418,10 +415,8 @@ ipcMain.on("get-modality-settings", function getModalitySettings(event) {
  * This is done by calling the ionm.py function gui_get_modalities
  */
 ipcMain.on('set-database', function setDatabasePath(event) {
-    log.info('to be set database path: ', selectedFileHolder);
     // only one file can end up here, but it still is in a list
     let new_database_path = selectedFileHolder[0];
-    log.info(new_database_path);
 
     let command = 'ionm.py gui_set_database "' + new_database_path + '"';
     exec(command, {
@@ -448,10 +443,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
  * This is done by calling the ionm.py function gui_get_modalities
  */
 ipcMain.on('set-new-modality', function setModality(event, name, type, strategy) {
-    log.info('to be set modality: ', name, type, strategy);
-
     let command = `ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
-    log.info(command);
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {

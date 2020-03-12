@@ -1,3 +1,6 @@
+// set the start path of the file select window
+defaultDatabasePath = "D:\\Menno\\NimEclipse\\NS\\test";
+
 // inform the Main Process that it has to open a file select window
 variable_content.on("click", '.csv-select-btn', function() {
     // configure which types of files are allowed
@@ -71,7 +74,6 @@ function generateFilenames(paths) {
         if( (i % 2) !== 0 && (i !== 0) ) {
             fileNameList.push(substring);
             fileNameList.push('<br>');
-            log.info('modulo ',i, ' is 0')
         } else if ( paths.length !== 1 ) {
             fileNameList.push(substring);
             fileNameList.push('&nbsp;&nbsp;&nbsp;&nbsp;');

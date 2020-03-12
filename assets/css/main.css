@@ -617,7 +617,7 @@ h1 i {
     width: 80px;
     height: 80px;
     position: fixed;
-    z-index: 999;
+    z-index: 998;
 }
 .lds-ellipsis div {
     position: absolute;
@@ -677,7 +677,7 @@ h1 i {
     position: fixed;
     right: -455px;
     top: 35px;
-    z-index: 100;
+    z-index: 999;
     opacity: 0;
     font-size: 16px;
     font-weight: 600;
@@ -812,7 +812,7 @@ label.radio input:checked + span {
     display: none;
 }
 
-#failed-converts, #succeeded-converts {
+#failed-converts, #succeeded-converts, #succeeded-computes {
     font-weight: 600;
     width: fit-content;
     background: #404040;
@@ -823,7 +823,7 @@ label.radio input:checked + span {
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
-#failed-converts h1, #succeeded-converts h1 {
+#failed-converts h1, #succeeded-converts h1, #succeeded-computes h1  {
     text-align: left;
     font-size: 17px;
     font-weight: 700;
@@ -832,7 +832,7 @@ label.radio input:checked + span {
     margin: 0 0 5px;
 }
 
-#failed-converts h1 i , #succeeded-converts h1 i {
+#failed-converts h1 i , #succeeded-converts h1 i, #succeeded-computes h1 i {
     margin: 2px -4px 0 0;
     float: right
 }
@@ -849,7 +849,7 @@ label.radio input:checked + span {
     margin: 10px 0 0 0;
 }
 
-#failed-converts-p, #succeeded-converts-p {
+#failed-converts-p, #succeeded-converts-p, #succeeded-computes-p {
     color: darkorange;
 }
 

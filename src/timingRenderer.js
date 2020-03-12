@@ -25,57 +25,55 @@ variableContent.on("click", '#run-timing', function() {
  */
 ipcRenderer.on('set-title-and-preloader-timing', function (event) {
     $('.lds-ellipsis').show('fast');
-    variableContent.html(
-        `<h2 id="summarize-result-title">Resulting timing plots</h2>
-         <div id="timing-results"></div>`);
+    variableContent.html(`<div id="timing-results"></div>`);
     // hide summarize results div untill it actually gets some results
     $('#timing-results').hide();
 });
 
 
 ipcRenderer.on('timing-result', function (event, timing_result) {
-    log.info('timing result in renderer: ', timing_result);
-    log.info(typeof timing_result);
+    // log.info('timing result in renderer: ', timing_result);
+    // log.info(typeof timing_result);
 
-    $('#timing-results').html('<canvas id="myChart"></canvas>');
-    let myChart = $('#myChart');
-
-    let modalities = timing_result['modalities'];
-    let timestamps = timing_result['timestamps'];
-    let indices = timing_result['indices'];
-    let unique_modalities = timing_result['unique_modalities'];
-    let colors = timing_result['colors'];
-    log.info('mod: ', modalities);
-    log.info('tim: ', timestamps);
-    log.info('ind: ', indices);
-    log.info('uni: ', unique_modalities);
-    log.info('col: ', colors);
-
-    let massPopChart = new Chart(myChart, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Scatter Dataset',
-                data: [{
-                    x: -10,
-                    y: 0
-                }, {
-                    x: 0,
-                    y: 10
-                }, {
-                    x: 10,
-                    y: 5
-                }]
-            }]
-        },
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'linear',
-                    position: 'bottom'
-                }]
-            }
-        }
-    });
+    // $('#timing-results').html('<canvas id="myChart"></canvas>');
+    // let myChart = $('#myChart');
+    //
+    // let modalities = timing_result['modalities'];
+    // let timestamps = timing_result['timestamps'];
+    // let indices = timing_result['indices'];
+    // let unique_modalities = timing_result['unique_modalities'];
+    // let colors = timing_result['colors'];
+    // log.info('mod: ', modalities);
+    // log.info('tim: ', timestamps);
+    // log.info('ind: ', indices);
+    // log.info('uni: ', unique_modalities);
+    // log.info('col: ', colors);
+    //
+    // let massPopChart = new Chart(myChart, {
+    //     type: 'scatter',
+    //     data: {
+    //         datasets: [{
+    //             label: 'Scatter Dataset',
+    //             data: [{
+    //                 x: -10,
+    //                 y: 0
+    //             }, {
+    //                 x: 0,
+    //                 y: 10
+    //             }, {
+    //                 x: 10,
+    //                 y: 5
+    //             }]
+    //         }]
+    //     },
+    //     options: {
+    //         scales: {
+    //             xAxes: [{
+    //                 type: 'linear',
+    //                 position: 'bottom'
+    //             }]
+    //         }
+    //     }
+    // });
     $('.lds-ellipsis').hide('fast');
 });

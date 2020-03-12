@@ -34,9 +34,9 @@ ipcRenderer.on('set-title-and-preloader-convert', function () {
                 <div id="succeeded-converts">
                     <h1>Succeeded converts<i class="fas fa-check"></i></h1>
                     <p id="succeeded-converts-p">
-                        In the future below might appear a form per succeeded convert for the purpose of immediately computing
+                        In the future, below might appear a form per succeeded convert for the purpose of immediately computing
                         the convert files their statistics.<br>
-                        This is currently in development
+                        This is currently in development..
                     </p>
                 </div>
             </div>
@@ -78,7 +78,6 @@ ipcRenderer.on('set-preloader-rerun-convert', function () {
  * to do next.
  */
 ipcRenderer.on('convert-result', function displayConvertResultContent(event, convert_output, filePathOfRun) {
-    log.info('displaying convert result');
     let missingModalities = [];
     let rndmHash = Math.random().toString(36).substring(7);
     let convert_results = $('#convert-results');
@@ -117,7 +116,6 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
 
         for (let i = 0; i < unknown_modalities.length; i++) {
             if (!missingModalities.includes(unknown_modalities[i].toString())) {
-                log.info('missing: ', unknown_modalities[i].toString());
                 missingModalities.push(unknown_modalities[i].toString())
             }
         }
@@ -141,7 +139,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
         });
     });
 
-    $('.lds-ellipsis').delay(1000).hide('fast');
+    $('.lds-ellipsis').hide('fast');
 });
 
 
