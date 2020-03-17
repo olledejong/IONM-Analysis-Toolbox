@@ -104,7 +104,7 @@ variable_content.on("click", '#select-database-btn', function() {
  * database path in the config.ini file in the Python project
  */
 var_cont.on("click", '#set-database', function() {
-    showNotification('info', 'Setting the database path..');
+    showNotification('info', 'Setting the database path');
     ipcRenderer.send("set-database");
 
     let set_database = $('#set-database');
@@ -125,7 +125,7 @@ ipcRenderer.on('database-set-successful', function () {
     ipcRenderer.send('get-database-settings');
 
     showNotification('success', 'Successfully set the database path');
-    showNotification('info', 'Updating the modalities..');
+    showNotification('info', 'Updating the modalities');
 });
 
 
@@ -244,14 +244,24 @@ variable_content.on('click', '#setup-database', function () {
         buttons: ["Yes", "No", "Cancel"],
         message: "Are you sure about setting up the following database?\n"+ currentDatabase
     };
-    ipcRenderer.send('showConfirmationBox', options)
-    showNotification('info', 'Setting up the database..');
+    ipcRenderer.send('showConfirmationBox', options);
 });
 
 
+/**
+ * Lets the user know that the database is being setup
+ */
+ipcRenderer.on('setting-up-database', function () {
+    showNotification('info', 'Setting up the database')
+});
+
+
+/**
+ * Lets the user know that the database setup was successful
+ */
 ipcRenderer.on('database-setup-successful', function () {
     showNotification('success', 'Successfully setup the database');
     // update the modalities
     ipcRenderer.send('get-modality-settings');
-    showNotification('info', 'Updating the modalities..');
+    showNotification('info', 'Updating the modalities');
 });

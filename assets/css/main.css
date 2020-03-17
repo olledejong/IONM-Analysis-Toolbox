@@ -48,7 +48,7 @@ footer span {
     min-width: 100%;
     margin-top: 38px;
     position: absolute;
-    padding: 10px 20px 20px 20px;
+    padding: 10px 20px 0 20px;
     overflow-y: visible;
 }
 
@@ -66,7 +66,7 @@ footer span {
 
 .csv-select-btn {
     height: 100%;
-    background: #ff8c00cf;
+    background: darkorange;
     line-height: 22px;
     font-weight: 500;
     font-size: 16px;
@@ -87,6 +87,22 @@ footer span {
     margin-top: 8px;
 }
 
+#compute-content h1 {
+    border-radius: 4px;
+    left: 50%;
+    transform: translate(-50%, 30px);
+    padding: 20px;
+    font-size: 29px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: white;
+    background: #404040;
+    text-align: center;
+    width: fit-content;
+    position: absolute;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
 .content-description-container {
     padding: 12px 20px 20px 20px;
     background: #404040;
@@ -103,7 +119,6 @@ footer span {
 
 #selected-filename-container {
     border-radius: 0 4px 4px 0;
-    overflow: scroll;
     background: #404040;
     float: right;
     transition: all 0.2s ease-out;
@@ -113,13 +128,16 @@ footer span {
 }
 
 #selected-filenames {
+    max-height: 126px;
+    overflow: scroll;
     width: fit-content;
-    position: absolute;
-    transform: translate(-50%, -50%);
     letter-spacing: 1.5px;
     color: white;
+    position: absolute;
     left: 50%;
     top: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
 }
 
 
@@ -335,7 +353,7 @@ h1 i {
     letter-spacing: 1.5px;
     float: right;
     width: 100px;
-    background-color: #ff8c00cf;
+    background-color: darkorange;
     height: 50px;
     opacity: 0;
     color: white;
@@ -818,7 +836,7 @@ label.radio input:checked + span {
     background: #404040;
     margin: 16px 16px 4px 16px;
     border-radius: 4px;
-    padding: 10px 15px 20px 15px;
+    padding: 10px 15px 10px 15px;
     letter-spacing: 1.5px;
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
@@ -837,6 +855,18 @@ label.radio input:checked + span {
     float: right
 }
 
+#succeeded-computes {
+    margin: 0;
+}
+
+#succeeded-computes td {
+    padding: 0 30px 0 0;
+}
+
+#succeeded-computes .name-td {
+    white-space:nowrap;
+}
+
 #failed-converts h1 i {
     color: #d8222c;
 }
@@ -845,12 +875,16 @@ label.radio input:checked + span {
     color: #270;
 }
 
-#failed-converts tr, #failed-converts-p, #succeeded-converts tr, #succeeded-converts-p {
+#failed-converts tr, #failed-converts-p, #succeeded-converts tr, #succeeded-converts-p, #succeeded-computes tr {
     margin: 10px 0 0 0;
 }
 
 #failed-converts-p, #succeeded-converts-p, #succeeded-computes-p {
     color: darkorange;
+}
+
+#succeeded-computes-p {
+    margin: 5px 0 0 0;
 }
 
 #failed-converts td, #succeeded-converts td {

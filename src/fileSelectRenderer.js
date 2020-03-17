@@ -34,6 +34,13 @@ ipcRenderer.on("selected", function (event, paths) {
     if(paths.length !== 0) {
         let finalFileNames = generateFilenames(paths);
 
+        selected_filenames_p.css({
+            'position' : 'relative',
+            'left' : '0',
+            'top' : '0',
+            'margin': '8px 0 8px 15px',
+            'transform': 'none',
+        });
         // set text inside the button to selected files
         selected_filenames_p.html(finalFileNames);
 
@@ -48,6 +55,13 @@ ipcRenderer.on("selected", function (event, paths) {
 
     // disable run button when file selection cancelled
     } else {
+        selected_filenames_p.css({
+            'position' : 'absolute',
+            'left' : '50%',
+            'top' : '50%',
+            'margin': '0',
+            'transform': 'translate(-50%, -50%)',
+        });
         selected_filenames_p.html('No files selected');
         run_button.css({
             'right': '-100px',
@@ -71,15 +85,8 @@ function generateFilenames(paths) {
         let lastIndex = paths[i].lastIndexOf('\\');
         let substring = paths[i].substring((lastIndex + 1), paths[i].length);
         // after every two filenames push a linebreak, but dont do this for the first element
-        if( (i % 2) !== 0 && (i !== 0) ) {
-            fileNameList.push(substring);
-            fileNameList.push('<br>');
-        } else if ( paths.length !== 1 ) {
-            fileNameList.push(substring);
-            fileNameList.push('&nbsp;&nbsp;&nbsp;&nbsp;');
-        } else {
-            fileNameList.push(substring);
-        }
+        fileNameList.push(substring);
+        fileNameList.push('<br>');
     }
     return fileNameList.join('');
 }

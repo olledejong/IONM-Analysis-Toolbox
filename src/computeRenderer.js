@@ -13,6 +13,7 @@ let variableCont = $("#variable-content");
  * command.
  */
 variableCont.on("click", '#run-compute', function() {
+    ipcRenderer.send('resize-window', 1180, 600);
     ipcRenderer.send("run-compute");
 });
 
@@ -24,9 +25,10 @@ variableCont.on("click", '#run-compute', function() {
 ipcRenderer.on('set-title-and-preloader-compute', function () {
     $('.lds-ellipsis').show();
     variableCont.html(`<div id="compute-content">
+                            <h1>Please work through the external windows to get to the final result</h1>
                             <div id="successful-computes">
                                 <div id="succeeded-computes">
-                                    <h1>Succeeded computes<i class="fas fa-check"></i></h1>
+                                    <h1>Successfully computed<i class="fas fa-check"></i></h1>
                                     <p id="succeeded-computes-p">
                                         For now the method of selecting signals is the same as before, but this might change in the future.
                                     </p>
@@ -38,10 +40,15 @@ ipcRenderer.on('set-title-and-preloader-compute', function () {
 
 
 ipcRenderer.on('compute-result', function (event, stdout, file_path) {
-    let file_name = path.parse(file_path).base.trim();
+    for (let i = 0; i < file_path.length; i++) {
+        log.info(file_path);
+        let file_name = path.parse(file_path[i]).base.trim();
+        showNotification('success', `Successfully computed ${file_name} `);
+        $(`<tr><td class="name-td">` + file_name +`</td><td class="msg-td">Successfully computed the statistics of this file. Results can be found in the database</td><td class="filepath-td">`+ file_path[0] +`</td></tr><br>`).insertBefore('#succeeded-computes-p');
+    }
     $('.lds-ellipsis').hide('fast');
-    showNotification('success', `The file has successfully been computed`);
+    $('#compute-content h1').hide();
     $('#successful-computes').show('fast');
-    $(`<tr><td class="name-td">` + file_name +`</td><td class="msg-td">Successfully computed the statistics of this file. Results can be found in the database</td><td class="filepath-td">`+ file_path +`</td></tr><br>`).insertBefore('#succeeded-computes-p');
+
 });
 

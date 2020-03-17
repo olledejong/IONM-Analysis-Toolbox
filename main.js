@@ -462,21 +462,27 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
     });
 });
 
-
+/**
+ * Shows a confirmation box to the user for safety purposes
+ */
 ipcMain.on('showConfirmationBox', function (event, options) {
     dialog.showMessageBox(window, options).then(r => {
         if (r.response !== 0) {
             event.sender.send('cancelled')
         } else {
-            // showNotification('info', 'Setting up the datbase');
             setupDatabase(event)
         }
     })
 });
 
-
+/**
+ * Calls the python function that sets up the database via a ChildProcess
+ * @param event
+ */
 function setupDatabase(event) {
     // TODO WRITE THIS FUNCTION, note: no database path needed since its already defined in config.ini
+    event.sender.send('setting-up-database');
+
     exec('ionm.py gui_setup', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
