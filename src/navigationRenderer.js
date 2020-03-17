@@ -40,11 +40,12 @@ $('#welcome-text').html(`Welcome, ${username}, please select a tool to get start
  * Loads variable content for the [ welcome section ]
  */
 $("#welcome-section").click(function () {
+    removeToastMessages();
     if (variable_content_div.find('#tool-container').length > 0) {
     } else {
         ipcRenderer.send('resize-window', 730, 800);
         variable_content_div.html(
-        `<h1 id="welcome-text">Hi ` + username + `, what do you wish to do next?</h1>
+        `<h1 id="welcome-text">Hi ${username}, what do you wish to do next?</h1>
          <div id="tool-container">
             <div id="summarize-section">
                 <span class="tool-number">1</span>
@@ -103,6 +104,7 @@ $("#welcome-section").click(function () {
  * Loads variable content for the [ summarize section ]
  */
 body.delegate("#summarize-section", "click", function () {
+    removeToastMessages();
     ipcRenderer.send('resize-window', 750, 460);
     variable_content_div.html(
         `<div id="summarize-content">
@@ -129,6 +131,7 @@ body.delegate("#summarize-section", "click", function () {
  * Loads variable content for the [ timing section ]
  */
 body.delegate('#timing-section', 'click', function () {
+    removeToastMessages();
     ipcRenderer.send('resize-window', 800, 450);
     variable_content_div.html(
         `<div id="timing-content">
@@ -155,6 +158,7 @@ body.delegate('#timing-section', 'click', function () {
  * Loads variable content for the [ availability section ]
  */
 body.delegate('#availability-section', 'click', function () {
+    ipcRenderer.send('remove-toast-messages');
     showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
 });
 
@@ -163,6 +167,7 @@ body.delegate('#availability-section', 'click', function () {
  * Loads variable content for the [ convert section ]
  */
 body.delegate('#convert-section', 'click', function () {
+    removeToastMessages();
     ipcRenderer.send('resize-window', 800, 690);
     variable_content_div.html(
         `<div id="convert-content">
@@ -200,13 +205,14 @@ body.delegate('#convert-section', 'click', function () {
  * Loads variable content for the [ compute section ]
  */
 body.delegate('#compute-section', 'click', function () {
+    removeToastMessages();
     ipcRenderer.send('resize-window', 800, 500);
     variable_content_div.html(
         `<div id="compute-content">
             <div id="compute-content-description" class="content-description-container">
                 <h3 id="compute-content-h">Compute the statistics of converted Eclipse files</h3>
                 <p id="compute-content-p">
-                    It will compute the statistics and store these inside the database.
+                    This tool will compute the statistics and store these inside the database.
                     <br><br>Please select the CSV file(s) you wish to compute the statistics of.
                 </p>
             </div>
@@ -225,6 +231,7 @@ body.delegate('#compute-section', 'click', function () {
  * Loads variable content for the [ EVC section ]
  */
 body.delegate('#evc-section', 'click', function () {
+    removeToastMessages();
     showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
 });
 
@@ -233,6 +240,7 @@ body.delegate('#evc-section', 'click', function () {
  * Loads variable content for the [ classify section ]
  */
 body.delegate('#classify-section', 'click', function () {
+    removeToastMessages();
     showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
 });
 
@@ -241,6 +249,7 @@ body.delegate('#classify-section', 'click', function () {
  * Loads variable content for the [ settings section ]
  */
 body.delegate('#settings-section', 'click', function () {
+    removeToastMessages();
     // tell main process to resize the window, and to retrieve the current settings
     ipcRenderer.send('resize-window', 1200, 850);
     ipcRenderer.send('get-database-settings');
@@ -309,9 +318,13 @@ body.delegate('#settings-section', 'click', function () {
                 </div>
                 <button class="settings-button" id="submit-new-modality" disabled>SUBMIT</button>
             </div>
+<!--            <div class="small-tool" id="parameter-calculation-settings">-->
+<!--                <input id="modality-input" type="text" placeholder="MODALITY" required>-->
+<!--                <button class="settings-button" id="submit-parameter-calc-setting" disabled>SUBMIT</button>-->
+<!--            </div>-->
         </div>
         `);
-    showNotification('info', 'Retrieving configured modalities and the currently active database');
+    showNotification('info', 'Retrieving current settings');
 });
 
 
@@ -324,6 +337,7 @@ body.delegate('#settings-section', 'click', function () {
  * info and calls function that generates the GUI version info.
  */
 about_section_button.click(function () {
+    removeToastMessages();
     if(variable_content_div.find('#about-app').length > 0) {
         // when about page already loaded, do not load it again.
     } else {

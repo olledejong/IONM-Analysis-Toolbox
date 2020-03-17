@@ -63,3 +63,13 @@ function showNotification(type, message) {
         });
     });
 }
+
+/**
+ * Removes all displayed toast messages on navigation
+ */
+function removeToastMessages() {
+    $('.success-msg').remove();
+    $('.info-msg').remove() ;
+    $('.error-msg').remove();
+    $('.warning-msg').remove();
+}
