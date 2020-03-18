@@ -254,9 +254,22 @@ body.delegate('#settings-section', 'click', function () {
     ipcRenderer.send('resize-window', 1200, 850);
     ipcRenderer.send('get-database-settings');
     ipcRenderer.send('get-modality-settings');
+    ipcRenderer.send('get-python-src-dir-setting');
+    // ipcRenderer.send('get-paramter-calc-settings');
+    // ipcRenderer.send('get-trace-selection-settings');
     variable_content_div.html(
        `<div id="settings-content">
             <div id="small-tools">
+                <div id="set-python-src-dir" class="small-tool">
+                    <h4>Select and set src directory</h4>
+                    <p id="src-dir-path-p">
+                        This entire GUI relies on Johan Schneiders and Menno Gerbens their Pyhton Project (see the about section).
+                        If this path is not correctly configured, none of the tools will work. Make sure you select the right path.
+                    </p>
+                    <p id="src-dir-path"></p>
+                    <button class="settings-button" id="select-src-dir">SELECT</button>
+                    <button class="settings-button" id="set-src-dir" disabled>SET SRC DIRECTORY</button>
+                </div>
                 <div id="set-database-path" class="small-tool">
                     <h4>Select and set database</h4>
                     <p id="database-path-p">
@@ -324,7 +337,7 @@ body.delegate('#settings-section', 'click', function () {
 <!--            </div>-->
         </div>
         `);
-    showNotification('info', 'Retrieving current settings');
+    showNotification('info', 'Retrieving currently configured application settings');
 });
 
 

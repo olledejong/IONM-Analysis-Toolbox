@@ -6,9 +6,39 @@ let var_cont = $("#variable-content");
 
 // globals
 let currentDatabase;
+let currentSrcDirectory;
 
 // set the start path of the file select window
 defaultDatabasePath = "D:\\Menno\\NimEclipse\\NS\\test";
+
+
+/**
+ * Displays the currently set src directory path to the user
+ */
+ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
+    log.info(current_src_dir);
+    $('#src-dir-path').html(current_src_dir);
+    currentSrcDirectory = current_src_dir[0];
+    log.info(currentSrcDirectory)
+});
+
+
+variable_content.on("click", '#set-src-dir', function() {
+    ipcRenderer.send('set-python-src-dir');
+
+    let set_src_dir = $('#set-src-dir');
+    set_src_dir.css('background', '#ccc');
+    set_src_dir.css('color', '#404040');
+    set_src_dir.prop('disabled', true);
+    set_src_dir.css('cursor', 'auto');
+});
+
+
+ipcRenderer.on('successfully-set-src-dir', function () {
+    showNotification('success', 'Successfully set the python src directory');
+    ipcRenderer.send('get-database-settings');
+    ipcRenderer.send('get-modality-settings');
+});
 
 
 ipcRenderer.on('current-database-settings', function (event, database_settings) {
@@ -70,7 +100,7 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
         modalities_table.remove();
         $(`<table id="modalities-table">
             <tr id="modalities-table-hrow">
-                <th>The database is not setup yet, please do that first!</th>
+                <th>Either the database is not setup yet, or an error occurred while retrieving the modalities</th>
             </tr>
          </table>`).insertBefore('#add-new-modality').children(':last').hide().fadeIn(1200)
     }
@@ -93,6 +123,21 @@ variable_content.on("click", '#select-database-btn', function() {
         filters: types,
         defaultPath: defaultDatabasePath,
         properties: ['openFile']
+    };
+    ipcRenderer.send("select-file", options);
+});
+
+
+/**
+ * On click on the src directory SELECT button, this function sends a message
+ * to the main process and tells it to open a file selection window with
+ * the dynamic content 'options'
+ */
+variable_content.on("click", '#select-src-dir', function() {
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select Python Project SRC Directory',
+        properties: ['openDirectory']
     };
     ipcRenderer.send("select-file", options);
 });
@@ -186,27 +231,50 @@ variable_content.on("click", '#submit-new-modality', function() {
  * some file has been selected. Resulting from this, the design of the
  * 'set database' button gets changed and the displayed path gets changed
  */
-ipcRenderer.on('selected', function (event, selected_database) {
+ipcRenderer.on('selected', function (event, selected_file_or_folder) {
     // scope selectors
     let set_database = $('#set-database');
     let database_path_p = $('.database-path');
+    let src_dir_path_p = $('#src-dir-path');
+    let set_src_dir = $('#set-src-dir');
 
     // only do something if there is a file selected
-    if(selected_database.length !== 0) {
-        database_path_p.html(selected_database);
-        set_database.css('background', '#ff8c00cf');
-        set_database.css('color', 'white');
-        set_database.prop('disabled', false);
-        set_database.css('cursor', 'pointer')
+    if(selected_file_or_folder.length !== 0) {
+        if(selected_file_or_folder[0].endsWith('.accdb')) {
+            database_path_p.html(selected_file_or_folder);
+            set_database.css('background', '#ff8c00cf');
+            set_database.css('color', 'white');
+            set_database.prop('disabled', false);
+            set_database.css('cursor', 'pointer')
+        } else {
+            src_dir_path_p.html(selected_file_or_folder);
+            set_src_dir.css('background', '#ff8c00cf');
+            set_src_dir.css('color', 'white');
+            set_src_dir.prop('disabled', false);
+            set_src_dir.css('cursor', 'pointer')
+        }
     } else {
         database_path_p.html(currentDatabase);
-        set_database.css('background', '#ccc');
-        set_database.css('color', '#404040');
-        set_database.prop('disabled', true);
-        set_database.css('cursor', 'auto')
+        src_dir_path_p.html(currentSrcDirectory);
+        set_src_dir.css({
+            'color':'#404040',
+            'cursor':'auto',
+            'background':'#ccc'
+        });
+        set_src_dir.prop('disabled', true);
+        set_database.css({
+            'color':'#404040',
+            'cursor':'auto',
+            'background':'#ccc'
+        });
+        set_database.prop('disabled', true)
     }
 });
 
+
+/**
+ * Small function that resets the modality form
+ */
 function resetModalityForm() {
     $('#modality-input').val("");
     $('#description-input').val("");

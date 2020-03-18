@@ -483,7 +483,7 @@ h1 i {
     float: right;
 }
 
-#configure-database {
+#configure-database, #set-database-path {
     margin: 20px 0 0 0;
 }
 
@@ -531,7 +531,7 @@ h1 i {
     letter-spacing: 1px;
 }
 
-.database-path, input[type='text'] {
+.database-path, #src-dir-path, input[type='text'] {
     font-size: 15px;
     overflow-y: auto;
     display: block;
@@ -547,7 +547,7 @@ h1 i {
     text-align: center;
 }
 
-#database-path-p, #set-modalities-p {
+#database-path-p, #set-modalities-p, #src-dir-path-p {
     text-align: left;
     font-size: 16px;
     margin: 0 0 8px 0;
@@ -555,7 +555,7 @@ h1 i {
     letter-spacing: 1px;
 }
 
-#set-database {
+#set-database, #set-src-dir {
     float: right;
     cursor: auto;
     background: #ccc;
@@ -701,7 +701,7 @@ h1 i {
     font-weight: 600;
     color: black;
     width: auto;
-    max-width: 530px;
+    max-width: 560px;
     height: auto;
     margin: 10px 0;
     padding: 6px 10px;
@@ -734,7 +734,7 @@ info / error / succes msg icons
 */
 
 .important-span {
-    font-weight: 800;
+    font-weight: 700;
     color: darkorange;
 }
 
@@ -841,7 +841,7 @@ label.radio input:checked + span {
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
-#failed-converts h1, #succeeded-converts h1, #succeeded-computes h1  {
+#failed-converts h1, #succeeded-converts h1, #succeeded-computes h2  {
     text-align: left;
     font-size: 17px;
     font-weight: 700;
@@ -850,7 +850,7 @@ label.radio input:checked + span {
     margin: 0 0 5px;
 }
 
-#failed-converts h1 i , #succeeded-converts h1 i, #succeeded-computes h1 i {
+#failed-converts h1 i , #succeeded-converts h1 i, #succeeded-computes h2 i {
     margin: 2px -4px 0 0;
     float: right
 }

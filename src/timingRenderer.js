@@ -1,6 +1,5 @@
 // requires
 window.$ = window.jQuery = require('jquery');
-const ChartJs = require('chart.js');
 
 // jQuery selectors
 let variableContent = $("#variable-content");
@@ -13,7 +12,7 @@ let variableContent = $("#variable-content");
  * command.
  */
 variableContent.on("click", '#run-timing', function() {
-    variable_content.html('');
+    variableContent.html('');
     ipcRenderer.send("run-timing");
 });
 
@@ -32,48 +31,23 @@ ipcRenderer.on('set-title-and-preloader-timing', function (event) {
 
 
 ipcRenderer.on('timing-result', function (event, timing_result) {
-    // log.info('timing result in renderer: ', timing_result);
-    // log.info(typeof timing_result);
-
-    // $('#timing-results').html('<canvas id="myChart"></canvas>');
-    // let myChart = $('#myChart');
-    //
-    // let modalities = timing_result['modalities'];
-    // let timestamps = timing_result['timestamps'];
-    // let indices = timing_result['indices'];
-    // let unique_modalities = timing_result['unique_modalities'];
-    // let colors = timing_result['colors'];
-    // log.info('mod: ', modalities);
-    // log.info('tim: ', timestamps);
-    // log.info('ind: ', indices);
-    // log.info('uni: ', unique_modalities);
-    // log.info('col: ', colors);
-    //
-    // let massPopChart = new Chart(myChart, {
-    //     type: 'scatter',
-    //     data: {
-    //         datasets: [{
-    //             label: 'Scatter Dataset',
-    //             data: [{
-    //                 x: -10,
-    //                 y: 0
-    //             }, {
-    //                 x: 0,
-    //                 y: 10
-    //             }, {
-    //                 x: 10,
-    //                 y: 5
-    //             }]
-    //         }]
-    //     },
-    //     options: {
-    //         scales: {
-    //             xAxes: [{
-    //                 type: 'linear',
-    //                 position: 'bottom'
-    //             }]
-    //         }
-    //     }
-    // });
+    variableContent.html(
+        `<div id="timing-content">
+            <div id="timing-content-description" class="content-description-container">
+                <h3 id="timing-content-h">Generate a timing plot for insight into IONM measurements</h3>
+                <p id="timing-content-p">
+                This will generate a plot showing timestamps at which IONM measurements were made. In the resulting graph 
+                you will see plots in which timestamps of measurements are plotted as a function of the position in file.
+                <br><br>Please select the CSV file(s) of which you would like to see a timing plot.
+                </p>
+            </div>
+            <div id="file-upload-container">
+                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
+                <div id="selected-filename-container">
+                    <p id="selected-filenames">No files selected</p>
+                    <button class="run-button" id="run-timing" disabled>RUN</button>
+                </div>
+            </div>
+        </div>`);
     $('.lds-ellipsis').hide('fast');
 });

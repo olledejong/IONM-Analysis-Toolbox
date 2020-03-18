@@ -19,8 +19,8 @@ let window;
 // global list which holds the paths of the via a dialog window selected csv files.
 let selectedFileHolder;
 
-// [CHANGE THIS TO WHERE YOUR IONM PYTHON PROJECT IS LOCATED]
-pythonSrcDirectory = 'D:\\Menno\\IONM\\src';
+// change it in settings
+pythonSrcDirectory = '';
 
 // log options configuration
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
@@ -119,6 +119,7 @@ ipcMain.on("select-file", function selectFileAndSendBack(event, options) {
             event.sender.send('selected', fileNames.filePaths)
         } else {
             log.info("[ selectFileAndSendBack ][ Sending file path(s) to renderer ]");
+            log.info(fileNames.filePaths);
             event.sender.send("selected", fileNames.filePaths)
         }
     })
@@ -228,7 +229,7 @@ function createJsonString(stdout) {
 
 
 /**
- *                          [ SHOW TIMING ]
+ *                              [ SHOW TIMING ]
  *
  */
 ipcMain.on('run-timing', function executeShowTimingCommand(event) {
@@ -244,8 +245,10 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     }, function(error, stdout, stderr) {
         let errorMessage = "An error occurred while trying to run the show_timing command";
         if (error !== null) {
+            log.error(error);
             event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
+            log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
             event.sender.send('timing-result', /*JSON.parse(stdout)*/);
@@ -255,7 +258,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
 
 
 /**
- *                          [ CONVERT FILE(S) ]
+ *                              [ CONVERT FILE(S) ]
  *
  */
 ipcMain.on('run-convert', function executeConvertCommand(event) {
@@ -283,7 +286,7 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
 
 
 /**
- *                          [ RE-RUN CONVERT ]
+ *                              [ RE-RUN CONVERT ]
  * When an initial convert task fails, the user will be asked to insert the modalities
  * via forms because of which the convert failed. After this, the user gets the option
  * to re-run the convert command using the file-paths of the files that weren't correctly
@@ -314,7 +317,7 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
 
 
 /**
- *                          [ COMPUTE FILE(S) ]
+ *                              [ COMPUTE FILE(S) ]
  *
  */
 ipcMain.on('run-compute', function executeComputeCommand(event) {
@@ -341,7 +344,7 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
 });
 
 /**
- *                           [ VERSION INFO ]
+ *                              [ VERSION INFO ]
  * Handles the request for retrieving the python script its version info
  */
 ipcMain.on("get-version-info", function getVersionInfo(event) {
@@ -362,7 +365,7 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
 
 
 /**
- *                          [ SETTINGS (1 of 4) ]
+ *                              [ SETTINGS (1 of 4) ]
  * Handles the retrieving of the current database settings (for now only DB path).
  * This is done by calling the ionm.py function gui_get_database
  */
@@ -382,7 +385,7 @@ ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
 });
 
 /**
- *                          [ SETTINGS (2 of 4) ]
+ *                              [ SETTINGS (2 of 4) ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -410,7 +413,7 @@ ipcMain.on("get-modality-settings", function getModalitySettings(event) {
 });
 
 /**
- *                          [ SETTINGS (3 of 4) ]
+ *                              [ SETTINGS (3 of 4) ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -438,7 +441,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
 
 
 /**
- *               [ SETTINGS (4 of 4)  /  OR AFTER FAILED CONVERT ]
+ *                  [ SETTINGS (4 of 4)  /  AFTER FAILED CONVERT ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -462,6 +465,26 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
     });
 });
 
+
+/**
+ *                      [ SETTINGS 5/5 - PYTHON SRC DIRECTORY ]
+ */
+ipcMain.on('get-python-src-dir-setting', function (event) {
+    event.sender.send('current-python-src-dir', pythonSrcDirectory);
+});
+
+ipcMain.on('set-python-src-dir', function (event) {
+    try {
+        let new_src_dir_path = selectedFileHolder[0];
+        pythonSrcDirectory = new_src_dir_path;
+    } catch (e) {
+        event.sender.send('error', 'An error occurred while trying to set the src directory')
+    } finally {
+        event.sender.send('successfully-set-src-dir')
+    }
+});
+
+
 /**
  * Shows a confirmation box to the user for safety purposes
  */
@@ -480,7 +503,6 @@ ipcMain.on('showConfirmationBox', function (event, options) {
  * @param event
  */
 function setupDatabase(event) {
-    // TODO WRITE THIS FUNCTION, note: no database path needed since its already defined in config.ini
     event.sender.send('setting-up-database');
 
     exec('ionm.py gui_setup', {

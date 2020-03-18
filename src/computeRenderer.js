@@ -28,7 +28,7 @@ ipcRenderer.on('set-title-and-preloader-compute', function () {
                             <h1>Please work through the external windows to get to the final result</h1>
                             <div id="successful-computes">
                                 <div id="succeeded-computes">
-                                    <h1>Successfully computed<i class="fas fa-check"></i></h1>
+                                    <h2>Successfully computed<i class="fas fa-check"></i></h2>
                                     <p id="succeeded-computes-p">
                                         For now the method of selecting signals is the same as before, but this might change in the future.
                                     </p>
@@ -44,7 +44,7 @@ ipcRenderer.on('compute-result', function (event, stdout, file_path) {
         log.info(file_path);
         let file_name = path.parse(file_path[i]).base.trim();
         showNotification('success', `Successfully computed ${file_name} `);
-        $(`<tr><td class="name-td">` + file_name +`</td><td class="msg-td">Successfully computed the statistics of this file. Results can be found in the database</td><td class="filepath-td">`+ file_path[0] +`</td></tr><br>`).insertBefore('#succeeded-computes-p');
+        $(`<tr><td class="name-td">${file_name}</td><td class="msg-td">Successfully computed the statistics of this file. Results can be found in the database</td><td class="filepath-td">${file_path[0]}</td></tr><br>`).insertBefore('#succeeded-computes-p');
     }
     $('.lds-ellipsis').hide('fast');
     $('#compute-content h1').hide();
