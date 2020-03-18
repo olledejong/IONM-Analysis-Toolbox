@@ -1,7 +1,9 @@
 const { app, BrowserWindow, dialog} = require('electron');
 const ipcMain = require('electron').ipcMain;
+const path = require('path');
 const exec = require('child_process').exec;
 const log = require('electron-log');
+const notifier = require('node-notifier');
 console.log = log.log;
 const isDev = require('electron-is-dev');
 
@@ -12,6 +14,16 @@ if (isDev) {
     log.info('Running in production');
 }
 
+// notify the user that he/she has to set python src directory
+notifier.notify({
+    title: 'IONM Analysis Toolbox',
+    message: 'Don\'t forget to set the python src directory! Do this via settings.',
+    icon: path.join(__dirname, '/assets/images/icon.svg'),
+    sticky: true,
+    type: 'error',
+    appID: 'IONM Analysis Toolbox'
+});
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let window;
@@ -19,7 +31,7 @@ let window;
 // global list which holds the paths of the via a dialog window selected csv files.
 let selectedFileHolder;
 
-// change it in settings
+// python src directory path, which is empty on startup but can be configured via settings
 pythonSrcDirectory = '';
 
 // log options configuration
@@ -209,7 +221,6 @@ function createJsonString(stdout) {
         if( filtered[i].startsWith('\t') ) {
             let splitted = filtered[i].trim();
             splitted = splitted.split(/:\s/g);
-            //log.info(splitted[0]);
             JSON_string += "\"" + splitted[0] + "\": \"" + splitted[1] + "\"";
             if (i !== (filtered.length -1 )) {
                 if (!filtered[i + 1].startsWith("\t")) {
@@ -230,11 +241,11 @@ function createJsonString(stdout) {
 
 /**
  *                              [ SHOW TIMING ]
- *
+ * Executes the cli python command to generate timing plots for the given files
  */
 ipcMain.on('run-timing', function executeShowTimingCommand(event) {
-    window.setMinimumSize(800, 530);
-    window.setSize(800, 530);
+    window.setMinimumSize(850, 400);
+    window.setSize(850, 400);
 
     event.sender.send('set-title-and-preloader-timing');
 
@@ -243,7 +254,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while trying to run the show_timing command";
+        let errorMessage = "An error occurred while trying to generate the timing plot";
         if (error !== null) {
             log.error(error);
             event.sender.send('error', errorMessage);
@@ -258,8 +269,42 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
 
 
 /**
+ *                              [ SHOW EEG AVAILABILITY ]
+ * Executes the cli python command to generate EEG availability plots for the given files
+ */
+ipcMain.on('run-timing', function executeAvailabilityCommand(event) {
+    window.setMinimumSize(850, 400);
+    window.setSize(850, 400);
+
+    event.sender.send('set-title-and-preloader-availability');
+
+    // todo| Retrieve file paths from frontend via two different text input fields which function
+    // todo| like select buttons.
+    let eeg_file;
+    let triggered_file;
+    let command = `ionm.py show_availability -c ${eeg_file} -t ${triggered_file}`;
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = "An error occurred while trying to generate the EEG availability plot";
+        if (error !== null) {
+            log.error(error);
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('availability-result', /*JSON.parse(stdout)*/);
+        }
+    })
+});
+
+
+
+/**
  *                              [ CONVERT FILE(S) ]
- *
+ * Executes the cli python command to convert the CVS files exported by the Eclipse
+ * software into multiple custom CSV files: one separate file per modality.
  */
 ipcMain.on('run-convert', function executeConvertCommand(event) {
     log.info('[ main.js - executeConvertCommand ][ executing convert command ]');

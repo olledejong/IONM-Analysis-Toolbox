@@ -61,7 +61,7 @@ ipcRenderer.on('set-title-and-preloader-convert', function () {
     $('#success-and-run-compute').hide();
 });
 
-
+// todo docstring
 ipcRenderer.on('set-preloader-rerun-convert', function () {
     $('.lds-ellipsis').show();
     $('#add-modality-form-div').animate({
@@ -77,6 +77,7 @@ ipcRenderer.on('set-preloader-rerun-convert', function () {
  * It shows confirmation or informative error messages to the user so that he/she knows what
  * to do next.
  */
+// todo CLEAN UP THIS FUNCTION
 ipcRenderer.on('convert-result', function displayConvertResultContent(event, convert_output, filePathOfRun) {
     let missingModalities = [];
     let rndmHash = Math.random().toString(36).substring(7);
@@ -211,8 +212,16 @@ varContent.on("click", '#submit-all-modalities', function runAddModalityPerForm(
             opacity: 0
         }, 800, function () {
             $(this).remove();
-            $('#submit-all-modalities').css('background', '#ccc').css('color', '#404040').css('cursor', 'auto').prop('disabled', true);
-            $('#rerun-failed-converts').css('background', '#ff8c00cf').css('color', 'white').css('cursor', 'pointer').prop('disabled', false)
+            $('#submit-all-modalities').css({
+                'background': '#ccc',
+                'color': '#404040',
+                'cursor': 'auto'
+            }).prop('disabled', true);
+            $('#rerun-failed-converts').css({
+                'background': '#ff8c00cf',
+                'color': 'white',
+                'cursor': 'pointer'
+            }).prop('disabled', false)
         });
     })
 });

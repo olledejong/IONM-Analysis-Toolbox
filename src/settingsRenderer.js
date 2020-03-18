@@ -27,15 +27,18 @@ variable_content.on("click", '#set-src-dir', function() {
     ipcRenderer.send('set-python-src-dir');
 
     let set_src_dir = $('#set-src-dir');
-    set_src_dir.css('background', '#ccc');
-    set_src_dir.css('color', '#404040');
+    set_src_dir.css({
+        'background':'#ccc',
+        'color':'#404040',
+        'cursor':'auto'
+    });
     set_src_dir.prop('disabled', true);
-    set_src_dir.css('cursor', 'auto');
 });
 
 
 ipcRenderer.on('successfully-set-src-dir', function () {
     showNotification('success', 'Successfully set the python src directory');
+    showNotification('info', 'Retrieving currently configured application settings');
     ipcRenderer.send('get-database-settings');
     ipcRenderer.send('get-modality-settings');
 });
@@ -153,10 +156,13 @@ var_cont.on("click", '#set-database', function() {
     ipcRenderer.send("set-database");
 
     let set_database = $('#set-database');
-    set_database.css('background', '#ccc');
-    set_database.css('color', '#404040');
+    set_database.css({
+        'background': '#ccc',
+        'color': '#404040',
+        'cursor': 'auto'
+    });
     set_database.prop('disabled', true);
-    set_database.css('cursor', 'auto')
+
 });
 
 
@@ -206,7 +212,7 @@ variable_content.on("click", '#submit-new-modality', function() {
     let submit_new_modality = $('#submit-new-modality');
     let description_input = $('#description-input');
 
-    // handle click
+    // get form information
     let modality = $('#modality-input').val();
     let type = $("input[name='type']:checked").val();
     let strategy = $("input[name='strategy']:checked").val();
@@ -219,10 +225,13 @@ variable_content.on("click", '#submit-new-modality', function() {
 
     ipcRenderer.send('set-new-modality', modality, type, strategy, description);
 
-    submit_new_modality.css('background', '#ccc');
-    submit_new_modality.css('color', '#404040');
-    submit_new_modality.css('cursor', 'auto');
-    submit_new_modality.prop('disabled', true);
+    // disable button
+    submit_new_modality.css({
+        'background': '#ccc',
+        'color': '#404040',
+        'cursor': 'auto'
+    }).prop('disabled', true);
+
     resetModalityForm();
 });
 
@@ -242,16 +251,18 @@ ipcRenderer.on('selected', function (event, selected_file_or_folder) {
     if(selected_file_or_folder.length !== 0) {
         if(selected_file_or_folder[0].endsWith('.accdb')) {
             database_path_p.html(selected_file_or_folder);
-            set_database.css('background', '#ff8c00cf');
-            set_database.css('color', 'white');
-            set_database.prop('disabled', false);
-            set_database.css('cursor', 'pointer')
+            set_database.css({
+                'background': '#ff8c00cf',
+                'color': 'white',
+                'cursor': 'pointer'
+            }).prop('disabled', false)
         } else {
             src_dir_path_p.html(selected_file_or_folder);
-            set_src_dir.css('background', '#ff8c00cf');
-            set_src_dir.css('color', 'white');
-            set_src_dir.prop('disabled', false);
-            set_src_dir.css('cursor', 'pointer')
+            set_src_dir.css({
+                'background': '#ff8c00cf',
+                'color': 'white',
+                'cursor': 'pointer'
+            }).prop('disabled', false)
         }
     } else {
         database_path_p.html(currentDatabase);
@@ -260,14 +271,13 @@ ipcRenderer.on('selected', function (event, selected_file_or_folder) {
             'color':'#404040',
             'cursor':'auto',
             'background':'#ccc'
-        });
-        set_src_dir.prop('disabled', true);
+        }).prop('disabled', true);
+
         set_database.css({
             'color':'#404040',
             'cursor':'auto',
             'background':'#ccc'
-        });
-        set_database.prop('disabled', true)
+        }).prop('disabled', true);
     }
 });
 

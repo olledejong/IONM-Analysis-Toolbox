@@ -18,6 +18,7 @@ const username = require("os").userInfo().username.toUpperCase();
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 
 
+
 // globals
 __name__ = "IONM Analysis Toolbox";
 __author__ = "Olle de Jong";
@@ -58,7 +59,7 @@ $("#welcome-section").click(function () {
                 <span class="tool-number">2</span>
                 <h3>Show Timing</h3>
                 <p>Plot timestamps of measurements as a function of position in file</p>
-                <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
+                <span class="tool-finished"><i class="fas fa-check"></i></span>
             </div>
             <div id="availability-section">
                 <span class="tool-number">3</span>
@@ -76,7 +77,7 @@ $("#welcome-section").click(function () {
                 <span class="tool-number">5</span>
                 <h3>Compute Statistics</h3>
                 <p>Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
-                <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
+                <span class="tool-finished"><i class="fas fa-check"></i></span>
             </div>
             <div id="evc-section">
                 <span class="tool-number">6</span>
@@ -158,8 +159,26 @@ body.delegate('#timing-section', 'click', function () {
  * Loads variable content for the [ availability section ]
  */
 body.delegate('#availability-section', 'click', function () {
-    ipcRenderer.send('remove-toast-messages');
-    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet')
+    removeToastMessages();
+    ipcRenderer.send('resize-window', 800, 450);
+    variable_content_div.html(
+        `<div id="availability-content">
+            <div id="availability-content-description" class="content-description-container">
+                <h3 id="availability-content-h">Generate a plot showing when an EEG context is available for given evoked potentials</h3>
+                <p id="availability-content-p">
+                This will generate a plot showing timestamps at which IONM measurements were made. In the resulting graph 
+                you will see plots in which timestamps of measurements are plotted as a function of the position in file.
+                <br><br>Please select the CSV file(s) of which you would like to see a timing plot.
+                </p>
+            </div>
+            <div id="file-upload-container">
+                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
+                <div id="selected-filename-container">
+                    <p id="selected-filenames">No files selected</p>
+                    <button class="run-button" id="run-availability" disabled>RUN</button>
+                </div>
+            </div>
+        </div>`);
 });
 
 
@@ -264,7 +283,8 @@ body.delegate('#settings-section', 'click', function () {
                     <h4>Select and set src directory</h4>
                     <p id="src-dir-path-p">
                         This entire GUI relies on Johan Schneiders and Menno Gerbens their Pyhton Project (see the about section).
-                        If this path is not correctly configured, none of the tools will work. Make sure you select the right path.
+                        If this path is not correctly configured, none of the tools will work. Make sure you select the right path.<br>
+                        <span class="important-span">NOTE: </span>Path resets every time when application is restarted
                     </p>
                     <p id="src-dir-path"></p>
                     <button class="settings-button" id="select-src-dir">SELECT</button>

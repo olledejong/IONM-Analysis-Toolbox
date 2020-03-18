@@ -15,7 +15,8 @@
     "electron": "^8.1.1",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^4.1.0",
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "node-notifier": "^6.0.0"
   },
   "devDependencies": {
     "debug": "^4.1.1",
