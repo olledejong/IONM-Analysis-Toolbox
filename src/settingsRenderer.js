@@ -116,6 +116,7 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
  * the dynamic content 'options'
  */
 variable_content.on("click", '#select-database-btn', function() {
+    let tool = 'database';
     // configure which types of files are allowed
     let types = [
         {name: 'Only extensions allowed:', extensions: ['accdb'] }
@@ -137,12 +138,13 @@ variable_content.on("click", '#select-database-btn', function() {
  * the dynamic content 'options'
  */
 variable_content.on("click", '#select-src-dir', function() {
+    let tool = 'src-dir';
     // configure the options (allowed types + properties)
     const options = {
         title: 'Select Python Project SRC Directory',
         properties: ['openDirectory']
     };
-    ipcRenderer.send("select-file", options);
+    ipcRenderer.send("select-file", options, tool);
 });
 
 
@@ -237,46 +239,54 @@ variable_content.on("click", '#submit-new-modality', function() {
 
 /**
  * Will be executed when the file select method detects no error and
- * some file has been selected. Resulting from this, the design of the
- * 'set database' button gets changed and the displayed path gets changed
+ * some src directory has been selected. Resulting from this, the design of the
+ * 'set src dir' button gets changed and the displayed path gets changed
  */
-ipcRenderer.on('selected', function (event, selected_file_or_folder) {
+ipcRenderer.on('selected-src-dir', function (event, selected_file_or_folder) {
     // scope selectors
-    let set_database = $('#set-database');
-    let database_path_p = $('.database-path');
     let src_dir_path_p = $('#src-dir-path');
     let set_src_dir = $('#set-src-dir');
 
     // only do something if there is a file selected
     if(selected_file_or_folder.length !== 0) {
-        if(selected_file_or_folder[0].endsWith('.accdb')) {
-            database_path_p.html(selected_file_or_folder);
-            set_database.css({
-                'background': '#ff8c00cf',
-                'color': 'white',
-                'cursor': 'pointer'
-            }).prop('disabled', false)
-        } else {
-            src_dir_path_p.html(selected_file_or_folder);
-            set_src_dir.css({
-                'background': '#ff8c00cf',
-                'color': 'white',
-                'cursor': 'pointer'
-            }).prop('disabled', false)
-        }
+        src_dir_path_p.html(selected_file_or_folder);
+        set_src_dir.css({
+            'background': '#e87e04',
+            'color': 'white',
+            'cursor': 'pointer'
+        }).prop('disabled', false)
     } else {
-        database_path_p.html(currentDatabase);
         src_dir_path_p.html(currentSrcDirectory);
         set_src_dir.css({
             'color':'#404040',
             'cursor':'auto',
             'background':'#ccc'
         }).prop('disabled', true);
+    }
+});
 
+/**
+ * Will be executed when the file select method detects no error and
+ * some database file has been selected. Resulting from this, the design of the
+ * 'set database' button gets changed and the displayed path gets changed
+ */
+ipcRenderer.on('selected-database', function (event, selected_file_or_folder) {
+    let set_database = $('#set-database');
+    let database_path_p = $('.database-path');
+
+    if (selected_file_or_folder.length !== 0) {
+        database_path_p.html(selected_file_or_folder);
         set_database.css({
-            'color':'#404040',
-            'cursor':'auto',
-            'background':'#ccc'
+            'background': '#e87e04',
+            'color': 'white',
+            'cursor': 'pointer'
+        }).prop('disabled', false)
+    } else {
+        database_path_p.html(currentDatabase);
+        set_database.css({
+            'color': '#404040',
+            'cursor': 'auto',
+            'background': '#ccc'
         }).prop('disabled', true);
     }
 });
@@ -294,20 +304,22 @@ function resetModalityForm() {
 
 /**
  * Listener for add-modality form change. When form is filled out,
- * enable the
+ * enable the submit button
  */
 variable_content.on('change', '#add-modality',  function checkIfFormComplete() {
     let submit_new_modality = $('#submit-new-modality');
     if ( $('#modality-input').val().length > 0) {
-        submit_new_modality.css('background', '#ff8c00cf');
-        submit_new_modality.css('color', 'white');
-        submit_new_modality.css('cursor', 'pointer');
-        submit_new_modality.prop('disabled', false)
+        submit_new_modality.css({
+            'background': '#e87e04',
+            'color': 'white',
+            'cursor': 'pointer'
+        }).prop('disabled', false)
     } else {
-        submit_new_modality.css('background', '#ccc');
-        submit_new_modality.css('color', '#404040');
-        submit_new_modality.css('cursor', 'auto');
-        submit_new_modality.prop('disabled', true)
+        submit_new_modality.css({
+            'background': '#ccc',
+            'color': '#404040',
+            'cursor': 'auto'
+        }).prop('disabled', true);
     }
 });
 

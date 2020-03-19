@@ -66,7 +66,7 @@ footer span {
 
 .csv-select-btn {
     height: 100%;
-    background: darkorange;
+    background: #e87e04;
     line-height: 22px;
     font-weight: 500;
     font-size: 16px;
@@ -154,7 +154,7 @@ footer span {
 #summarize-content-h, #timing-content-h, #convert-content-h, #compute-content-h, #availability-content-h {
     margin: 0 0 10px 0;
     text-align: left;
-    color: darkorange;
+    color: #f89406;
     font-weight: 500;
     letter-spacing: 1px;
 }
@@ -286,7 +286,7 @@ th {
     border-bottom: 1px solid white;
     letter-spacing: 1.5px;
     margin: 0 0 10px 0;
-    color: darkorange;
+    color: #f89406;
     text-align: left;
     font-size: 16px;
     height: 40px;
@@ -335,7 +335,7 @@ h1 i {
     margin: 0 0 5px 0;
     font-size: 16px;
     letter-spacing: 1.5px;
-    color: darkorange;
+    color: #f89406;
 }
 
 #summarize-results td {
@@ -356,7 +356,7 @@ h1 i {
     letter-spacing: 1.5px;
     float: right;
     width: 100px;
-    background-color: darkorange;
+    background-color: #e87e04;
     height: 50px;
     opacity: 0;
     color: white;
@@ -456,7 +456,7 @@ h1 i {
     bottom: 0;
     padding: 20px;
     border-radius: 2px;
-    background-color: #ff8c00cf;
+    background-color: #e87e04;
     border: 0;
     color: white;
     outline: none;
@@ -526,7 +526,7 @@ h1 i {
 }
 
 .small-tool h4, #set-modalities h4 {
-    color: darkorange;
+    color: #f89406;
     text-align: left;
     font-size: 18px;
     margin: -10px 0 5px 0;
@@ -738,7 +738,7 @@ info / error / succes msg icons
 
 .important-span {
     font-weight: 700;
-    color: darkorange;
+    color: #f89406;
 }
 
 /* radio buttons */
@@ -766,8 +766,8 @@ label.radio span {
 }
 label.radio input:checked + span {
     background: #56565663;
-    border-color: darkorange;
-    color: darkorange;
+    border-color: #e87e04;
+    color: #e87e04;
 }
 
 .radio-container {
@@ -812,7 +812,7 @@ label.radio input:checked + span {
     float: left;
     padding: 16px;
     margin: 16px;
-    background: #ff8c00cf;
+    background: #e87e04;
     color: white;
     cursor: pointer;
     display: block;
@@ -849,7 +849,7 @@ label.radio input:checked + span {
     font-size: 17px;
     font-weight: 700;
     letter-spacing: 2px;
-    color: darkorange;
+    color: #f89406;
     margin: 0 0 5px;
 }
 
@@ -883,7 +883,7 @@ label.radio input:checked + span {
 }
 
 #failed-converts-p, #succeeded-converts-p, #succeeded-computes-p {
-    color: darkorange;
+    color: #f89406;
 }
 
 #succeeded-computes-p {
@@ -896,4 +896,46 @@ label.radio input:checked + span {
 
 #strategy-radios {
     float: right
+}
+
+/* availability */
+#availability-select-container {
+    width: 100%;
+    height: 125px;
+    margin-top: 15px;
+}
+
+.availability-btn {
+    display: block;
+    float: left;
+    outline: 0;
+    height: calc(50% - 5px);
+    width: calc(80% - 10px);
+    letter-spacing: 2px;
+    color: white;
+    background: #e87e04;
+    border: 0;
+    cursor: pointer;
+    margin: 0 10px 0 0;
+    border-radius: 4px;
+    font-size: 16px;
+    overflow-y: auto;
+}
+
+#trg-select-btn {
+    margin: 10px 0 0 0;
+}
+
+#run-availability {
+    font-size: 16px;
+    background: #ccc;
+    border-radius: 4px;
+    width: 20%;
+    height: 100%;
+    transition: all 0.2s ease-out;
+    outline: 0;
+    border: 0;
+    display: block;
+    position: relative;
+    color: #404040;
 }

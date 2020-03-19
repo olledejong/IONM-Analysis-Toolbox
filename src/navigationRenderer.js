@@ -17,10 +17,9 @@ const username = require("os").userInfo().username.toUpperCase();
 // log options configuration for all renderer processes
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 
-
-
 // globals
 __name__ = "IONM Analysis Toolbox";
+__description__ = "Graphical User Interface for the purpose of using IONM Analysis tools. Created for the UMCG.";
 __author__ = "Olle de Jong";
 __maintainer__ = "Olle de Jong";
 __contact__ = "['ol.de.jong@st.hanze.nl', 'olledejong@gmail.com']";
@@ -171,12 +170,10 @@ body.delegate('#availability-section', 'click', function () {
                 <br><br>Please select the CSV file(s) of which you would like to see a timing plot.
                 </p>
             </div>
-            <div id="file-upload-container">
-                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
-                <div id="selected-filename-container">
-                    <p id="selected-filenames">No files selected</p>
-                    <button class="run-button" id="run-availability" disabled>RUN</button>
-                </div>
+            <div id="availability-select-container">
+                <button id="eeg-select-btn" class="availability-btn">Click to select an EEG file</button>
+                <button id="trg-select-btn" class="availability-btn">Click to select a TRG file</button>
+                <button id="run-availability" disabled>RUN</button>
             </div>
         </div>`);
 });
@@ -374,7 +371,7 @@ about_section_button.click(function () {
     if(variable_content_div.find('#about-app').length > 0) {
         // when about page already loaded, do not load it again.
     } else {
-        ipcRenderer.send('resize-window', 1070, 540);
+        ipcRenderer.send('resize-window', 1070, 625);
         // tell main process to get the python script its version info
         ipcRenderer.send('get-version-info');
 
@@ -436,6 +433,7 @@ ipcRenderer.on("script-version-info", function (event, python_version_info) {
  */
 function generateElectronAboutInfo() {
     $("#app-version-info").html(`<tr><td class="version-first-cell">Name</td><td class="version-second-cell">${__name__}</td></tr>
+                                <tr><td class="version-first-cell">Description</td><td class="version-second-cell">${__description__}</td></tr>
                                 <tr><td class="version-first-cell">Author</td><td class="version-second-cell">${__author__}</td></tr>
                                 <tr><td class="version-first-cell">Maintainer</td><td class="version-second-cell">${__maintainer__}</td></tr>
                                 <tr><td class="version-first-cell">Contact</td><td class="version-second-cell">${__contact__}</td></tr>

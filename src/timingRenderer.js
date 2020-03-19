@@ -30,7 +30,7 @@ ipcRenderer.on('set-title-and-preloader-timing', function (event) {
 });
 
 
-ipcRenderer.on('timing-result', function (event, timing_result) {
+ipcRenderer.on('timing-result', function (event) {
     variableContent.html(
         `<div id="timing-content">
             <div id="timing-content-description" class="content-description-container">

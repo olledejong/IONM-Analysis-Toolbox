@@ -45,6 +45,7 @@ log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 function createWindow () {
     // Create the browser window
     window = new BrowserWindow({
+        show: false,
         width: 730,
         height: 800,
         title: 'IONM Analysis Toolbox',
@@ -60,6 +61,11 @@ function createWindow () {
 
     // and load the index.html of the app.
     window.loadFile('src/index.html');
+
+    // once everything is loaded, show window
+    window.once('ready-to-show', () => {
+        window.show()
+    });
 
     // Open the DevTools.
     window.webContents.openDevTools();
@@ -103,8 +109,10 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
     try {
         let currentWindowSize = window.getSize();
         if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
+            //window.hide();
             window.setMinimumSize(newX, newY);
             window.setSize(newX, newY);
+            //window.show();
         }
     } catch (e) {
         event.sender.send('error', 'Something went wrong while trying to resize the browser window')
@@ -121,18 +129,21 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
  * @param event
  * @param options
  */
-ipcMain.on("select-file", function selectFileAndSendBack(event, options) {
+ipcMain.on("select-file", function selectFileAndSendBack(event, options, tool, label) {
     // open the actual dialog with the above options
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
         selectedFileHolder = fileNames.filePaths;
-        if (fileNames.canceled === true) {
-            log.info("[ selectFileAndSendBack ][ File selection cancelled ]");
-            event.sender.send('selected', fileNames.filePaths)
+        log.info("[ selectFileAndSendBack ][ Sending file path(s) to renderer ]");
+        log.info(fileNames.filePaths);
+        if (tool === 'general') {
+            event.sender.send("selected-general", fileNames.filePaths, label)
+        } else if (tool === 'src-dir') {
+            event.sender.send("selected-src-dir", fileNames.filePaths, label)
+        } else if (tool === 'database') {
+            event.sender.send("selected-database", fileNames.filePaths, label)
         } else {
-            log.info("[ selectFileAndSendBack ][ Sending file path(s) to renderer ]");
-            log.info(fileNames.filePaths);
-            event.sender.send("selected", fileNames.filePaths)
+            event.sender.send("selected-availability", fileNames.filePaths, label)
         }
     })
 });
@@ -272,17 +283,13 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
  *                              [ SHOW EEG AVAILABILITY ]
  * Executes the cli python command to generate EEG availability plots for the given files
  */
-ipcMain.on('run-timing', function executeAvailabilityCommand(event) {
+ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file, trg_file) {
     window.setMinimumSize(850, 400);
     window.setSize(850, 400);
 
     event.sender.send('set-title-and-preloader-availability');
 
-    // todo| Retrieve file paths from frontend via two different text input fields which function
-    // todo| like select buttons.
-    let eeg_file;
-    let triggered_file;
-    let command = `ionm.py show_availability -c ${eeg_file} -t ${triggered_file}`;
+    let command = `ionm.py show_availability -c "${eeg_file}" -t "${trg_file}"`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {

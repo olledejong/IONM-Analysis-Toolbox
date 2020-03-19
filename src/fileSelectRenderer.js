@@ -3,6 +3,7 @@ defaultDatabasePath = "D:\\Menno\\NimEclipse\\NS\\test";
 
 // inform the Main Process that it has to open a file select window
 variable_content.on("click", '.csv-select-btn', function() {
+    let tool = 'general';
     // configure which types of files are allowed
     let types = [
         {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
@@ -14,7 +15,7 @@ variable_content.on("click", '.csv-select-btn', function() {
         defaultPath: "D:\\Menno\\NimEclipse",
         properties: ['openFile', "multiSelections"]
     };
-    ipcRenderer.send("select-file", options);
+    ipcRenderer.send("select-file", options, tool);
 });
 
 
@@ -24,7 +25,7 @@ variable_content.on("click", '.csv-select-btn', function() {
  * @param {object} IpcRendererEvent, contains all information about the event
  * @param {array} Contains the paths of all selected files
  */
-ipcRenderer.on("selected", function (event, paths) {
+ipcRenderer.on("selected-general", function (event, paths) {
     // jQuery selector(s)
     let run_button = $(".run-button");
     let file_select_button = $(".csv-select-btn");

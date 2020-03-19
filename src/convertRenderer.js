@@ -218,7 +218,7 @@ varContent.on("click", '#submit-all-modalities', function runAddModalityPerForm(
                 'cursor': 'auto'
             }).prop('disabled', true);
             $('#rerun-failed-converts').css({
-                'background': '#ff8c00cf',
+                'background': '#e87e04',
                 'color': 'white',
                 'cursor': 'pointer'
             }).prop('disabled', false)
