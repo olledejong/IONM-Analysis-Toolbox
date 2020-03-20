@@ -1,3 +1,15 @@
+/**
+ * This renderer file is responsible for all user interaction in the
+ * settings section of the applications, and for telling the main process
+ * what to do regarding the settings of this applications and the python
+ * project. These functionalities are:
+ * - Setting the python src directory
+ * - Setting the database the user wants to work with
+ * - Setting up a new database
+ * - Insight into the current configured modalities of the active database
+ * - Add a new modality to the active database
+ */
+
 // requires
 window.$ = window.jQuery = require('jquery');
 
@@ -8,28 +20,33 @@ let var_cont = $("#variable-content");
 let currentDatabase;
 let currentSrcDirectory;
 
-// set the start path of the file select window
-defaultDatabasePath = "D:\\Menno\\NimEclipse\\NS\\test";
-
-
 /**
- * Displays the currently set src directory path to the user
+ * Displays the currently configured src directory path to the user
+ *
+ * @param {object} event
+ * @param {string} current_src_dir - currently configured src directory path
  */
 ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
-    log.info(current_src_dir);
     $('#src-dir-path').html(current_src_dir);
     currentSrcDirectory = current_src_dir[0];
-    log.info(currentSrcDirectory)
 });
 
-
+/**
+ * Lets the user know that the python src dir has been successfully configured.
+ * Also retrieves the currently configured settings.
+ */
 ipcRenderer.on('successfully-set-src-dir', function () {
     showNotification('success', 'Successfully set the python src directory');
     showNotification('info', 'Retrieving currently configured application settings');
     ipcRenderer.send('get-current-settings');
 });
 
-
+/**
+ * Displays the currently configured database settings (path)
+ *
+ * @param {object} event
+ * @param {string} database_settings - currently configured database settings (path)
+ */
 ipcRenderer.on('current-database-settings', function (event, database_settings) {
     $('.database-path').html(database_settings.replace(/"/g, ''));
     currentDatabase = database_settings.replace(/"/g, '');
@@ -37,14 +54,12 @@ ipcRenderer.on('current-database-settings', function (event, database_settings) 
 
 
 /**
- * Show the configured modalities to the user on the message 'current-modality-settings'.
- * This message comes from the main process and with it comes the modality info from the
- * database.
+ * Show the configured modalities to the user in a table.
  *
- * @param output
+ * @param {object} event
+ * @param {string} current_modality_settings - JSON string containing the current configured modalities
  */
 ipcRenderer.on('current-modality-settings', function (event, current_modality_settings) {
-    let set_modalities = $('#set-modalities');
     let modalities_table = $('#modalities-table');
     let parsed;
 
@@ -97,31 +112,8 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
 
 
 /**
- * On click on the database SELECT button, this function sends a message
- * to the main process and tells it to open a file selection window with
- * the dynamic content 'options'
- */
-variable_content.on("click", '#select-database-btn', function() {
-    let tool = 'database';
-    // configure which types of files are allowed
-    let types = [
-        {name: 'Only extensions allowed:', extensions: ['accdb'] }
-    ];
-    // configure the options (allowed types + properties)
-    const options = {
-        title: 'Select database',
-        filters: types,
-        defaultPath: defaultDatabasePath,
-        properties: ['openFile']
-    };
-    ipcRenderer.send("select-file", options, tool);
-});
-
-
-/**
- * On clicking the SET DATABASE button on the settings page, this
- * renderer process will tell the main process to set the selected
- * database path in the config.ini file in the Python project
+ * Tells the main process to write the by the user selected database path to the
+ * config.ini file in the python project. Also disables the 'set datbase' button.
  */
 var_cont.on("click", '#set-database', function() {
     showNotification('info', 'Setting the database path');
@@ -134,27 +126,12 @@ var_cont.on("click", '#set-database', function() {
         'cursor': 'auto'
     });
     set_database.prop('disabled', true);
-
 });
-
 
 /**
- * On click on the src directory SELECT button, this function sends a message
- * to the main process and tells it to open a file selection window with
- * the dynamic content 'options'
+ * Tells the main process to set the by the user selected python src dir.
+ * Also disables the 'set src directory' button.
  */
-variable_content.on("click", '#select-src-dir', function() {
-
-    let tool = 'src-dir';
-    // configure the options (allowed types + properties)
-    const options = {
-        title: 'Select Python Project SRC Directory',
-        properties: ['openDirectory']
-    };
-    ipcRenderer.send("select-file", options, tool);
-});
-
-
 variable_content.on("click", '#set-src-dir', function() {
     let src_dir = $('#src-dir-path').html();
     ipcRenderer.send('set-python-src-dir', src_dir);
@@ -170,22 +147,19 @@ variable_content.on("click", '#set-src-dir', function() {
 
 
 /**
- * When setting the database string is completed successfully,
- * retrieve the settings again (update) and show toast messages
- * to the user
+ * Retrieves / updates the currently configured settings because of the
+ * successful configuration of a new database path
  */
 ipcRenderer.on('database-set-successful', function () {
     ipcRenderer.send('get-current-settings');
 
     showNotification('success', 'Successfully set the database path');
-    showNotification('info', 'Updating the modalities');
+    showNotification('info', 'Retrieving the modalities for this database');
 });
 
 
 /**
- * On click on the database SELECT button, this function sends a message
- * to the main process and tells it to open a file selection window with
- * the dynamic content 'options'
+ * Shows the modality form using an animation on the user's request
  */
 variable_content.on("click", '#add-new-modality', function() {
     ipcRenderer.send('resize-window', 1200, 800);
@@ -198,6 +172,10 @@ variable_content.on("click", '#add-new-modality', function() {
     $('#hide-modality-form').show()
 });
 
+
+/**
+ * Hides the modality form using an animation on the user's request
+ */
 variable_content.on("click", '#hide-modality-form', function() {
     let add_modality = $('#add-modality');
     // hide add-modality form
@@ -210,6 +188,11 @@ variable_content.on("click", '#hide-modality-form', function() {
     resetModalityForm();
 });
 
+
+/**
+ * Retrieves the filled out form values and tells the main process to execute
+ * the 'set modality' command. Then disables the 'submit new modality' button.
+ */
 variable_content.on("click", '#submit-new-modality', function() {
     let submit_new_modality = $('#submit-new-modality');
     let description_input = $('#description-input');
@@ -238,18 +221,20 @@ variable_content.on("click", '#submit-new-modality', function() {
 });
 
 /**
- * Will be executed when the file select method detects no error and
- * some src directory has been selected. Resulting from this, the design of the
- * 'set src dir' button gets changed and the displayed path gets changed
+ * Alters the design of the 'set src dir' button + enables / disables it. Also
+ * the displayed src-dir path gets updated.
+ *
+ * @param {object} event
+ * @param {array} selected_src_dir - selected src directory path in an array (return type of select modal)
  */
-ipcRenderer.on('selected-src-dir', function (event, selected_file_or_folder) {
+ipcRenderer.on('selected-src-dir', function (event, selected_src_dir) {
     // scope selectors
     let src_dir_path_p = $('#src-dir-path');
     let set_src_dir = $('#set-src-dir');
 
     // only do something if there is a file selected
-    if(selected_file_or_folder.length !== 0) {
-        src_dir_path_p.html(selected_file_or_folder);
+    if(selected_src_dir.length !== 0) {
+        src_dir_path_p.html(selected_src_dir);
         set_src_dir.css({
             'background': '#e87e04',
             'color': 'white',
@@ -266,16 +251,17 @@ ipcRenderer.on('selected-src-dir', function (event, selected_file_or_folder) {
 });
 
 /**
- * Will be executed when the file select method detects no error and
- * some database file has been selected. Resulting from this, the design of the
- * 'set database' button gets changed and the displayed path gets changed
+ * Alters design of the 'set database' button and the displayed path gets updated
+ *
+ * @param {object} event
+ * @param {array} selected_database - selected database path in an array (return type of select modal)
  */
-ipcRenderer.on('selected-database', function (event, selected_file_or_folder) {
+ipcRenderer.on('selected-database', function (event, selected_database) {
     let set_database = $('#set-database');
     let database_path_p = $('.database-path');
 
-    if (selected_file_or_folder.length !== 0) {
-        database_path_p.html(selected_file_or_folder);
+    if (selected_database.length !== 0) {
+        database_path_p.html(selected_database);
         set_database.css({
             'background': '#e87e04',
             'color': 'white',
@@ -293,7 +279,7 @@ ipcRenderer.on('selected-database', function (event, selected_file_or_folder) {
 
 
 /**
- * Small function that resets the modality form
+ * Resets the modality form after submit or when the form gets hidden
  */
 function resetModalityForm() {
     $('#modality-input').val("");
@@ -303,8 +289,8 @@ function resetModalityForm() {
 }
 
 /**
- * Listener for add-modality form change. When form is filled out,
- * enable the submit button
+ * Listener for changes in the add-modality form. When form is filled completed, the
+ * submit button get enabled. When it is not complete, the submit button gets disabled
  */
 variable_content.on('change', '#add-modality',  function checkIfFormComplete() {
     let submit_new_modality = $('#submit-new-modality');
@@ -325,9 +311,9 @@ variable_content.on('change', '#add-modality',  function checkIfFormComplete() {
 
 
 /**
- * Shows the user a confirmation popup whether he/she is absolutely
- * sure about seting up the database. Using the feedback of the user,
- * in the Main process, the setup command either gets run or it doesnt.
+ * Tells the main process to show the user a confirmation popup box whether
+ * he/she is absolutely sure about seting up the database. Based on the feedback
+ * of the user, the setup command get run or not.
  */
 variable_content.on('click', '#setup-database', function () {
     let options  = {
@@ -339,7 +325,7 @@ variable_content.on('click', '#setup-database', function () {
 
 
 /**
- * Lets the user know that the database is being setup
+ * Lets the user know that the database is being setup on message from main process
  */
 ipcRenderer.on('setting-up-database', function () {
     showNotification('info', 'Setting up the database')
@@ -347,11 +333,11 @@ ipcRenderer.on('setting-up-database', function () {
 
 
 /**
- * Lets the user know that the database setup was successful
+ * Lets the user know that the database setup was successful on message from main process
  */
 ipcRenderer.on('database-setup-successful', function () {
     showNotification('success', 'Successfully setup the database');
     // update the modalities
     ipcRenderer.send('get-modality-settings');
-    showNotification('info', 'Updating the modalities');
+    showNotification('info', 'Retrieving the modalities for this database');
 });

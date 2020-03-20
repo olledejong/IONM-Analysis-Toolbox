@@ -482,7 +482,7 @@ h1 i {
 
 #set-modalities {
     transition: all 0.2s ease-out;
-    max-width: calc(60% - 10px);
+    max-width: calc(58% - 10px);
     float: right;
 }
 
@@ -492,7 +492,7 @@ h1 i {
 
 #small-tools {
     position: relative;
-    width: calc(40% - 10px);
+    width: calc(42% - 10px);
     float: left;
 }
 
@@ -567,16 +567,12 @@ h1 i {
 
 #add-modality {
     opacity: 0;
-    width: calc(60% - 10px);
+    width: calc(58% - 10px);
     float: right;
     height: auto;
     margin: -130px 0 0 0;
     z-index: -5;
 }
-
-/*#add-modality .radio-container {*/
-/*    margin: 0;*/
-/*}*/
 
 /* add modality AFTER convert */
 .add-modality-after-convert {

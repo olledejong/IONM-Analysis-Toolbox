@@ -7,36 +7,7 @@ let tool = 'availability';
 // jQuery selectors
 let var_con = $("#variable-content");
 
-var_con.on('click', '#eeg-select-btn', function () {
-    let label = 'eeg';
-    // configure which types of files are allowed
-    let types = [
-        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
-    ];
-    // configure the options (allowed types + properties)
-    const options = {
-        title: 'Select electroencephalography (EEG) file(s)',
-        filters: types,
-        properties: ['openFile']
-    };
-    ipcRenderer.send('select-file', options, tool, label)
-});
 
-
-var_con.on('click', '#trg-select-btn', function () {
-    let label = 'trg';
-    // configure which types of files are allowed
-    let types = [
-        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
-    ];
-    // configure the options (allowed types + properties)
-    const options = {
-        title: 'Select triggered (TRG) file(s)',
-        filters: types,
-        properties: ['openFile']
-    };
-    ipcRenderer.send('select-file', options, tool, label)
-});
 
 ipcRenderer.on('selected-availability', function (event, paths, label) {
     if (label === 'trg') {

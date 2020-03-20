@@ -279,7 +279,7 @@ body.delegate('#settings-section', 'click', function () {
                     <p id="src-dir-path-p">
                         This entire GUI relies on Johan Schneiders and Menno Gerbens their Pyhton Project (see the about section).
                         If this path is not correctly configured, none of the tools will work. Make sure you select the right path.<br>
-                        <span class="important-span">NOTE: </span>Path resets every time when application is restarted
+                        <span class="important-span">NOTE: </span>After configuring this once, the path will be saved in in your user-preferences. Don't worry, you can change it as often as you want.
                     </p>
                     <p id="src-dir-path"></p>
                     <button class="settings-button" id="select-src-dir">SELECT</button>
