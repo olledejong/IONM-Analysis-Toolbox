@@ -64,7 +64,7 @@ $("#welcome-section").click(function () {
                 <span class="tool-number">3</span>
                 <h3>Show EEG Availability</h3>
                 <p>Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
-                <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
+                <span class="tool-finished"><i class="fas fa-check"></i></span>
             </div>
             <div id="convert-section">
                 <span class="tool-number">4</span>

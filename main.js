@@ -1,11 +1,20 @@
 const { app, BrowserWindow, dialog} = require('electron');
 const ipcMain = require('electron').ipcMain;
 const path = require('path');
+const debug = require('electron-debug');
 const exec = require('child_process').exec;
 const log = require('electron-log');
 const notifier = require('node-notifier');
 console.log = log.log;
 const isDev = require('electron-is-dev');
+const Store = require('electron-store');
+
+// create store object for user preferences
+const store = new Store();
+log.info(app.getPath('userData'));
+
+// enable debug
+debug();
 
 // check what environment you're running in
 if (isDev) {
@@ -14,16 +23,6 @@ if (isDev) {
     log.info('Running in production');
 }
 
-// notify the user that he/she has to set python src directory
-notifier.notify({
-    title: 'IONM Analysis Toolbox',
-    message: 'Don\'t forget to set the python src directory! Do this via settings.',
-    icon: path.join(__dirname, '/assets/images/icon.svg'),
-    sticky: true,
-    type: 'error',
-    appID: 'IONM Analysis Toolbox'
-});
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let window;
@@ -31,8 +30,8 @@ let window;
 // global list which holds the paths of the via a dialog window selected csv files.
 let selectedFileHolder;
 
-// python src directory path, which is empty on startup but can be configured via settings
-pythonSrcDirectory = '';
+// python src directory, retrieved from user-preferences on startup, can be changed via settings
+pythonSrcDirectory = store.get('python-src-dir');
 
 // log options configuration
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
@@ -417,7 +416,7 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
 
 
 /**
- *                              [ SETTINGS (1 of 4) ]
+ *                              [ SETTINGS 1/5 ]
  * Handles the retrieving of the current database settings (for now only DB path).
  * This is done by calling the ionm.py function gui_get_database
  */
@@ -437,7 +436,7 @@ ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
 });
 
 /**
- *                              [ SETTINGS (2 of 4) ]
+ *                              [ SETTINGS 2/5 ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -465,7 +464,7 @@ ipcMain.on("get-modality-settings", function getModalitySettings(event) {
 });
 
 /**
- *                              [ SETTINGS (3 of 4) ]
+ *                              [ SETTINGS 3/5 ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -493,7 +492,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
 
 
 /**
- *                  [ SETTINGS (4 of 4)  /  AFTER FAILED CONVERT ]
+ *                  [ SETTINGS 4/5  /  AFTER FAILED CONVERT ]
  * Handles the retrieving of the current modality settings.
  * This is done by calling the ionm.py function gui_get_modalities
  */
@@ -522,15 +521,15 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
  *                      [ SETTINGS 5/5 - PYTHON SRC DIRECTORY ]
  */
 ipcMain.on('get-python-src-dir-setting', function (event) {
-    event.sender.send('current-python-src-dir', pythonSrcDirectory);
+    event.sender.send('current-python-src-dir', store.get('python-src-dir'));
 });
 
-ipcMain.on('set-python-src-dir', function (event) {
+ipcMain.on('set-python-src-dir', function (event, src_dir) {
     try {
-        let new_src_dir_path = selectedFileHolder[0];
-        pythonSrcDirectory = new_src_dir_path;
+        store.set('python-src-dir', src_dir);
+        pythonSrcDirectory = src_dir;
     } catch (e) {
-        event.sender.send('error', 'An error occurred while trying to set the src directory')
+        event.sender.send('error', 'An error occurred while trying to set the python src directory')
     } finally {
         event.sender.send('successfully-set-src-dir')
     }

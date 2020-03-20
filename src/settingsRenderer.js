@@ -23,19 +23,6 @@ ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
 });
 
 
-variable_content.on("click", '#set-src-dir', function() {
-    ipcRenderer.send('set-python-src-dir');
-
-    let set_src_dir = $('#set-src-dir');
-    set_src_dir.css({
-        'background':'#ccc',
-        'color':'#404040',
-        'cursor':'auto'
-    });
-    set_src_dir.prop('disabled', true);
-});
-
-
 ipcRenderer.on('successfully-set-src-dir', function () {
     showNotification('success', 'Successfully set the python src directory');
     showNotification('info', 'Retrieving currently configured application settings');
@@ -128,22 +115,6 @@ variable_content.on("click", '#select-database-btn', function() {
         defaultPath: defaultDatabasePath,
         properties: ['openFile']
     };
-    ipcRenderer.send("select-file", options);
-});
-
-
-/**
- * On click on the src directory SELECT button, this function sends a message
- * to the main process and tells it to open a file selection window with
- * the dynamic content 'options'
- */
-variable_content.on("click", '#select-src-dir', function() {
-    let tool = 'src-dir';
-    // configure the options (allowed types + properties)
-    const options = {
-        title: 'Select Python Project SRC Directory',
-        properties: ['openDirectory']
-    };
     ipcRenderer.send("select-file", options, tool);
 });
 
@@ -165,6 +136,37 @@ var_cont.on("click", '#set-database', function() {
     });
     set_database.prop('disabled', true);
 
+});
+
+
+/**
+ * On click on the src directory SELECT button, this function sends a message
+ * to the main process and tells it to open a file selection window with
+ * the dynamic content 'options'
+ */
+variable_content.on("click", '#select-src-dir', function() {
+
+    let tool = 'src-dir';
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select Python Project SRC Directory',
+        properties: ['openDirectory']
+    };
+    ipcRenderer.send("select-file", options, tool);
+});
+
+
+variable_content.on("click", '#set-src-dir', function() {
+    let src_dir = $('#src-dir-path').html();
+    ipcRenderer.send('set-python-src-dir', src_dir);
+
+    let set_src_dir = $('#set-src-dir');
+    set_src_dir.css({
+        'background':'#ccc',
+        'color':'#404040',
+        'cursor':'auto'
+    });
+    set_src_dir.prop('disabled', true);
 });
 
 
