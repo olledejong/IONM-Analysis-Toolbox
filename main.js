@@ -1,17 +1,23 @@
+/**
+ * main.js is responsible for creating the single browser window and
+ * communicating with the python project.
+ * It runs the commands when asked to by one of the renderer processes
+ * and returns the data (if needed) back to the renderer process the
+ * task came from.
+ */
+// requires (electron)
 const { app, BrowserWindow, dialog} = require('electron');
 const ipcMain = require('electron').ipcMain;
-const path = require('path');
 const debug = require('electron-debug');
 const exec = require('child_process').exec;
 const log = require('electron-log');
-const notifier = require('node-notifier');
 console.log = log.log;
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 
 // create store object for user preferences
 const store = new Store();
-log.info(app.getPath('userData'));
+log.info('User preferences stored at: ', app.getPath('userData'));
 
 // enable debug
 debug();
@@ -96,22 +102,18 @@ app.on('activate', () => {
 
 
 /**
- *                        [ RESIZE BROWSER WINDOW ]
- * General function for resizing the browser window, can be called from the renderer
- * process by using ipcRenderer.send('resize-window')
- *
+ *                         |> RESIZE BROWSER WINDOW <|
+ * Resizes the browser window, can be called from one of the renderer processes
  * @param {int} newX
  * @param {int} newY
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
-    log.info('[ resizeBrowserWindow ][ resizing window to: ', newX, 'px wide and ', newY, 'px high ]');
+    log.info('Resizing window to ', newX, ' x ', newY);
     try {
         let currentWindowSize = window.getSize();
         if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
-            //window.hide();
             window.setMinimumSize(newX, newY);
             window.setSize(newX, newY);
-            //window.show();
         }
     } catch (e) {
         event.sender.send('error', 'Something went wrong while trying to resize the browser window')
@@ -120,13 +122,13 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
 
 
 /**
- *                      [ FILE SELECT AND STORE PATHS ]
- * This function listens to the 'select-csv-file' message from the renderer process
- * which opens a dialog where the user can select files. If canceled, do nothing
+ *                       |> FILE SELECT AND STORE PATHS <|
+ * Opens a dialog where the user can select files. If canceled, do nothing
  * if completed, store the paths to files in the array selectedFileHolder.
  *
  * @param event
- * @param options
+ * @param {Object} options - Options for the showOpenDialog method (directory or file / multi selection or single file etc)
+ * @param {string} tool - tag that defines where the select-file message came from (purpose: correct handling of select output)
  */
 ipcMain.on("select-file", function selectFileAndSendBack(event, options, tool, label) {
     // open the actual dialog with the above options
@@ -141,7 +143,7 @@ ipcMain.on("select-file", function selectFileAndSendBack(event, options, tool, l
             event.sender.send("selected-src-dir", fileNames.filePaths, label)
         } else if (tool === 'database') {
             event.sender.send("selected-database", fileNames.filePaths, label)
-        } else {
+        } else if (tool === 'availability') {
             event.sender.send("selected-availability", fileNames.filePaths, label)
         }
     })
@@ -149,12 +151,11 @@ ipcMain.on("select-file", function selectFileAndSendBack(event, options, tool, l
 
 
 /**
- *                            [ SUMMARIZE (1 of 2) ]
- * Performs commandline commands which retrieve a summary of the basic
- * information about the given ECLIPSE-files. These get sent back to the
- * Renderer process in summarizeRenderer.js
+ *                              |> SUMMARIZE 1/2 <|
+ * Performs the summarize command and parses the outcome into JSON data by calling on
+ * createJsonString().This gets sent back to the renderer process where it is displayed.
  *
- * @param {object} IpcRendererEvent, contains all information about the event
+ * @param {object} event
  */
 ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // window sizing logic
@@ -172,7 +173,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // issue message to the Renderer process to set result title and loading gif
     event.sender.send('set-title-and-preloader-summarize');
 
-    log.info("[ executeSummarizeCommand ][ executing summarize command ]");
+    log.info("Creating child-process and running the summarize command");
 
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < selectedFileHolder.length; i++) {
@@ -184,8 +185,10 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
 
             // if errors occur, send an error message to the renderer process
             if (error !== null) {
+                log.error(error);
                 event.sender.send('error', summarize_error_message);
             } else if (stderr !== '') {
+                log.error(stderr);
                 event.sender.send('error', summarize_error_message);
             } else {
                 // build json string using the command output
@@ -200,12 +203,12 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
 
 
 /**
- *                            [ SUMMARIZE (2 of 2) ]
+ *                          |> SUMMARIZE 1/2 <|
  * Generates JSON formatted string for front-end convenience by taking the
  * command line output and logically splitting and processing this.
  *
  * @param stdout
- * @returns {string}
+ * @returns {string} JSON_string - contains the JSON formatted information as string
  */
 function createJsonString(stdout) {
     let JSON_string = '{';
@@ -250,13 +253,14 @@ function createJsonString(stdout) {
 
 
 /**
- *                              [ SHOW TIMING ]
- * Executes the cli python command to generate timing plots for the given files
+ *                              |> SHOW TIMING <|
+ * Executes the 'show timing' command and informs the renderer when it is completed
+ *
+ * @param {object} event
  */
 ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     window.setMinimumSize(850, 400);
     window.setSize(850, 400);
-
     event.sender.send('set-title-and-preloader-timing');
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
@@ -272,23 +276,26 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send('timing-result', /*JSON.parse(stdout)*/);
+            event.sender.send('timing-result');
         }
     })
 });
 
 
 /**
- *                              [ SHOW EEG AVAILABILITY ]
- * Executes the cli python command to generate EEG availability plots for the given files
+ *                          |> SHOW EEG AVAILABILITY <|
+ * Executes the availability command to generate EEG availability plots for the given files
+ *
+ * @param {string} eeg_file_path - file path to the EEG file selected by the user
+ * @param {string} trg_file_path - file path to the TRG file selected by the user
+ * @param {object} event
  */
-ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file, trg_file) {
+ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file_path, trg_file_path) {
     window.setMinimumSize(850, 400);
     window.setSize(850, 400);
-
     event.sender.send('set-title-and-preloader-availability');
 
-    let command = `ionm.py show_availability -c "${eeg_file}" -t "${trg_file}"`;
+    let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}"`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -300,7 +307,7 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send('availability-result', /*JSON.parse(stdout)*/);
+            event.sender.send('availability-result');
         }
     })
 });
@@ -308,12 +315,14 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
 
 
 /**
- *                              [ CONVERT FILE(S) ]
- * Executes the cli python command to convert the CVS files exported by the Eclipse
+ *                          |> CONVERT FILE(S) <|
+ * Executes the convert command to convert the CVS files exported by the Eclipse
  * software into multiple custom CSV files: one separate file per modality.
+ *
+ * @param {object} event
  */
 ipcMain.on('run-convert', function executeConvertCommand(event) {
-    log.info('[ main.js - executeConvertCommand ][ executing convert command ]');
+    log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
 
     for(let i = 0; i < selectedFileHolder.length; i++) {
@@ -337,14 +346,16 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
 
 
 /**
- *                              [ RE-RUN CONVERT ]
+ *                              |> RE-RUN CONVERT <|
  * When an initial convert task fails, the user will be asked to insert the modalities
  * via forms because of which the convert failed. After this, the user gets the option
  * to re-run the convert command using the file-paths of the files that weren't correctly
  * converted in the first place.
+ *
+ * @param {object} event
  */
 ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedConvertFilePaths) {
-    log.info('[ main.js - executeReRunConvertCommand ][ re-running the convert command using the filepaths of the converts that failed]');
+    log.info('Re-running the convert command using the file-paths of the converts that failed before');
     event.sender.send('set-preloader-rerun-convert');
 
     for(let i = 0; i < failedConvertFilePaths.length; i++) {
@@ -368,11 +379,13 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
 
 
 /**
- *                              [ COMPUTE FILE(S) ]
+ *                         |> COMPUTE STATISTICS OF FILE(S) <|
+ * Computes the statistics of converted files and writes these to the database
  *
+ * @param {object} event
  */
 ipcMain.on('run-compute', function executeComputeCommand(event) {
-    log.info('[ main.js - executeComputeCommand ][ executing compute command ]');
+    log.info('Executing the compute command');
     event.sender.send('set-title-and-preloader-compute');
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
@@ -395,18 +408,22 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
 });
 
 /**
- *                              [ VERSION INFO ]
+ *                          |> ABOUT / VERSION INFO <|
  * Handles the request for retrieving the python script its version info
+ *
+ * @param {object} event
  */
 ipcMain.on("get-version-info", function getVersionInfo(event) {
-    log.info("[ getVersionInfo ][ executing 'ionm.py version' command ]");
+    log.info("Executing the version command");
     exec('ionm.py version', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = "An error occurred while retrieving the python version info";
         if (error !== null) {
+            log.error(error);
             event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
+            log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
             event.sender.send("script-version-info", stdout);
@@ -416,11 +433,30 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
 
 
 /**
- *                              [ SETTINGS 1/5 ]
+ *                           |> GET CURRENT APP SETTINGS <|
  * Handles the retrieving of the current database settings (for now only DB path).
  * This is done by calling the ionm.py function gui_get_database
+ *
+ * @param {object} event
  */
-ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
+ipcMain.on("get-current-settings", function getCurrentSettings(event) {
+    // get python src dir from user preferences
+    event.sender.send('current-python-src-dir', store.get('python-src-dir'));
+
+    // get database path
+    getDatabaseSettings(event);
+
+    // get modalities
+    getModalitySettings(event);
+});
+
+/**
+ * Executes the command that retrieves the current database settings from
+ * the python project's config.ini file
+ *
+ * @param {object} event
+ */
+function getDatabaseSettings(event) {
     exec('ionm.py gui_get_database', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -433,14 +469,15 @@ ipcMain.on("get-database-settings", function getDatabaseSettings(event) {
             event.sender.send("current-database-settings", stdout);
         }
     });
-});
+}
 
 /**
- *                              [ SETTINGS 2/5 ]
- * Handles the retrieving of the current modality settings.
- * This is done by calling the ionm.py function gui_get_modalities
+ * Executes the command that retrieves the current configured modalities from
+ * the database via the python project
+ *
+ * @param {object} event
  */
-ipcMain.on("get-modality-settings", function getModalitySettings(event) {
+function getModalitySettings(event) {
     exec('ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -461,12 +498,14 @@ ipcMain.on("get-modality-settings", function getModalitySettings(event) {
             event.sender.send("current-modality-settings", stdout);
         }
     });
-});
+}
 
 /**
- *                              [ SETTINGS 3/5 ]
- * Handles the retrieving of the current modality settings.
- * This is done by calling the ionm.py function gui_get_modalities
+ *                    |> SETTINGS - SET DATABASE PATH <|
+ * Writes the database path given by user to the config.ini by executing
+ * the gui_set_database function in the python project
+ *
+ * @param {object} event
  */
 ipcMain.on('set-database', function setDatabasePath(event) {
     // only one file can end up here, but it still is in a list
@@ -492,9 +531,15 @@ ipcMain.on('set-database', function setDatabasePath(event) {
 
 
 /**
- *                  [ SETTINGS 4/5  /  AFTER FAILED CONVERT ]
- * Handles the retrieving of the current modality settings.
- * This is done by calling the ionm.py function gui_get_modalities
+ *                      |> SETTINGS - SET NEW MODALITY <|
+ * Stores new modality in the configured database. This function is either called
+ * via settings or after the converting of a file failes because one or more of the
+ * encountered modalities have not been configured.
+ *
+ * @param {object} event
+ * @param {string} name - name of the to be stored modality
+ * @param {string} type - type of the to be stored modality (TRIGGERED or FREE_RUNNING)
+ * @param {string} strategy - strategy of the to be stored modality (DIRECT or AVERAGE)
  */
 ipcMain.on('set-new-modality', function setModality(event, name, type, strategy) {
     let command = `ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
@@ -516,17 +561,21 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
     });
 });
 
-
 /**
- *                      [ SETTINGS 5/5 - PYTHON SRC DIRECTORY ]
+ *                      |> SETTINGS - SET PYTHON SRC DIR <|
+ * Stores new modality in the configured database. This function is either called
+ * via settings or after the converting of a file failes because one or more of the
+ * encountered modalities have not been configured.
+ *
+ * @param {object} event
+ * @param {string} src_dir - path of the to be set python src directory
  */
-ipcMain.on('get-python-src-dir-setting', function (event) {
-    event.sender.send('current-python-src-dir', store.get('python-src-dir'));
-});
-
 ipcMain.on('set-python-src-dir', function (event, src_dir) {
+    log.info(event);
     try {
+        // store the given path in user-preferences (if already exists it will be updated)
         store.set('python-src-dir', src_dir);
+        // locally set the python src dir path for further use in the application
         pythonSrcDirectory = src_dir;
     } catch (e) {
         event.sender.send('error', 'An error occurred while trying to set the python src directory')
@@ -537,9 +586,14 @@ ipcMain.on('set-python-src-dir', function (event, src_dir) {
 
 
 /**
- * Shows a confirmation box to the user for safety purposes
+ *                |> CONFIRMATION BOX - SETUP DATABASE <|
+ * Shows a confirmation box to the user for safety purposes. Used only for
+ * sensitive user decisions.
+ *
+ * @param {object} event
+ * @param {object} options - options for the to be thrown confirmation box
  */
-ipcMain.on('showConfirmationBox', function (event, options) {
+ipcMain.on('show-confirmation-box', function (event, options) {
     dialog.showMessageBox(window, options).then(r => {
         if (r.response !== 0) {
             event.sender.send('cancelled')
@@ -549,9 +603,13 @@ ipcMain.on('showConfirmationBox', function (event, options) {
     })
 });
 
+
 /**
- * Calls the python function that sets up the database via a ChildProcess
- * @param event
+ *                        |> SETUP DATABASE <|
+ * Executes the python function that sets up the database via a ChildProcess
+ * Only executed if user proceeds from confirmation box
+ *
+ * @param {object} event
  */
 function setupDatabase(event) {
     event.sender.send('setting-up-database');
@@ -563,8 +621,8 @@ function setupDatabase(event) {
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
-            event.sender.send('error', errorMessage);
             log.error(error);
+            event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
             log.error(stderr);
             event.sender.send('error', errorMessage);

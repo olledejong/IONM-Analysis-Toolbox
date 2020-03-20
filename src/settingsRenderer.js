@@ -26,8 +26,7 @@ ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
 ipcRenderer.on('successfully-set-src-dir', function () {
     showNotification('success', 'Successfully set the python src directory');
     showNotification('info', 'Retrieving currently configured application settings');
-    ipcRenderer.send('get-database-settings');
-    ipcRenderer.send('get-modality-settings');
+    ipcRenderer.send('get-current-settings');
 });
 
 
@@ -176,8 +175,7 @@ variable_content.on("click", '#set-src-dir', function() {
  * to the user
  */
 ipcRenderer.on('database-set-successful', function () {
-    ipcRenderer.send('get-modality-settings');
-    ipcRenderer.send('get-database-settings');
+    ipcRenderer.send('get-current-settings');
 
     showNotification('success', 'Successfully set the database path');
     showNotification('info', 'Updating the modalities');
@@ -336,7 +334,7 @@ variable_content.on('click', '#setup-database', function () {
         buttons: ["Yes", "No", "Cancel"],
         message: "Are you sure about setting up the following database?\n"+ currentDatabase
     };
-    ipcRenderer.send('showConfirmationBox', options);
+    ipcRenderer.send('show-confirmation-box', options);
 });
 
 

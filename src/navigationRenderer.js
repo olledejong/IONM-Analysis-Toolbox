@@ -268,9 +268,7 @@ body.delegate('#settings-section', 'click', function () {
     removeToastMessages();
     // tell main process to resize the window, and to retrieve the current settings
     ipcRenderer.send('resize-window', 1200, 850);
-    ipcRenderer.send('get-database-settings');
-    ipcRenderer.send('get-modality-settings');
-    ipcRenderer.send('get-python-src-dir-setting');
+    ipcRenderer.send('get-current-settings');
     // ipcRenderer.send('get-paramter-calc-settings');
     // ipcRenderer.send('get-trace-selection-settings');
     variable_content_div.html(
