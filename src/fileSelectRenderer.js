@@ -166,7 +166,6 @@ variable_content.on("click", '#select-database-btn', function() {
     const options = {
         title: 'Select database',
         filters: types,
-        defaultPath: defaultDatabasePath,
         properties: ['openFile']
     };
     ipcRenderer.send("select-file", options, tool);

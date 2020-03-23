@@ -30,6 +30,7 @@ ipcRenderer.on('error', function errorHandler(event, error_message) {
 /**
  * General function for generating and animating notification (toast) messages for all
  * renderer processes
+ *
  * @param type
  * @param message
  */

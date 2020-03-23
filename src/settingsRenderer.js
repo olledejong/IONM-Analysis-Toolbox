@@ -1,6 +1,6 @@
 /**
  * This renderer file is responsible for all user interaction in the
- * settings section of the applications, and for telling the main process
+ * settings section of the application. Also for telling the main process
  * what to do regarding the settings of this applications and the python
  * project. These functionalities are:
  * - Setting the python src directory
@@ -48,8 +48,14 @@ ipcRenderer.on('successfully-set-src-dir', function () {
  * @param {string} database_settings - currently configured database settings (path)
  */
 ipcRenderer.on('current-database-settings', function (event, database_settings) {
-    $('.database-path').html(database_settings.replace(/"/g, ''));
-    currentDatabase = database_settings.replace(/"/g, '');
+    if (database_settings.trim().length === 0) {
+        log.info('leeg');
+        $('.database-path').html('No path configured');
+    } else {
+
+        $('.database-path').html(database_settings.replace(/"/g, ''));
+        currentDatabase = database_settings.replace(/"/g, '');
+    }
 });
 
 
@@ -338,6 +344,6 @@ ipcRenderer.on('setting-up-database', function () {
 ipcRenderer.on('database-setup-successful', function () {
     showNotification('success', 'Successfully setup the database');
     // update the modalities
-    ipcRenderer.send('get-modality-settings');
+    ipcRenderer.send('get-current-settings');
     showNotification('info', 'Retrieving the modalities for this database');
 });

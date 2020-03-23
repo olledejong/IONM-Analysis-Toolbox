@@ -1,19 +1,22 @@
+/**
+ * This renderer file is responsible for all user interaction in the
+ * convert section of the application. It is responsible for telling
+ * the main process to execute the tool via a ChildProcess and handling
+ * the response of this ChildProcess (error / success)
+ */
+
 // requires
 window.$ = window.jQuery = require('jquery');
 
 // jQuery selectors
 let varContent = $("#variable-content");
-let convert_results = $('#convert-results');
 
 // globals
 let failedConvertFilePaths = [];
 
 /**
- * On clicking the RUN button on the summarize page, the page
- * will be cleared to be later filled with the skeleton for
- * the eventual results.
- * Of course also tells the main process to run the summarize
- * command.
+ * Tells the main process to run the summarize tool / command.
+ * Sends message to resize window.
  */
 varContent.on("click", '#run-convert', function() {
     ipcRenderer.send('resize-window', 1000, 850);
@@ -22,9 +25,8 @@ varContent.on("click", '#run-convert', function() {
 
 
 /**
- * This function is executed when the main process sends the
- * message 'set-title-and-preloader-convert'. The result page skeleton
- * and preloader will be set.
+ * Loads result page skeleton and the preloader will be showed.
+ * Hides all containers until needed later.
  */
 ipcRenderer.on('set-title-and-preloader-convert', function () {
     $('.lds-ellipsis').show();
@@ -61,7 +63,10 @@ ipcRenderer.on('set-title-and-preloader-convert', function () {
     $('#success-and-run-compute').hide();
 });
 
-// todo docstring
+/**
+ * Show container for the purpose of adding encountered unknown modalities.
+ * Shows preloader.
+ */
 ipcRenderer.on('set-preloader-rerun-convert', function () {
     $('.lds-ellipsis').show();
     $('#add-modality-form-div').animate({
@@ -73,15 +78,20 @@ ipcRenderer.on('set-preloader-rerun-convert', function () {
 
 
 /**
- * This function gets called by the main renderer for every file that the user wants to convert.
- * It shows confirmation or informative error messages to the user so that he/she knows what
- * to do next.
+ * Shows confirmation (and resulting logic) or informative error messages about the convert
+ * task the user just ran.
+ *
+ * @param {string} convert_output - the output of the convert run in JSON string format
+ * @param {string} filepath_of_run - the filepath of the specific convert run
+ * @param {object} event - for purpose of communication with sender
  */
-// todo CLEAN UP THIS FUNCTION
-ipcRenderer.on('convert-result', function displayConvertResultContent(event, convert_output, filePathOfRun) {
-    let missingModalities = [];
-    let rndmHash = Math.random().toString(36).substring(7);
-    let convert_results = $('#convert-results');
+ipcRenderer.on('convert-result', function displayConvertResultContent(event, convert_output, filepath_of_run) {
+    let convert_results_container = $('#convert-results');
+    let succeeded_converts_containter = $('#succeeded-converts');
+    let success_and_compute_container = $('#success-and-run-compute');
+    let failed_converts_container = $('#failed-converts');
+    let add_modality_forms_container = $('#add-modality-form-div');
+    let preloader = $('.lds-ellipsis');
 
     // output parts
     let file_name = convert_output['file-name'];
@@ -90,72 +100,64 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
     let error_msg = convert_output['error-msg'];
     let unknown_modalities = convert_output['unknown-modalities'];
 
-    // calculate the extra needed top offset
-    let extraTopOffset = ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) * 40;
-
-    // if iteration has a success message in it
+    // if iteration has a success message in it (if convert of file succeeded)
     if (convert_output.hasOwnProperty('success-msg')) {
-        $(`<tr><td class="failed-name-td">` + file_name +`</td><td class="err-msg-td">`+ success_msg +`</td><td class="file-path-td">`+ filePathOfRun +`</td></tr><br>`).insertBefore('#succeeded-converts-p');
-        $('#succeeded-converts').show();
-        $('#success-and-run-compute').show();
+        $(`<tr><td class="filename-td">${file_name}</td><td class="msg-td">${success_msg}</td><td class="file-path-td">${filepath_of_run}</td></tr><br>`).insertBefore('#succeeded-converts-p');
+        succeeded_converts_containter.show();
+        success_and_compute_container.show();
 
         showNotification('success', success_msg);
-        convert_results.show();
-    // if iteration does not contain success message
+        convert_results_container.show();
+
+    // if iteration does not contain success message (if convert of file failed
     } else {
-        failedConvertFilePaths.push(filePathOfRun);
-        $(`<tr><td class="failed-name-td">` + file_name +`</td><td class="err-msg-td">`+ error_msg +`</td><td class="file-path-td">`+ filePathOfRun +`</td></tr><br>`).insertBefore('#failed-converts-p');
-        $('#add-modality-form-div').show();
-        $('#failed-converts').show();
-        let existingAddModalityForms = [];
-        // get all modality name text values
-        let modalityTextFields = $('.modality-input');
-        for(let i = 0; i < modalityTextFields.length; i++){
-            existingAddModalityForms.push($(modalityTextFields[i]).val())
-        }
-        log.info('EXISING ON PAGE: ', existingAddModalityForms);
+        failedConvertFilePaths.push(filepath_of_run);
+        $(`<tr><td class="filename-td">${file_name}</td><td class="msg-td">${error_msg}</td><td class="file-path-td">${filepath_of_run}</td></tr><br>`).insertBefore('#failed-converts-p');
+        add_modality_forms_container.show();
+        failed_converts_container.show();
 
-        for (let i = 0; i < unknown_modalities.length; i++) {
-            if (!missingModalities.includes(unknown_modalities[i].toString())) {
-                missingModalities.push(unknown_modalities[i].toString())
-            }
-        }
-        log.info('ALL MISSING: ', missingModalities);
+
+
         showNotification('error', short_error_msg);
-        convert_results.show();
+        convert_results_container.show();
 
+        let existingFormsOnPage = getExistingModalities(unknown_modalities);
         // generate and insert the modality forms
-        generateModalityFormFields(missingModalities, existingAddModalityForms, unknown_modalities);
+        generateModalityFormFields( existingFormsOnPage, unknown_modalities);
     }
-
-    let tempNotiElement = $('#'+rndmHash);
-    tempNotiElement.css('top', '+=' + extraTopOffset);
-
-    // animate the message
-    tempNotiElement.animate({
-        right: '+=465', opacity: 1
-    }, 800, function () {
-        tempNotiElement.delay(6000).fadeOut(800, function () {
-            $(this).remove();
-        });
-    });
-
-    $('.lds-ellipsis').hide('fast');
+    preloader.hide('fast');
 });
+
+
+/**
+ * Gets all the moldality forms that are already on the page
+ *
+ * @param missingModalities
+ * @returns {array} existingFormsOnPage - all modalities that are already on the page
+ */
+function getExistingModalities(missingModalities) {
+    let modalityInputFields = $('.modality-input');
+    let existingFormsOnPage = [];
+    // get all modality name text values
+    for (let i = 0; i < modalityInputFields.length; i++) {
+        existingFormsOnPage.push($(modalityInputFields[i]).val())
+    }
+    return existingFormsOnPage
+}
 
 
 /**
  * Generates and inserts a modality form field for every modality encountered
  * that is not already displayed to the user. This has to be done because the
- * function gets run for every file the user selects
- * @param missingModalities
- * @param existingAddModalityForms
+ * function gets run for every file the user selects.
+ *
+ * @param existingFormsOnPage
  * @param unknown_modalities
  */
-function generateModalityFormFields(missingModalities, existingAddModalityForms, unknown_modalities) {
-    for (let i = 0; i < missingModalities.length; i++) {
+function generateModalityFormFields(existingFormsOnPage, unknown_modalities) {
+    for (let i = 0; i < unknown_modalities.length; i++) {
         let rndmHash = Math.random().toString(36).substring(7);
-        if (!existingAddModalityForms.includes(unknown_modalities[i])) {
+        if (!existingFormsOnPage.includes(unknown_modalities[i])) {
             $(`<div class="add-modality-after-convert">
                     <input class="modality-input" id="modality-input" type="text" placeholder="MODALITY" value="` + unknown_modalities[i] + `" required>
                     <div class="add-modality-btn-container">
@@ -185,26 +187,36 @@ function generateModalityFormFields(missingModalities, existingAddModalityForms,
     }
 }
 
+
+/**
+ * Retrieves the values selected by the user for each modality (form) and tells
+ * the main process to store them one-by-one. Also disables/enables button and
+ * hides the preloader.
+ */
 varContent.on("click", '#submit-all-modalities', function runAddModalityPerForm() {
+    // loop trough all 'add modality' forms
     $('.add-modality-after-convert').each(function (i, form) {
         let modality_name = $(this).find('.modality-input').val();
         let modality_type;
         let modality_strategy;
-        // let modality_type = $(this).find('.modality-input').val();
-        // let modality_strategy = $(this).find('.modality-input').val()
+
+        // if triggered radio button is checked
         if($(this).find('#triggered').prop('checked')) {
             modality_type = $(this).find('#triggered').val()
+        // if free-running radio button is checked
         } else {
             modality_type = $(this).find('#free-running').val()
         }
 
+        // if direct radio button is checked
         if($(this).find('#direct').prop('checked')) {
             modality_strategy = $(this).find('#direct').val()
+        // if average radio button is checked
         } else {
             modality_strategy = $(this).find('#average').val()
         }
 
-        // store all modalities using the values of their unique form
+        // store the modality using the values of their unique form
         ipcRenderer.send('set-new-modality', modality_name, modality_type, modality_strategy);
 
         // animate forms out
@@ -223,27 +235,28 @@ varContent.on("click", '#submit-all-modalities', function runAddModalityPerForm(
                 'cursor': 'pointer'
             }).prop('disabled', false)
         });
-    })
+    });
+    $('.lds-ellipsis').show();
 });
 
 
 /**
- * When the main process successfully set the modalities (nothing can go wrong
- * while doing that, so no error handling) let the user know by showing a toast
- * notification for every modality
+ * Lets the user know that the modality was set successfully by showing a
+ * toast notification for every modality.
  */
 ipcRenderer.on('set-modality-successful', function (event, name) {
     showNotification('success', ('Successfully stored the modality '+ name));
-
-    // refresh modalities (in case of via settings)
+    // refresh modalities (in case of added via settings)
     ipcRenderer.send('get-modality-settings');
+    $('.lds-ellipsis').hide('fast');
 });
 
 
 /**
+ * Tells the main process to re-run the convert command for the failed converts.
  * Because the at first unknown modalities now have been stored (nothing can go wrong
  * while doing that, so no error handling) we can let the user repeat the convert command
- * for those files that previously failed. This is initiated by a click on the rerun button.
+ * for those files that previously failed.
  */
 varContent.on('click', '#rerun-failed-converts', function () {
     ipcRenderer.send("rerun-convert", failedConvertFilePaths);

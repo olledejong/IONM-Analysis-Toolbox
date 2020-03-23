@@ -1,3 +1,10 @@
+/**
+ * This renderer file is responsible for all user interaction in the
+ * 'show timing' section of the application. It is responsible for telling
+ * the main process to execute the tool via a ChildProcess and handling
+ * the response of this ChildProcess (error / success)
+ */
+
 // requires
 window.$ = window.jQuery = require('jquery');
 
@@ -5,11 +12,8 @@ window.$ = window.jQuery = require('jquery');
 let variableContent = $("#variable-content");
 
 /**
- * On clicking the RUN button on the summarize page, the page
- * will be cleared to be later filled with the skeleton for
- * the eventual results.
- * Of course also tells the main process to run the summarize
- * command.
+ * Tells the main process to run the summarize tool / command and
+ * empties the page
  */
 variableContent.on("click", '#run-timing', function() {
     variableContent.html('');
@@ -18,11 +22,9 @@ variableContent.on("click", '#run-timing', function() {
 
 
 /**
- * This function is executed when the main process sends the
- * message 'set-title-and-preloader-timing'. The result page skeleton
- * and preloader will be set.
+ * Sets result page skeleton and preloader will be shown.
  */
-ipcRenderer.on('set-title-and-preloader-timing', function (event) {
+ipcRenderer.on('set-title-and-preloader-timing', function () {
     $('.lds-ellipsis').show('fast');
     variableContent.html(`<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>`);
     // hide summarize results div untill it actually gets some results
@@ -30,7 +32,11 @@ ipcRenderer.on('set-title-and-preloader-timing', function (event) {
 });
 
 
-ipcRenderer.on('timing-result', function (event) {
+/**
+ * Restores original page when user closes external windows and functionality
+ * is done. Also hides preloader.
+ */
+ipcRenderer.on('timing-result', function () {
     variableContent.html(
         `<div id="timing-content">
             <div id="timing-content-description" class="content-description-container">

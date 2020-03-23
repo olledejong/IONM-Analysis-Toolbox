@@ -104,6 +104,8 @@ app.on('activate', () => {
 /**
  *                         |> RESIZE BROWSER WINDOW <|
  * Resizes the browser window, can be called from one of the renderer processes
+ *
+ * @param {object} event - for purpose of communication with sender
  * @param {int} newX
  * @param {int} newY
  */
@@ -126,7 +128,7 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
  * Opens a dialog where the user can select files. If canceled, do nothing
  * if completed, store the paths to files in the array selectedFileHolder.
  *
- * @param event
+ * @param {object} event - for purpose of communication with sender
  * @param {Object} options - Options for the showOpenDialog method (directory or file / multi selection or single file etc)
  * @param {string} tool - tag that defines where the select-file message came from (purpose: correct handling of select output)
  */
@@ -155,7 +157,7 @@ ipcMain.on("select-file", function selectFileAndSendBack(event, options, tool, l
  * Performs the summarize command and parses the outcome into JSON data by calling on
  * createJsonString().This gets sent back to the renderer process where it is displayed.
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // window sizing logic
@@ -256,7 +258,7 @@ function createJsonString(stdout) {
  *                              |> SHOW TIMING <|
  * Executes the 'show timing' command and informs the renderer when it is completed
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     window.setMinimumSize(850, 400);
@@ -288,7 +290,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
  *
  * @param {string} eeg_file_path - file path to the EEG file selected by the user
  * @param {string} trg_file_path - file path to the TRG file selected by the user
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file_path, trg_file_path) {
     window.setMinimumSize(850, 400);
@@ -319,7 +321,7 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
  * Executes the convert command to convert the CVS files exported by the Eclipse
  * software into multiple custom CSV files: one separate file per modality.
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on('run-convert', function executeConvertCommand(event) {
     log.info('Executing the convert command');
@@ -352,7 +354,7 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
  * to re-run the convert command using the file-paths of the files that weren't correctly
  * converted in the first place.
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedConvertFilePaths) {
     log.info('Re-running the convert command using the file-paths of the converts that failed before');
@@ -382,7 +384,7 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
  *                         |> COMPUTE STATISTICS OF FILE(S) <|
  * Computes the statistics of converted files and writes these to the database
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on('run-compute', function executeComputeCommand(event) {
     log.info('Executing the compute command');
@@ -411,7 +413,7 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
  *                          |> ABOUT / VERSION INFO <|
  * Handles the request for retrieving the python script its version info
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on("get-version-info", function getVersionInfo(event) {
     log.info("Executing the version command");
@@ -437,7 +439,7 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
  * Handles the retrieving of the current database settings (for now only DB path).
  * This is done by calling the ionm.py function gui_get_database
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on("get-current-settings", function getCurrentSettings(event) {
     // get python src dir from user preferences
@@ -454,7 +456,7 @@ ipcMain.on("get-current-settings", function getCurrentSettings(event) {
  * Executes the command that retrieves the current database settings from
  * the python project's config.ini file
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 function getDatabaseSettings(event) {
     exec('ionm.py gui_get_database', {
@@ -475,7 +477,7 @@ function getDatabaseSettings(event) {
  * Executes the command that retrieves the current configured modalities from
  * the database via the python project
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 function getModalitySettings(event) {
     exec('ionm.py gui_get_modalities', {
@@ -505,7 +507,7 @@ function getModalitySettings(event) {
  * Writes the database path given by user to the config.ini by executing
  * the gui_set_database function in the python project
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on('set-database', function setDatabasePath(event) {
     // only one file can end up here, but it still is in a list
@@ -536,7 +538,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
  * via settings or after the converting of a file failes because one or more of the
  * encountered modalities have not been configured.
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  * @param {string} name - name of the to be stored modality
  * @param {string} type - type of the to be stored modality (TRIGGERED or FREE_RUNNING)
  * @param {string} strategy - strategy of the to be stored modality (DIRECT or AVERAGE)
@@ -567,7 +569,7 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
  * via settings or after the converting of a file failes because one or more of the
  * encountered modalities have not been configured.
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  * @param {string} src_dir - path of the to be set python src directory
  */
 ipcMain.on('set-python-src-dir', function (event, src_dir) {
@@ -590,7 +592,7 @@ ipcMain.on('set-python-src-dir', function (event, src_dir) {
  * Shows a confirmation box to the user for safety purposes. Used only for
  * sensitive user decisions.
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  * @param {object} options - options for the to be thrown confirmation box
  */
 ipcMain.on('show-confirmation-box', function (event, options) {
@@ -609,7 +611,7 @@ ipcMain.on('show-confirmation-box', function (event, options) {
  * Executes the python function that sets up the database via a ChildProcess
  * Only executed if user proceeds from confirmation box
  *
- * @param {object} event
+ * @param {object} event - for purpose of communication with sender
  */
 function setupDatabase(event) {
     event.sender.send('setting-up-database');

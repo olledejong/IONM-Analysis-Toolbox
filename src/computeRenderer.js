@@ -1,3 +1,10 @@
+/**
+ * This renderer file is responsible for all user interaction in the
+ * compute section of the application. It is responsible for telling
+ * the main process to execute the tool via a ChildProcess and handling
+ * the response of this ChildProcess (error / success)
+ */
+
 // requires
 window.$ = window.jQuery = require('jquery');
 const path = require('path');
@@ -6,11 +13,8 @@ const path = require('path');
 let variableCont = $("#variable-content");
 
 /**
- * On clicking the RUN button on the summarize page, the page
- * will be cleared to be later filled with the skeleton for
- * the eventual results.
- * Of course also tells the main process to run the summarize
- * command.
+ * Tells the main process to run the compute tool / command.
+ * Sends message to resize the window
  */
 variableCont.on("click", '#run-compute', function() {
     ipcRenderer.send('resize-window', 1180, 600);
@@ -18,9 +22,8 @@ variableCont.on("click", '#run-compute', function() {
 });
 
 /**
- * This function is executed when the main process sends the
- * message 'set-title-and-preloader-convert'. The result page skeleton
- * and preloader will be set.
+ * Loads result page skeleton and the preloader will be showed.
+ * Hides containers until needed later.
  */
 ipcRenderer.on('set-title-and-preloader-compute', function () {
     $('.lds-ellipsis').show();
@@ -38,7 +41,10 @@ ipcRenderer.on('set-title-and-preloader-compute', function () {
     $('#successful-computes').hide()
 });
 
-
+/**
+ * Shows the result skeleton and fills it for every successfully completed
+ * compute task. Hides preloader and shows the results.
+ */
 ipcRenderer.on('compute-result', function (event, stdout, file_path) {
     for (let i = 0; i < file_path.length; i++) {
         log.info(file_path);

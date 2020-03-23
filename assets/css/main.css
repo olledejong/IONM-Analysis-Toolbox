@@ -935,3 +935,15 @@ label.radio input:checked + span {
     position: relative;
     color: #404040;
 }
+
+.filename-td {
+    width: 24%;
+}
+
+.msg-td {
+    width: 25%;
+}
+
+.file-path-td {
+    width: 55%;
+}
