@@ -36,10 +36,11 @@ ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
  * Also retrieves the currently configured settings.
  */
 ipcRenderer.on('successfully-set-src-dir', function () {
-    showNotification('success', 'Successfully set the python src directory');
+    showNotification('success', 'Successfully set the python renderer directory');
     showNotification('info', 'Retrieving currently configured application settings');
     ipcRenderer.send('get-current-settings');
 });
+
 
 /**
  * Displays the currently configured database settings (path)

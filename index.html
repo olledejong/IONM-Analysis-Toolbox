@@ -33,43 +33,65 @@
                     <span class="tool-number">2</span>
                     <h3>Show Timing</h3>
                     <p class="tool-description-p">Plot timestamps of measurements as a function of position in file</p>
-                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
+                    <p class="python-command-p">python command: ionm.py show_timing</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="availability-section">
                     <span class="tool-number">3</span>
                     <h3>Show EEG Availability</h3>
                     <p class="tool-description-p">Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
-                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
+                    <p class="python-command-p">python command: ionm.py show_availability</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="convert-section">
                     <span class="tool-number">4</span>
                     <h3>Convert File(s)</h3>
                     <p class="tool-description-p">Convert an Eclipse CSV into multiple custom files: one per modality</p>
-                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
+                    <p class="python-command-p">python command: ionm.py convert</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="compute-section">
                     <span class="tool-number">5</span>
                     <h3>Compute Statistics</h3>
                     <p class="tool-description-p">Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
-                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
+                    <p class="python-command-p">python command: ionm.py compute</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
-                <div id="evc-section">
+                <div id="extract-section">
                     <span class="tool-number">6</span>
-                    <h3>Extract, Validate and Combine</h3>
-                    <p class="tool-description-p">click here to expand pathway</p>
-                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
+                    <h3>Extract EEG</h3>
+                    <p class="tool-description-p">Create separate file containing evoked potentials with the available EEG context</p>
+                    <p class="python-command-p">python command: ionm.py extract_eeg</p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
+                </div>
+                <div id="validate-section">
+                    <span class="tool-number">7</span>
+                    <h3>Validate EEG/TES-MEP</h3>
+                    <p class="tool-description-p">description goes here</p>
+                    <p class="python-command-p">python command: ionm.py validate</p>
+                    <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
+                </div>
+                <div id="combine-section">
+                    <span class="tool-number">8</span>
+                    <h3>Combine</h3>
+                    <p class="tool-description-p">Combines the data from the database with the output of the graphical analysis data</p>
+                    <p class="python-command-p">python command: ionm.py combine</p>
                     <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="classify-section">
-                    <span class="tool-number">7</span>
+                    <span class="tool-number">9</span>
                     <h3>Classify</h3>
                     <p class="tool-description-p">Classify signals of file(s) on the presence of F-waves</p>
-                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
+                    <p class="python-command-p">python command: ionm.py classify</p>
                     <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
+                </div>
+                <div id="placeholder1-section">
+                    <h3>Placeholder</h3>
+                    <p class="tool-description-p">A simple placeholder for future reference</p>
+                </div>
+                <div id="placeholder2-section">
+                    <h3>Placeholder</h3>
+                    <p class="tool-description-p">A simple placeholder for future reference</p>
                 </div>
                 <div id="settings-section">
                     <span id="settings-icon"><i class="fas fa-cog"></i></span>

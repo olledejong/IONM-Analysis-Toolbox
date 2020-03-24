@@ -51,8 +51,8 @@ function createWindow () {
     // Create the browser window
     window = new BrowserWindow({
         show: false,
-        width: 730,
-        height: 800,
+        width: 1142,
+        height: 798,
         title: 'IONM Analysis Toolbox',
         resizable: true,
         frame: false,
@@ -161,11 +161,11 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
 ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
     // window sizing logic
     if ( selectedFileHolder.length > 2 ) {
-        window.setMinimumSize(1220, 900);
-        window.setSize(1220, 900);
+        window.setMinimumSize(1410, 900);
+        window.setSize(1410, 900);
     } else if ( selectedFileHolder.length === 2 ) {
-        window.setMinimumSize(1220, 550);
-        window.setSize(1220, 550);
+        window.setMinimumSize(1410, 550);
+        window.setSize(1410, 550);
     } else {
         window.setMinimumSize(800, 550);
         window.setSize(800, 550);

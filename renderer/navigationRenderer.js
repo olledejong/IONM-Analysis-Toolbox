@@ -39,7 +39,7 @@ $('#welcome-text').html(`Welcome, ${username}, please select a tool to get start
 $('#welcome-section').click(function () {
     if (variable_content_div.find('#tool-container').length !== 1) {
         removeToastMessages();
-        ipcRenderer.send('resize-window', 730, 800);
+        ipcRenderer.send('resize-window', 1142, 798);
         variable_content_div.load('shared/index.html');
     }
 });
@@ -99,10 +99,30 @@ body.delegate('#compute-section', 'click', function () {
 /**
  * Loads variable content for the [ EVC section ]
  */
-body.delegate('#evc-section', 'click', function () {
+body.delegate('#extract-section', 'click', function () {
+    removeToastMessages();
+    ipcRenderer.send('resize-window', 800, 450);
+    variable_content_div.load('shared/extract.html');
+});
+
+
+/**
+ * Loads variable content for the [ EVC section ]
+ */
+body.delegate('#validate-section', 'click', function () {
     removeToastMessages();
     showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet');
 });
+
+
+/**
+ * Loads variable content for the [ EVC section ]
+ */
+body.delegate('#combine-section', 'click', function () {
+    removeToastMessages();
+    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet');
+});
+
 
 
 /**

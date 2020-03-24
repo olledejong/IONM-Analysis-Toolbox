@@ -30,7 +30,7 @@ variable_content.on("click", '#run-summarize', function() {
  * message 'set-title-and-preloader-summarize'. The result page skeleton
  * and preloader will be set.
  */
-ipcRenderer.on('set-title-and-preloader-summarize', function (event) {
+ipcRenderer.on('set-title-and-preloader-summarize', function () {
     $('.lds-ellipsis').show()
     variable_content.html(`<div id="summarize-results"></div>`);
     // hide summarize results div untill it actually gets some results
@@ -72,7 +72,7 @@ ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_
  * @returns variables htmlTableContent and fileName via a Promise object
  */
 function generateTable(JSON_obj) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
 
         let decodedFilePath = decodeURI(JSON_obj['File path']);
         let htmlTableContent = [];

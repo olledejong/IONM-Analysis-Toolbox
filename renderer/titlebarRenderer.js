@@ -15,14 +15,14 @@ console.log = log.log;
 let MyTitleBar = new customTitlebar.Titlebar({
     backgroundColor: customTitlebar.Color.fromHex('#404040'),
     unfocusEffect: false,
-    titleHorizontalAlignment: "left",
+    titleHorizontalAlignment: 'left',
     minimizable: true,
     maximizable: false,
     drag: true,
     shadow: false,
     icon: 'assets/images/icon.svg'
 });
-MyTitleBar.updateTitle("IONM ANALYSIS TOOLBOX");
+MyTitleBar.updateTitle('IONM ANALYSIS TOOLBOX');
 MyTitleBar.updateIcon('assets/images/icon.svg');
 
 
@@ -33,13 +33,13 @@ MyTitleBar.updateIcon('assets/images/icon.svg');
  */
 // This piece of code listens to the click on menu
 // buttons and changes the color accordingly.
-let taskbar = document.getElementById("taskbar");
-let sections = taskbar.getElementsByClassName("taskbar-div");
+let taskbar = document.getElementById('taskbar');
+let sections = taskbar.getElementsByClassName('taskbar-div');
 for (let i = 0; i < sections.length; i++) {
-    sections[i].addEventListener("click", function() {
-        let current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
+    sections[i].addEventListener('click', function() {
+        let current = document.getElementsByClassName('active');
+        current[0].className = current[0].className.replace(' active', '');
+        this.className += ' active';
     });
 }
 

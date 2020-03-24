@@ -15,9 +15,9 @@ let variableContent = $('#variable-content');
  * Tells the main process to run the summarize tool / command and
  * empties the page
  */
-variableContent.on("click", '#run-timing', function() {
+variableContent.on('click', '#run-timing', function() {
     variableContent.html('');
-    ipcRenderer.send("run-timing");
+    ipcRenderer.send('run-timing');
 });
 
 
@@ -26,7 +26,7 @@ variableContent.on("click", '#run-timing', function() {
  */
 ipcRenderer.on('set-title-and-preloader-timing', function () {
     $('.lds-ellipsis').show('fast');
-    variableContent.html(`<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>`);
+    variableContent.html('<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>');
     // hide summarize results div untill it actually gets some results
     $('#timing-results').hide();
 });
