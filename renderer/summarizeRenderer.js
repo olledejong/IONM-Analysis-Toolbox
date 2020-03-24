@@ -11,7 +11,7 @@
 window.$ = window.jQuery = require('jquery');
 
 // jQuery selectors
-let variable_content = $("#variable-content");
+let variable_content = $('#variable-content');
 
 /**
  * On clicking the RUN button on the summarize page, the page
@@ -20,9 +20,9 @@ let variable_content = $("#variable-content");
  * Of course also tells the main process to run the summarize
  * command.
  */
-variable_content.on("click", '#run-summarize', function() {
+variable_content.on('click', '#run-summarize', function() {
     variable_content.html('');
-    ipcRenderer.send("run-summarize");
+    ipcRenderer.send('run-summarize');
 });
 
 /**
@@ -31,8 +31,8 @@ variable_content.on("click", '#run-summarize', function() {
  * and preloader will be set.
  */
 ipcRenderer.on('set-title-and-preloader-summarize', function () {
-    $('.lds-ellipsis').show()
-    variable_content.html(`<div id="summarize-results"></div>`);
+    $('.lds-ellipsis').show();
+    variable_content.html('<div id="summarize-results"></div>');
     // hide summarize results div untill it actually gets some results
     $('#summarize-results').hide();
 });
@@ -45,8 +45,8 @@ ipcRenderer.on('set-title-and-preloader-summarize', function () {
  *
  * @param {string} JSON_result
  */
-ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_result) {
-    log.info("[ summarizeRenderer.js ][ displaySummarizeResults() is being executed ]");
+ipcRenderer.on('summarize-result', function displaySummarizeResults(event, JSON_result) {
+    log.info('[ summarizeRenderer.js ][ displaySummarizeResults() is being executed ]');
     // parse the JSON string into a JSON object
     let JSON_obj = JSON.parse(JSON_result);
 
@@ -59,9 +59,9 @@ ipcRenderer.on("summarize-result", function displaySummarizeResults(event, JSON_
         let selector = $('#table-' + result[1]);
 
         selector.append(result[0]);
-        log.info("[ summarizeRenderer.js ][ Appending table rows to table "+ result[1] +" ]");
+        log.info('[ summarizeRenderer.js ][ Appending table rows to table '+ result[1] +' ]');
         // fade out the preloader
-        $('.lds-ellipsis').hide('fast')
+        $('.lds-ellipsis').hide('fast');
     });
 });
 
@@ -90,14 +90,14 @@ function generateTable(JSON_obj) {
         for(let i=0; i < Object.keys(JSON_obj.meta).length; i++) {
             let key = Object.keys(JSON_obj.meta)[i];
             let value = JSON_obj['meta'][Object.keys(JSON_obj.meta)[i]];
-            htmlTableContent.push(`<tr><td class="table-item">${key}</td><td>${value}</td></tr>`)
+            htmlTableContent.push(`<tr><td class="table-item">${key}</td><td>${value}</td></tr>`);
         }
 
         // for every instance in the modalities object, build a row with its key and its value
         for(let j=0; j < Object.keys(JSON_obj['modalities']).length; j++) {
             let key = Object.keys(JSON_obj['modalities'])[j];
             let value = JSON_obj['modalities'][Object.keys(JSON_obj['modalities'])[j]];
-            htmlTableContent.push(`<tr><td class="table-item">${key}</td><td>${value}</td></tr>`)
+            htmlTableContent.push(`<tr><td class="table-item">${key}</td><td>${value}</td></tr>`);
         }
 
         resolve([htmlTableContent, fileName]);

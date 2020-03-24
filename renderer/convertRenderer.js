@@ -9,7 +9,7 @@
 window.$ = window.jQuery = require('jquery');
 
 // jQuery selectors
-let varContent = $("#variable-content");
+let varContent = $('#variable-content');
 
 // globals
 let failedConvertFilePaths = [];
@@ -18,9 +18,9 @@ let failedConvertFilePaths = [];
  * Tells the main process to run the summarize tool / command.
  * Sends message to resize window.
  */
-varContent.on("click", '#run-convert', function() {
+varContent.on('click', '#run-convert', function() {
     ipcRenderer.send('resize-window', 1000, 850);
-    ipcRenderer.send("run-convert");
+    ipcRenderer.send('run-convert');
 });
 
 
@@ -73,7 +73,7 @@ ipcRenderer.on('set-preloader-rerun-convert', function () {
         opacity: 0
     }, 800, function () {
         $(this).remove();
-    })
+    });
 });
 
 
@@ -101,6 +101,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
     let unknown_modalities = convert_output['unknown-modalities'];
 
     // if iteration has a success message in it (if convert of file succeeded)
+    // eslint-disable-next-line no-prototype-builtins
     if (convert_output.hasOwnProperty('success-msg')) {
         $(`<tr><td class="filename-td">${file_name}</td><td class="msg-td">${success_msg}</td><td class="file-path-td">${filepath_of_run}</td></tr><br>`).insertBefore('#succeeded-converts-p');
         succeeded_converts_containter.show();
@@ -121,28 +122,27 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
         showNotification('error', short_error_msg);
         convert_results_container.show();
 
-        let existingFormsOnPage = getExistingModalities(unknown_modalities);
+        let existingFormsOnPage = getExistingModalities();
         // generate and insert the modality forms
-        generateModalityFormFields( existingFormsOnPage, unknown_modalities);
+        generateModalityFormFields( existingFormsOnPage, unknown_modalities );
     }
     preloader.hide('fast');
 });
 
 
 /**
- * Gets all the moldality forms that are already on the page
+ * Gets all the modality forms that are already on the page
  *
- * @param missingModalities
  * @returns {array} existingFormsOnPage - all modalities that are already on the page
  */
-function getExistingModalities(missingModalities) {
+function getExistingModalities() {
     let modalityInputFields = $('.modality-input');
     let existingFormsOnPage = [];
     // get all modality name text values
     for (let i = 0; i < modalityInputFields.length; i++) {
-        existingFormsOnPage.push($(modalityInputFields[i]).val())
+        existingFormsOnPage.push($(modalityInputFields[i]).val());
     }
-    return existingFormsOnPage
+    return existingFormsOnPage;
 }
 
 
@@ -193,27 +193,27 @@ function generateModalityFormFields(existingFormsOnPage, unknown_modalities) {
  * the main process to store them one-by-one. Also disables/enables button and
  * hides the preloader.
  */
-varContent.on("click", '#submit-all-modalities', function runAddModalityPerForm() {
+varContent.on('click', '#submit-all-modalities', function runAddModalityPerForm() {
     // loop trough all 'add modality' forms
-    $('.add-modality-after-convert').each(function (i, form) {
+    $('.add-modality-after-convert').each(function () {
         let modality_name = $(this).find('.modality-input').val();
         let modality_type;
         let modality_strategy;
 
         // if triggered radio button is checked
         if($(this).find('#triggered').prop('checked')) {
-            modality_type = $(this).find('#triggered').val()
+            modality_type = $(this).find('#triggered').val();
         // if free-running radio button is checked
         } else {
-            modality_type = $(this).find('#free-running').val()
+            modality_type = $(this).find('#free-running').val();
         }
 
         // if direct radio button is checked
         if($(this).find('#direct').prop('checked')) {
-            modality_strategy = $(this).find('#direct').val()
+            modality_strategy = $(this).find('#direct').val();
         // if average radio button is checked
         } else {
-            modality_strategy = $(this).find('#average').val()
+            modality_strategy = $(this).find('#average').val();
         }
 
         // store the modality using the values of their unique form
@@ -233,7 +233,7 @@ varContent.on("click", '#submit-all-modalities', function runAddModalityPerForm(
                 'background': '#e87e04',
                 'color': 'white',
                 'cursor': 'pointer'
-            }).prop('disabled', false)
+            }).prop('disabled', false);
         });
     });
     $('.lds-ellipsis').show();
@@ -259,7 +259,7 @@ ipcRenderer.on('set-modality-successful', function (event, name) {
  * for those files that previously failed.
  */
 varContent.on('click', '#rerun-failed-converts', function () {
-    ipcRenderer.send("rerun-convert", failedConvertFilePaths);
+    ipcRenderer.send('rerun-convert', failedConvertFilePaths);
     // empty the list for possible future encounters
     failedConvertFilePaths = [];
 });

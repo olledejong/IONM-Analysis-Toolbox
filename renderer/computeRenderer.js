@@ -10,15 +10,15 @@ window.$ = window.jQuery = require('jquery');
 const path = require('path');
 
 // selectors
-let variableCont = $("#variable-content");
+let variableCont = $('#variable-content');
 
 /**
  * Tells the main process to run the compute tool / command.
  * Sends message to resize the window
  */
-variableCont.on("click", '#run-compute', function() {
+variableCont.on('click', '#run-compute', function() {
     ipcRenderer.send('resize-window', 1180, 600);
-    ipcRenderer.send("run-compute");
+    ipcRenderer.send('run-compute');
 });
 
 /**
@@ -38,7 +38,7 @@ ipcRenderer.on('set-title-and-preloader-compute', function () {
                                 </div>
                             </div>
                        </div>`);
-    $('#successful-computes').hide()
+    $('#successful-computes').hide();
 });
 
 /**

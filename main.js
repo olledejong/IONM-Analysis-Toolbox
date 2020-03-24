@@ -36,8 +36,8 @@ let window;
 // global list which holds the paths of the via a dialog window selected csv files.
 let selectedFileHolder;
 
-// python src directory, retrieved from user-preferences on startup, can be changed via settings
-pythonSrcDirectory = store.get('python-src-dir');
+// python renderer directory, retrieved from user-preferences on startup, can be changed via settings
+let pythonSrcDirectory = store.get('python-src-dir');
 
 // log options configuration
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';

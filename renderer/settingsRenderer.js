@@ -14,7 +14,7 @@
 window.$ = window.jQuery = require('jquery');
 
 // jQuery selectors
-let var_cont = $("#variable-content");
+let var_cont = $('#variable-content');
 
 // globals
 let currentDatabase;
@@ -80,7 +80,7 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
             <tr id="modalities-table-hrow">
                 <th>No modalities configured for this database</th>
             </tr>
-         </table>`).insertBefore('#add-new-modality').children(':last').hide().fadeIn(1200)
+         </table>`).insertBefore('#add-new-modality').children(':last').hide().fadeIn(1200);
         } else {
             modalities_table.remove();
             // add table skeleton and header row to the page
@@ -112,7 +112,7 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
             <tr id="modalities-table-hrow">
                 <th>Either the database is not setup yet, or an error occurred while retrieving the modalities</th>
             </tr>
-         </table>`).insertBefore('#add-new-modality').children(':last').hide().fadeIn(1200)
+         </table>`).insertBefore('#add-new-modality').children(':last').hide().fadeIn(1200);
     }
 });
 
@@ -121,9 +121,9 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
  * Tells the main process to write the by the user selected database path to the
  * config.ini file in the python project. Also disables the 'set datbase' button.
  */
-var_cont.on("click", '#set-database', function() {
+var_cont.on('click', '#set-database', function() {
     showNotification('info', 'Setting the database path');
-    ipcRenderer.send("set-database");
+    ipcRenderer.send('set-database');
 
     let set_database = $('#set-database');
     set_database.css({
@@ -138,7 +138,7 @@ var_cont.on("click", '#set-database', function() {
  * Tells the main process to set the by the user selected python src dir.
  * Also disables the 'set src directory' button.
  */
-variable_content.on("click", '#set-src-dir', function() {
+variable_content.on('click', '#set-src-dir', function() {
     let src_dir = $('#src-dir-path').html();
     ipcRenderer.send('set-python-src-dir', src_dir);
 
@@ -167,7 +167,7 @@ ipcRenderer.on('database-set-successful', function () {
 /**
  * Shows the modality form using an animation on the user's request
  */
-variable_content.on("click", '#add-new-modality', function() {
+variable_content.on('click', '#add-new-modality', function() {
     ipcRenderer.send('resize-window', 1200, 800);
 
     // animate the modality form
@@ -175,14 +175,14 @@ variable_content.on("click", '#add-new-modality', function() {
         margin: '15px 0 0 0', opacity: 1, zIndex: 20
     }, 800);
 
-    $('#hide-modality-form').show()
+    $('#hide-modality-form').show();
 });
 
 
 /**
  * Hides the modality form using an animation on the user's request
  */
-variable_content.on("click", '#hide-modality-form', function() {
+variable_content.on('click', '#hide-modality-form', function() {
     let add_modality = $('#add-modality');
     // hide add-modality form
     $('#hide-modality-form').hide();
@@ -199,14 +199,14 @@ variable_content.on("click", '#hide-modality-form', function() {
  * Retrieves the filled out form values and tells the main process to execute
  * the 'set modality' command. Then disables the 'submit new modality' button.
  */
-variable_content.on("click", '#submit-new-modality', function() {
+variable_content.on('click', '#submit-new-modality', function() {
     let submit_new_modality = $('#submit-new-modality');
     let description_input = $('#description-input');
 
     // get form information
     let modality = $('#modality-input').val();
-    let type = $("input[name='type']:checked").val();
-    let strategy = $("input[name='strategy']:checked").val();
+    let type = $('input[name=\'type\']:checked').val();
+    let strategy = $('input[name=\'strategy\']:checked').val();
     let description = null;
 
     // if description given, replace null
@@ -245,7 +245,7 @@ ipcRenderer.on('selected-src-dir', function (event, selected_src_dir) {
             'background': '#e87e04',
             'color': 'white',
             'cursor': 'pointer'
-        }).prop('disabled', false)
+        }).prop('disabled', false);
     } else {
         src_dir_path_p.html(currentSrcDirectory);
         set_src_dir.css({
@@ -272,7 +272,7 @@ ipcRenderer.on('selected-database', function (event, selected_database) {
             'background': '#e87e04',
             'color': 'white',
             'cursor': 'pointer'
-        }).prop('disabled', false)
+        }).prop('disabled', false);
     } else {
         database_path_p.html(currentDatabase);
         set_database.css({
@@ -288,8 +288,8 @@ ipcRenderer.on('selected-database', function (event, selected_database) {
  * Resets the modality form after submit or when the form gets hidden
  */
 function resetModalityForm() {
-    $('#modality-input').val("");
-    $('#description-input').val("");
+    $('#modality-input').val('');
+    $('#description-input').val('');
     $('#triggered').prop('checked', true);
     $('#direct').prop('checked', true);
 }
@@ -305,7 +305,7 @@ variable_content.on('change', '#add-modality',  function checkIfFormComplete() {
             'background': '#e87e04',
             'color': 'white',
             'cursor': 'pointer'
-        }).prop('disabled', false)
+        }).prop('disabled', false);
     } else {
         submit_new_modality.css({
             'background': '#ccc',
@@ -323,8 +323,8 @@ variable_content.on('change', '#add-modality',  function checkIfFormComplete() {
  */
 variable_content.on('click', '#setup-database', function () {
     let options  = {
-        buttons: ["Yes", "No", "Cancel"],
-        message: "Are you sure about setting up the following database?\n"+ currentDatabase
+        buttons: ['Yes', 'No', 'Cancel'],
+        message: 'Are you sure about setting up the following database?\n'+ currentDatabase
     };
     ipcRenderer.send('show-confirmation-box', options);
 });
@@ -334,7 +334,7 @@ variable_content.on('click', '#setup-database', function () {
  * Lets the user know that the database is being setup on message from main process
  */
 ipcRenderer.on('setting-up-database', function () {
-    showNotification('info', 'Setting up the database')
+    showNotification('info', 'Setting up the database');
 });
 
 

@@ -34,6 +34,7 @@ ipcRenderer.on('error', function errorHandler(event, error_message) {
  * @param type
  * @param message
  */
+// eslint-disable-next-line no-unused-vars
 function showNotification(type, message) {
     let container_after_titlebar = $('.container-after-titlebar');
     let r = Math.random().toString(36).substring(7);
@@ -68,6 +69,7 @@ function showNotification(type, message) {
 /**
  * Removes all displayed toast messages on navigation
  */
+// eslint-disable-next-line no-unused-vars
 function removeToastMessages() {
     $('.success-msg').remove();
     $('.info-msg').remove() ;

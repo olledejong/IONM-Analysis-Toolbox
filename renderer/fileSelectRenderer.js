@@ -11,7 +11,7 @@
  * lets it know the selecting of files is for the purpose of general
  * tools
  */
-variable_content.on("click", '.csv-select-btn', function() {
+variable_content.on('click', '.csv-select-btn', function() {
     let tool = 'general';
     // configure which types of files are allowed
     let types = [
@@ -21,10 +21,10 @@ variable_content.on("click", '.csv-select-btn', function() {
     const options = {
         title: 'Select file(s)',
         filters: types,
-        defaultPath: "D:\\Menno\\NimEclipse",
-        properties: ['openFile', "multiSelections"]
+        defaultPath: 'D:\\Menno\\NimEclipse',
+        properties: ['openFile', 'multiSelections']
     };
-    ipcRenderer.send("select-file", options, tool);
+    ipcRenderer.send('select-file', options, tool);
 });
 
 /**
@@ -35,10 +35,9 @@ variable_content.on("click", '.csv-select-btn', function() {
  * @param {object} event
  * @param {array} paths - contains paths of all selected files
  */
-ipcRenderer.on("selected-general", function (event, paths) {
+ipcRenderer.on('selected-general', function (event, paths) {
     // jQuery selector(s)
-    let run_button = $(".run-button");
-    let file_select_button = $(".csv-select-btn");
+    let run_button = $('.run-button');
     let selected_filenames_p = $('#selected-filenames');
 
     // only do something if there are actually files are selected
@@ -123,7 +122,7 @@ variable_content.on('click', '#eeg-select-btn', function () {
         filters: types,
         properties: ['openFile']
     };
-    ipcRenderer.send('select-file', options, tool, label)
+    ipcRenderer.send('select-file', options, tool, label);
 });
 
 
@@ -146,7 +145,7 @@ variable_content.on('click', '#trg-select-btn', function () {
         filters: types,
         properties: ['openFile']
     };
-    ipcRenderer.send('select-file', options, tool, label)
+    ipcRenderer.send('select-file', options, tool, label);
 });
 
 
@@ -156,7 +155,7 @@ variable_content.on('click', '#trg-select-btn', function () {
  * lets it know the selecting of files is for the purpose of setting
  * the database path via the app settings
  */
-variable_content.on("click", '#select-database-btn', function() {
+variable_content.on('click', '#select-database-btn', function() {
     let tool = 'database';
     // configure which types of files are allowed
     let types = [
@@ -168,7 +167,7 @@ variable_content.on("click", '#select-database-btn', function() {
         filters: types,
         properties: ['openFile']
     };
-    ipcRenderer.send("select-file", options, tool);
+    ipcRenderer.send('select-file', options, tool);
 });
 
 
@@ -178,7 +177,7 @@ variable_content.on("click", '#select-database-btn', function() {
  * lets it know the selecting of files is for the purpose of setting
  * the python src dir via the app settings
  */
-variable_content.on("click", '#select-src-dir', function() {
+variable_content.on('click', '#select-src-dir', function() {
 
     let tool = 'src-dir';
     // configure the options (allowed types + properties)
@@ -186,5 +185,5 @@ variable_content.on("click", '#select-src-dir', function() {
         title: 'Select Python Project SRC Directory',
         properties: ['openDirectory']
     };
-    ipcRenderer.send("select-file", options, tool);
+    ipcRenderer.send('select-file', options, tool);
 });

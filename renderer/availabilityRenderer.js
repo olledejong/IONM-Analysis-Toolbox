@@ -9,7 +9,7 @@
 window.$ = window.jQuery = require('jquery');
 
 // global jQuery selectors
-let var_con = $("#variable-content");
+let var_con = $('#variable-content');
 
 /**
  * Responsible for handling the information that the file select dialog
@@ -29,14 +29,14 @@ ipcRenderer.on('selected-availability', function (event, paths, label) {
         } else {
             trg_select.html('Click to select a TRG file');
         }
-        checkIfFilesAreGiven()
+        checkIfFilesAreGiven();
     } else {
         if (paths.length !== 0) {
             eeg_select.html(paths.join('<br>'));
         } else {
             eeg_select.html('Click to select an EEG file');
         }
-        checkIfFilesAreGiven()
+        checkIfFilesAreGiven();
     }
 });
 
@@ -52,13 +52,13 @@ function checkIfFilesAreGiven() {
             'background':'#e87e04',
             'color': 'white',
             'cursor': 'pointer'
-        }).prop('disabled', false)
+        }).prop('disabled', false);
     } else {
         run_availability.css({
             'background':'#ccc',
             'color': '#404040',
             'cursor': 'auto'
-        }).prop('disabled', true)
+        }).prop('disabled', true);
     }
 }
 
@@ -66,14 +66,14 @@ function checkIfFilesAreGiven() {
  * Tells the main process to run the availability tool / command.
  * Clears the html.
  */
-var_con.on("click", '#run-availability', function() {
+var_con.on('click', '#run-availability', function() {
     let trg_select = $('#trg-select-btn');
     let eeg_select = $('#eeg-select-btn');
 
     let eeg_file = eeg_select.html();
     let trg_file = trg_select.html();
     var_con.html('');
-    ipcRenderer.send("run-availability", eeg_file, trg_file);
+    ipcRenderer.send('run-availability', eeg_file, trg_file);
 });
 
 /**
@@ -83,7 +83,7 @@ ipcRenderer.on('set-title-and-preloader-availability', function () {
     let preloader = $('.lds-ellipsis');
 
     preloader.show('fast');
-    var_con.html(`<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>`);
+    var_con.html('<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>');
 });
 
 
