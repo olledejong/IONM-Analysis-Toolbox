@@ -1,0 +1,28 @@
+<div id="convert-content">
+    <div id="convert-content-description" class="content-description-container">
+        <h3 id="convert-content-h">Convert Eclipse CSV file(s) into a custom format</h3>
+        <p id="convert-content-p">
+            This tool is a preprocess tool to eventually compute the statistics of the Eclipse files.
+            It will convert Eclipse CSV files into multiple custom files: one separate file per modality.
+            <br><br>
+            All the modalities that the file, or files, contain should be already in the known modalities table. If not,
+            the converting of the file that contains unknown modalities will fail. Don't worry, this is not a disaster! If
+            this occurs, forms will appear where you can fill out the needed information. Since the names are given already
+            it isn't that big of a deal to fill out the forms. After you're done, simply click the 'submit all' button to
+            insert the new modalities into the modalities table. Since you came here to convert files, you can re-run the
+            convert task for all the files that initially failed.
+            <br><br>
+            As mentioned, the statistics can be computed for one or more of these converted files. On the output page there
+            will also be an option to immediately run the compute step. Select the files you wish to compute the statistic of
+            from a list of successfully convert files.
+            <br><br>Please select the CSV file(s) you wish to convert.
+        </p>
+    </div>
+    <div id="file-upload-container">
+        <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
+        <div id="selected-filename-container">
+            <p id="selected-filenames">No files selected</p>
+            <button class="run-button" id="run-convert" disabled>RUN</button>
+        </div>
+    </div>
+</div>

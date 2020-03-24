@@ -550,7 +550,7 @@ h1 i {
     text-align: center;
 }
 
-#database-path-p, #set-modalities-p, #src-dir-path-p {
+.database-path-p, #set-modalities-p, #src-dir-path-p {
     text-align: left;
     font-size: 16px;
     margin: 0 0 8px 0;
@@ -579,12 +579,20 @@ h1 i {
     background: #404040;
     position: relative;
     display: inline-block;
-    width: calc(50% - 32px);
+    width: calc(50% - 16px);
     border-radius: 4px;
-    margin: 16px;
+    margin: 16px 0 0 0;
     padding: 18px;
     float: left;
     box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+}
+
+.add-modality-after-convert:nth-child(odd){
+    float: right;
+}
+
+#failed-converts {
+    margin: 16px 0 0 0;
 }
 
 .add-modality-after-convert h1, .failed-convert-form h1 {
@@ -807,7 +815,7 @@ label.radio input:checked + span {
 #submit-all-modalities {
     float: left;
     padding: 16px;
-    margin: 16px;
+    margin: 16px 0;
     background: #e87e04;
     color: white;
     cursor: pointer;
@@ -817,7 +825,7 @@ label.radio input:checked + span {
 #rerun-failed-converts {
     float: right;
     padding: 16px;
-    margin: 16px;
+    margin: 16px 0;
     background: #cccccc;
     color: #404040;
     cursor: auto;
@@ -833,7 +841,6 @@ label.radio input:checked + span {
     font-weight: 600;
     width: fit-content;
     background: #404040;
-    margin: 16px 16px 4px 16px;
     border-radius: 4px;
     padding: 10px 15px 10px 15px;
     letter-spacing: 1.5px;
@@ -946,4 +953,9 @@ label.radio input:checked + span {
 
 .file-path-td {
     width: 55%;
+}
+
+.tool-description-p {
+    margin: 0 -4px 0 -4px;
+    font-size: 15px;
 }

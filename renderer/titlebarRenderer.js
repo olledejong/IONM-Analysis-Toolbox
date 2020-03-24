@@ -6,8 +6,10 @@
 // REQUIRES
 const customTitlebar = require('custom-electron-titlebar');
 const { remote } = require('electron');
+// eslint-disable-next-line no-unused-vars
 const ipcRenderer = require('electron').ipcRenderer;
-
+const log = require('electron-log');
+console.log = log.log;
 
 // Create custom title bar and set characteristics
 let MyTitleBar = new customTitlebar.Titlebar({
@@ -18,10 +20,10 @@ let MyTitleBar = new customTitlebar.Titlebar({
     maximizable: false,
     drag: true,
     shadow: false,
-    icon: '../assets/images/icon.svg'
+    icon: 'assets/images/icon.svg'
 });
 MyTitleBar.updateTitle("IONM ANALYSIS TOOLBOX");
-MyTitleBar.updateIcon('../assets/images/icon.svg');
+MyTitleBar.updateIcon('assets/images/icon.svg');
 
 
 /**

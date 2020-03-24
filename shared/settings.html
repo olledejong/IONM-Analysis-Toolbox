@@ -1,0 +1,79 @@
+<div id="settings-content" style="display: none">
+    <div id="small-tools">
+        <div id="set-python-src-dir" class="small-tool">
+            <h4>Select and set src directory</h4>
+            <p id="src-dir-path-p">
+                This entire GUI relies on Johan Schneiders and Menno Gerbens their Pyhton Project (see the about section).
+                If this path is not correctly configured, none of the tools will work. Make sure you select the right path.<br>
+                <span class="important-span">NOTE: </span>After configuring this once, the path will be saved in in your user-preferences. Don't worry, you can change it as often as you want.
+            </p>
+            <p id="src-dir-path"></p>
+            <button class="settings-button" id="select-src-dir">SELECT</button>
+            <button class="settings-button" id="set-src-dir" disabled>SET SRC DIRECTORY</button>
+        </div>
+        <div id="set-database-path" class="small-tool">
+            <h4>Select and set database</h4>
+            <p class="database-path-p">
+                The currently configured database is displayed within the white box. Select and
+                set the the database you wish to work with.
+            </p>
+            <p class="database-path"></p>
+            <button class="settings-button" id="select-database-btn">SELECT</button>
+            <button class="settings-button" id="set-database" disabled>SET DATABASE</button>
+        </div>
+        <div id="configure-database" class="small-tool">
+            <h4>Setup the (new) database</h4>
+            <p class="database-path-p">
+                ONLY FOR NEW AND EMPTY DATABASES! The currently set database path is displayed within
+                the white box. Click on the button to setup the database.<br>
+                <span class="important-span">NOTE:</span>&nbsp;Be very thoughtful when using this
+                tool. If you (mistakenly) setup a database which is already in use and potentially
+                full of data, you <span class="important-span">will</span> delete all of its content
+                or corrupt the database.
+            </p>
+            <p class="database-path"></p>
+            <button class="settings-button" id="setup-database">SETUP DATABASE</button>
+        </div>
+    </div>
+    <div id="set-modalities">
+        <h4>Configure the modalities</h4>
+        <p id="set-modalities-p">
+            The currently in the active database configured modalities are displayed in the table.
+            Add modalities to your liking.<br>
+            <span class="important-span">NOTE:</span>&nbsp;Be very accurate when you fill out the
+            new modalities, do not make any spelling mistakes!
+        </p>
+        <button class="settings-button" id="add-new-modality">ADD MODALITY</button>
+        <button class="settings-button" id="hide-modality-form">HIDE FORM</button>
+    </div>
+    <!-- add new modality form-->
+    <div class="small-tool" id="add-modality">
+        <input id="modality-input" type="text" placeholder="MODALITY" required>
+        <input id="description-input" type="text" placeholder="DESCRIPTION (Optional)">
+        <div class="radio-container" id="type-radios">
+            <label class="radio">
+                <input type="radio" id="triggered" name="type" value="TRIGGERED" checked="checked">
+                <span>TRIGGERED</span>
+            </label>
+            <label class="radio">
+                <input type="radio" id="free-running" name="type" value="FREE_RUNNING">
+                <span>FREE-RUNNING</span>
+            </label>
+        </div>
+        <div class="radio-container" id="strategy-radios">
+            <label class="radio">
+                <input type="radio" id="direct" name="strategy" value="DIRECT" checked="checked">
+                <span>DIRECT</span>
+            </label>
+            <label class="radio">
+                <input type="radio" id="average" name="strategy" value="AVERAGE">
+                <span>AVERAGE</span>
+            </label>
+        </div>
+        <button class="settings-button" id="submit-new-modality" disabled>SUBMIT</button>
+    </div>
+    <!--            <div class="small-tool" id="parameter-calculation-settings">-->
+    <!--                <input id="modality-input" type="text" placeholder="MODALITY" required>-->
+    <!--                <button class="settings-button" id="submit-parameter-calc-setting" disabled>SUBMIT</button>-->
+    <!--            </div>-->
+</div>

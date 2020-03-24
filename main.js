@@ -54,22 +54,21 @@ function createWindow () {
         width: 730,
         height: 800,
         title: 'IONM Analysis Toolbox',
-        icon: __dirname + '/assets/images/icon.svg',
         resizable: true,
         frame: false,
         webPreferences: {
             webSecurity: true,
             nodeIntegration: true,
-            disableBlinkFeatures : "Auxclick"
+            disableBlinkFeatures : 'Auxclick'
         }
     });
 
     // and load the index.html of the app.
-    window.loadFile('src/index.html');
+    window.loadFile('index.html');
 
     // once everything is loaded, show window
     window.once('ready-to-show', () => {
-        window.show()
+        window.show();
     });
 
     // Open the DevTools.
@@ -77,7 +76,7 @@ function createWindow () {
 
     // Emitted when the window is closed.
     window.on('closed', () => {
-        window = null
+        window = null;
     });
 }
 
@@ -88,7 +87,7 @@ app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
 });
 
@@ -96,7 +95,7 @@ app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (window === null) {
-        createWindow()
+        createWindow();
     }
 });
 
@@ -118,7 +117,7 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
             window.setSize(newX, newY);
         }
     } catch (e) {
-        event.sender.send('error', 'Something went wrong while trying to resize the browser window')
+        event.sender.send('error', 'Something went wrong while trying to resize the browser window');
     }
 });
 
@@ -132,23 +131,23 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
  * @param {Object} options - Options for the showOpenDialog method (directory or file / multi selection or single file etc)
  * @param {string} tool - tag that defines where the select-file message came from (purpose: correct handling of select output)
  */
-ipcMain.on("select-file", function selectFileAndSendBack(event, options, tool, label) {
+ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, label) {
     // open the actual dialog with the above options
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
         selectedFileHolder = fileNames.filePaths;
-        log.info("[ selectFileAndSendBack ][ Sending file path(s) to renderer ]");
+        log.info('[ selectFileAndSendBack ][ Sending file path(s) to renderer ]');
         log.info(fileNames.filePaths);
         if (tool === 'general') {
-            event.sender.send("selected-general", fileNames.filePaths, label)
+            event.sender.send('selected-general', fileNames.filePaths, label);
         } else if (tool === 'src-dir') {
-            event.sender.send("selected-src-dir", fileNames.filePaths, label)
+            event.sender.send('selected-src-dir', fileNames.filePaths, label);
         } else if (tool === 'database') {
-            event.sender.send("selected-database", fileNames.filePaths, label)
+            event.sender.send('selected-database', fileNames.filePaths, label);
         } else if (tool === 'availability') {
-            event.sender.send("selected-availability", fileNames.filePaths, label)
+            event.sender.send('selected-availability', fileNames.filePaths, label);
         }
-    })
+    });
 });
 
 
@@ -159,7 +158,7 @@ ipcMain.on("select-file", function selectFileAndSendBack(event, options, tool, l
  *
  * @param {object} event - for purpose of communication with sender
  */
-ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
+ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
     // window sizing logic
     if ( selectedFileHolder.length > 2 ) {
         window.setMinimumSize(1220, 900);
@@ -175,7 +174,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
     // issue message to the Renderer process to set result title and loading gif
     event.sender.send('set-title-and-preloader-summarize');
 
-    log.info("Creating child-process and running the summarize command");
+    log.info('Creating child-process and running the summarize command');
 
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < selectedFileHolder.length; i++) {
@@ -183,7 +182,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
         exec(command, {
             cwd: pythonSrcDirectory
         }, function(error, stdout, stderr) {
-            let summarize_error_message = "An error occurred while summarizing one or more files";
+            let summarize_error_message = 'An error occurred while summarizing one or more files';
 
             // if errors occur, send an error message to the renderer process
             if (error !== null) {
@@ -197,7 +196,7 @@ ipcMain.on("run-summarize", function executeSummarizeCommand(event) {
                 let JSONstring = createJsonString(stdout);
 
                 // send the json string back to the renderer to be displayed
-                event.sender.send("summarize-result", JSONstring);
+                event.sender.send('summarize-result', JSONstring);
             }
         });
     }
@@ -225,27 +224,27 @@ function createJsonString(stdout) {
         if( !filtered[i].startsWith('\t') ) {
             let splitted = filtered[i].split(/:\s/g);
             if (splitted[1] === undefined) {
-                JSON_string += "\"" + splitted[0].replace(":", '') + "\": {";
+                JSON_string += '"' + splitted[0].replace(':', '') + '": {';
             } else {
                 if(splitted[1].includes('\\')) {
-                    splitted[1] = encodeURI(splitted[1])
+                    splitted[1] = encodeURI(splitted[1]);
                 }
-                JSON_string += "\"" + splitted[0] + "\": \"" + splitted[1] + "\",";
+                JSON_string += '"' + splitted[0] + '": "' + splitted[1] + '",';
             }
         }
         if( filtered[i].startsWith('\t') ) {
             let splitted = filtered[i].trim();
             splitted = splitted.split(/:\s/g);
-            JSON_string += "\"" + splitted[0] + "\": \"" + splitted[1] + "\"";
+            JSON_string += '"' + splitted[0] + '": "' + splitted[1] + '"';
             if (i !== (filtered.length -1 )) {
-                if (!filtered[i + 1].startsWith("\t")) {
+                if (!filtered[i + 1].startsWith('\t')) {
                     JSON_string += '}';
                 }
             }
             if(i === (filtered.length -1 )) {
-                JSON_string += "}";
+                JSON_string += '}';
             } else {
-                JSON_string += ",";
+                JSON_string += ',';
             }
         }
     }
@@ -270,7 +269,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while trying to generate the timing plot";
+        let errorMessage = 'An error occurred while trying to generate the timing plot';
         if (error !== null) {
             log.error(error);
             event.sender.send('error', errorMessage);
@@ -280,7 +279,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
         } else {
             event.sender.send('timing-result');
         }
-    })
+    });
 });
 
 
@@ -301,7 +300,7 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while trying to generate the EEG availability plot";
+        let errorMessage = 'An error occurred while trying to generate the EEG availability plot';
         if (error !== null) {
             log.error(error);
             event.sender.send('error', errorMessage);
@@ -311,7 +310,7 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
         } else {
             event.sender.send('availability-result');
         }
-    })
+    });
 });
 
 
@@ -332,7 +331,7 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
         exec(command, {
             cwd: pythonSrcDirectory
         }, function (error, stdout, stderr) {
-            let errorMessage = "An error occurred while trying to run the convert command";
+            let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
                 event.sender.send('error', errorMessage);
@@ -365,7 +364,7 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
         exec(command, {
             cwd: pythonSrcDirectory
         }, function (error, stdout, stderr) {
-            let errorMessage = "An error occurred while trying to run the convert command";
+            let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
                 event.sender.send('error', errorMessage);
@@ -395,7 +394,7 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
     exec(command, {
         cwd: pythonSrcDirectory
     }, function (error, stdout, stderr) {
-        let errorMessage = "An error occurred while trying to run the compute command";
+        let errorMessage = 'An error occurred while trying to run the compute command';
         if (error !== null) {
             log.error(error);
             event.sender.send('error', errorMessage);
@@ -415,12 +414,12 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
  *
  * @param {object} event - for purpose of communication with sender
  */
-ipcMain.on("get-version-info", function getVersionInfo(event) {
-    log.info("Executing the version command");
+ipcMain.on('get-version-info', function getVersionInfo(event) {
+    log.info('Executing the version command');
     exec('ionm.py version', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while retrieving the python version info";
+        let errorMessage = 'An error occurred while retrieving the python version info';
         if (error !== null) {
             log.error(error);
             event.sender.send('error', errorMessage);
@@ -428,7 +427,7 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send("script-version-info", stdout);
+            event.sender.send('script-version-info', stdout);
         }
     });
 });
@@ -441,15 +440,18 @@ ipcMain.on("get-version-info", function getVersionInfo(event) {
  *
  * @param {object} event - for purpose of communication with sender
  */
-ipcMain.on("get-current-settings", function getCurrentSettings(event) {
-    // get python src dir from user preferences
-    event.sender.send('current-python-src-dir', store.get('python-src-dir'));
-
-    // get database path
-    getDatabaseSettings(event);
-
-    // get modalities
-    getModalitySettings(event);
+ipcMain.on('get-current-settings', function getCurrentSettings(event) {
+    // get python renderer dir from user preferences
+    if ( store.get('python-src-dir') ) {
+        event.sender.send('current-python-src-dir', store.get('python-src-dir'));
+        // get database path
+        getDatabaseSettings(event);
+        // get modalities
+        getModalitySettings(event);
+    } else {
+        event.sender.send('current-python-src-dir', 'No python src directory configured');
+        event.sender.send('current-database-settings', 'No python src directory configured');
+    }
 });
 
 /**
@@ -462,13 +464,13 @@ function getDatabaseSettings(event) {
     exec('ionm.py gui_get_database', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while retrieving the database path";
+        let errorMessage = 'An error occurred while retrieving the database path';
         if (error !== null) {
             event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send("current-database-settings", stdout);
+            event.sender.send('current-database-settings', stdout);
         }
     });
 }
@@ -483,21 +485,21 @@ function getModalitySettings(event) {
     exec('ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while retrieving the existing modalities";
+        let errorMessage = 'An error occurred while retrieving the existing modalities';
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
             if (error.toString().indexOf('modalities niet vinden') >= 0) {
-                errorMessage = "The database is not setup yet, please do that first!";
+                errorMessage = 'The database is not setup yet, please do that first!';
             }
             event.sender.send('current-modality-settings', errorMessage);
         } else if (stderr !== '') {
             if (stderr.toString().indexOf('modalities niet vinden') >= 0) {
-                errorMessage = "The database is not setup yet, please do that first!";
+                errorMessage = 'The database is not setup yet, please do that first!';
             }
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send("current-modality-settings", stdout);
+            event.sender.send('current-modality-settings', stdout);
         }
     });
 }
@@ -517,7 +519,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while trying to set the database";
+        let errorMessage = 'An error occurred while trying to set the database';
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
@@ -526,7 +528,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send("database-set-successful", stdout);
+            event.sender.send('database-set-successful', stdout);
         }
     });
 });
@@ -548,7 +550,7 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while trying to set the modality";
+        let errorMessage = 'An error occurred while trying to set the modality';
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
@@ -558,7 +560,7 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send("set-modality-successful", name);
+            event.sender.send('set-modality-successful', name);
         }
     });
 });
@@ -570,19 +572,19 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
  * encountered modalities have not been configured.
  *
  * @param {object} event - for purpose of communication with sender
- * @param {string} src_dir - path of the to be set python src directory
+ * @param {string} src_dir - path of the to be set python renderer directory
  */
 ipcMain.on('set-python-src-dir', function (event, src_dir) {
     log.info(event);
     try {
         // store the given path in user-preferences (if already exists it will be updated)
         store.set('python-src-dir', src_dir);
-        // locally set the python src dir path for further use in the application
+        // locally set the python renderer dir path for further use in the application
         pythonSrcDirectory = src_dir;
     } catch (e) {
-        event.sender.send('error', 'An error occurred while trying to set the python src directory')
+        event.sender.send('error', 'An error occurred while trying to set the python renderer directory');
     } finally {
-        event.sender.send('successfully-set-src-dir')
+        event.sender.send('successfully-set-src-dir');
     }
 });
 
@@ -598,11 +600,11 @@ ipcMain.on('set-python-src-dir', function (event, src_dir) {
 ipcMain.on('show-confirmation-box', function (event, options) {
     dialog.showMessageBox(window, options).then(r => {
         if (r.response !== 0) {
-            event.sender.send('cancelled')
+            event.sender.send('cancelled');
         } else {
-            setupDatabase(event)
+            setupDatabase(event);
         }
-    })
+    });
 });
 
 
@@ -619,7 +621,7 @@ function setupDatabase(event) {
     exec('ionm.py gui_setup', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
-        let errorMessage = "An error occurred while trying to setup the database";
+        let errorMessage = 'An error occurred while trying to setup the database';
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
@@ -629,7 +631,7 @@ function setupDatabase(event) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send("database-setup-successful", stdout);
+            event.sender.send('database-setup-successful', stdout);
         }
     });
 }

@@ -94,21 +94,6 @@ ipcRenderer.on('set-title-and-preloader-availability', function () {
 ipcRenderer.on('availability-result', function () {
     let preloader = $('.lds-ellipsis');
     ipcRenderer.send('resize-window', 800, 450);
-    var_con.html(
-        `<div id="availability-content">
-            <div id="availability-content-description" class="content-description-container">
-                <h3 id="availability-content-h">Generate a plot showing when an EEG context is available for given evoked potentials</h3>
-                <p id="availability-content-p">
-                This will generate a plot showing timestamps at which IONM measurements were made. In the resulting graph 
-                you will see plots in which timestamps of measurements are plotted as a function of the position in file.
-                <br><br>Please select the CSV file(s) of which you would like to see a timing plot.
-                </p>
-            </div>
-            <div id="availability-select-container">
-                <button id="eeg-select-btn" class="availability-btn">Click to select an EEG file</button>
-                <button id="trg-select-btn" class="availability-btn">Click to select a TRG file</button>
-                <button id="run-availability" disabled>RUN</button>
-            </div>
-        </div>`);
+    var_con.load('../shared/availability.html');
     preloader.hide('fast');
 });

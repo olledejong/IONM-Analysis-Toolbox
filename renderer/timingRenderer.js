@@ -9,7 +9,7 @@
 window.$ = window.jQuery = require('jquery');
 
 // jQuery selectors
-let variableContent = $("#variable-content");
+let variableContent = $('#variable-content');
 
 /**
  * Tells the main process to run the summarize tool / command and
@@ -37,23 +37,6 @@ ipcRenderer.on('set-title-and-preloader-timing', function () {
  * is done. Also hides preloader.
  */
 ipcRenderer.on('timing-result', function () {
-    variableContent.html(
-        `<div id="timing-content">
-            <div id="timing-content-description" class="content-description-container">
-                <h3 id="timing-content-h">Generate a timing plot for insight into IONM measurements</h3>
-                <p id="timing-content-p">
-                This will generate a plot showing timestamps at which IONM measurements were made. In the resulting graph 
-                you will see plots in which timestamps of measurements are plotted as a function of the position in file.
-                <br><br>Please select the CSV file(s) of which you would like to see a timing plot.
-                </p>
-            </div>
-            <div id="file-upload-container">
-                <button id="file-selectBtn" class="csv-select-btn">Click to select</button>
-                <div id="selected-filename-container">
-                    <p id="selected-filenames">No files selected</p>
-                    <button class="run-button" id="run-timing" disabled>RUN</button>
-                </div>
-            </div>
-        </div>`);
+    variableContent.load('../shared/timing.html');
     $('.lds-ellipsis').hide('fast');
 });

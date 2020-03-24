@@ -52,7 +52,6 @@ ipcRenderer.on('current-database-settings', function (event, database_settings) 
         log.info('leeg');
         $('.database-path').html('No path configured');
     } else {
-
         $('.database-path').html(database_settings.replace(/"/g, ''));
         currentDatabase = database_settings.replace(/"/g, '');
     }

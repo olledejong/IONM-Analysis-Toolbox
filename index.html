@@ -2,7 +2,7 @@
 <html lang="html">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="../assets/css/main.css"/>
+        <link rel="stylesheet" href="assets/css/main.css"/>
         <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
               integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
@@ -25,44 +25,50 @@
                 <div id="summarize-section">
                     <span class="tool-number">1</span>
                     <h3>Summarize File(s)</h3>
-                    <p>Gain insight into Eclipse files</p>
+                    <p class="tool-description-p">Gain insight into Eclipse files</p>
                     <p class="python-command-p">python command: ionm.py summarize [files]</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="timing-section">
                     <span class="tool-number">2</span>
                     <h3>Show Timing</h3>
-                    <p>Plot timestamps of measurements as a function of position in file</p>
+                    <p class="tool-description-p">Plot timestamps of measurements as a function of position in file</p>
+                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="availability-section">
                     <span class="tool-number">3</span>
                     <h3>Show EEG Availability</h3>
-                    <p>Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
+                    <p class="tool-description-p">Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
+                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="convert-section">
                     <span class="tool-number">4</span>
                     <h3>Convert File(s)</h3>
-                    <p>Convert an Eclipse CSV into multiple custom files: one per modality</p>
+                    <p class="tool-description-p">Convert an Eclipse CSV into multiple custom files: one per modality</p>
+                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="compute-section">
                     <span class="tool-number">5</span>
                     <h3>Compute Statistics</h3>
-                    <p>Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
+                    <p class="tool-description-p">Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
+                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
                     <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="evc-section">
                     <span class="tool-number">6</span>
                     <h3>Extract, Validate and Combine</h3>
-                    <p>click here to expand pathway</p>
+                    <p class="tool-description-p">click here to expand pathway</p>
+                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
                     <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="classify-section">
                     <span class="tool-number">7</span>
                     <h3>Classify</h3>
-                    <p>Classify signals of file(s) on the presence of F-waves</p>
+                    <p class="tool-description-p">Classify signals of file(s) on the presence of F-waves</p>
+                    <p class="python-command-p">python command: ionm.py summarize [files]</p>
                     <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
                 <div id="settings-section">
@@ -76,14 +82,14 @@
     </body>
 
     <!-- load the scripts-->
-    <script src="titlebarRenderer.js"></script>
-    <script src="navigationRenderer.js"></script>
-    <script src="summarizeRenderer.js"></script>
-    <script src="timingRenderer.js"></script>
-    <script src="fileSelectRenderer.js"></script>
-    <script src="convertRenderer.js"></script>
-    <script src="availabilityRenderer.js"></script>
-    <script src="settingsRenderer.js"></script>
-    <script src="messageFactory.js"></script>
-    <script src="computeRenderer.js"></script>
+    <script src="renderer/titlebarRenderer.js"></script>
+    <script src="renderer/navigationRenderer.js"></script>
+    <script src="renderer/summarizeRenderer.js"></script>
+    <script src="renderer/timingRenderer.js"></script>
+    <script src="renderer/fileSelectRenderer.js"></script>
+    <script src="renderer/convertRenderer.js"></script>
+    <script src="renderer/availabilityRenderer.js"></script>
+    <script src="renderer/settingsRenderer.js"></script>
+    <script src="renderer/messageFactory.js"></script>
+    <script src="renderer/computeRenderer.js"></script>
 </html>
