@@ -109,7 +109,7 @@ function generateFilenames(paths) {
  * lets it know the selecting of files is for the purpose of the
  * availability tool
  */
-variable_content.on('click', '#eeg-select-btn', function () {
+variable_content.on('click', '#a-eeg-select-btn', function () {
     let tool = 'availability';
     let label = 'eeg';
     // configure which types of files are allowed
@@ -118,7 +118,7 @@ variable_content.on('click', '#eeg-select-btn', function () {
     ];
     // configure the options (allowed types + properties)
     const options = {
-        title: 'Select electroencephalography (EEG) file(s)',
+        title: 'Select electroencephalography (EEG) file',
         filters: types,
         properties: ['openFile']
     };
@@ -132,7 +132,7 @@ variable_content.on('click', '#eeg-select-btn', function () {
  * lets it know the selecting of files is for the purpose of the
  * availability tool
  */
-variable_content.on('click', '#trg-select-btn', function () {
+variable_content.on('click', '#a-trg-select-btn', function () {
     let tool = 'availability';
     let label = 'trg';
     // configure which types of files are allowed
@@ -141,12 +141,59 @@ variable_content.on('click', '#trg-select-btn', function () {
     ];
     // configure the options (allowed types + properties)
     const options = {
-        title: 'Select triggered (TRG) file(s)',
+        title: 'Select triggered (TRG) file',
         filters: types,
         properties: ['openFile']
     };
     ipcRenderer.send('select-file', options, tool, label);
 });
+
+
+/**
+ *                      |> EXTRACT <|
+ * Informs the main process it has to open a select file window and
+ * lets it know the selecting of files is for the purpose of the
+ * availability tool
+ */
+variable_content.on('click', '#e-eeg-select-btn', function () {
+    let tool = 'extract';
+    let label = 'eeg';
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select electroencephalography (EEG) file',
+        filters: types,
+        properties: ['openFile']
+    };
+    ipcRenderer.send('select-file', options, tool, label);
+});
+
+
+/**
+ *                      |> EXTRACT <|
+ * Informs the main process it has to open a select file window and
+ * lets it know the selecting of files is for the purpose of the
+ * availability tool
+ */
+variable_content.on('click', '#e-trg-select-btn', function () {
+    let tool = 'extract';
+    let label = 'trg';
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select triggered (TRG) file',
+        filters: types,
+        properties: ['openFile']
+    };
+    ipcRenderer.send('select-file', options, tool, label);
+});
+
 
 
 /**

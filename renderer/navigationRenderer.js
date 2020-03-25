@@ -71,7 +71,7 @@ body.delegate('#timing-section', 'click', function () {
  */
 body.delegate('#availability-section', 'click', function () {
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 450);
+    ipcRenderer.send('resize-window', 800, 510);
     variable_content_div.load('shared/availability.html');
 });
 
@@ -101,7 +101,7 @@ body.delegate('#compute-section', 'click', function () {
  */
 body.delegate('#extract-section', 'click', function () {
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 450);
+    ipcRenderer.send('resize-window', 800, 510);
     variable_content_div.load('shared/extract.html');
 });
 
@@ -169,7 +169,7 @@ about_section_button.click(function () {
 
         // generate skeleton for information to be displayed in
         variable_content_div.load('shared/about.html');
-        showNotification('info', 'Retrieving version info from the script');
+        showNotification('info', 'Retrieving version info from the python project');
 
         // generate the info that tells you stuff about this electron app
         generateElectronAboutInfo();
@@ -198,8 +198,8 @@ ipcRenderer.on('script-version-info', function (event, python_version_info) {
         // add values to the html table string
         tableHtml.push('<tr><td class="version-first-cell">' + newVal + '</td><td class="version-second-cell">' + partList[i + 1] + '</td></tr>');
     }
-
     $('#scripts-version-info').html(tableHtml);
+    showNotification('success', 'Successfully retrieved the python project it\'s version info');
 });
 
 

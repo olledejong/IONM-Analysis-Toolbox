@@ -27,6 +27,7 @@ let currentSrcDirectory;
  * @param {string} current_src_dir - currently configured src directory path
  */
 ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
+    log.info('current src dir ',current_src_dir);
     $('#src-dir-path').html(current_src_dir);
     currentSrcDirectory = current_src_dir[0];
 });

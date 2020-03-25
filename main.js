@@ -146,6 +146,8 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
             event.sender.send('selected-database', fileNames.filePaths, label);
         } else if (tool === 'availability') {
             event.sender.send('selected-availability', fileNames.filePaths, label);
+        } else if (tool === 'extract') {
+            event.sender.send('selected-extract', fileNames.filePaths, label);
         }
     });
 });
@@ -292,8 +294,6 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
  * @param {object} event - for purpose of communication with sender
  */
 ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file_path, trg_file_path) {
-    window.setMinimumSize(850, 400);
-    window.setSize(850, 400);
     event.sender.send('set-title-and-preloader-availability');
 
     let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}"`;
@@ -380,7 +380,7 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
 
 
 /**
- *                         |> COMPUTE STATISTICS OF FILE(S) <|
+ *                      |> COMPUTE STATISTICS OF FILE(S) <|
  * Computes the statistics of converted files and writes these to the database
  *
  * @param {object} event - for purpose of communication with sender
@@ -405,8 +405,58 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
             event.sender.send('compute-result', stdout, selectedFileHolder);
         }
     });
-
 });
+
+
+/**
+ *                          |> EXTRACT EEG <|
+ */
+ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path) {
+    log.info('Executing the extract command');
+    event.sender.send('set-title-and-preloader-extract');
+
+    let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}"`;
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = 'An error occurred while trying to extract the data from the files';
+        if (error !== null) {
+            log.error(error);
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('extract-result');
+        }
+    });
+});
+
+
+/**
+ *                          |> VALIDATE <|
+ */
+ipcMain.on('run-validate', function (event) {
+    log.info('Executing the validate command');
+    event.sender.send('set-title-and-preloader-validate');
+
+    let command = `ionm.py validate -f ${selectedFileHolder[0]}`;
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = 'An error occurred while trying to validate the file';
+        if (error !== null) {
+            log.error(error);
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('validate-result');
+        }
+    });
+});
+
 
 /**
  *                          |> ABOUT / VERSION INFO <|

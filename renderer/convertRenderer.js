@@ -247,7 +247,8 @@ varContent.on('click', '#submit-all-modalities', function runAddModalityPerForm(
 ipcRenderer.on('set-modality-successful', function (event, name) {
     showNotification('success', ('Successfully stored the modality '+ name));
     // refresh modalities (in case of added via settings)
-    ipcRenderer.send('get-modality-settings');
+    ipcRenderer.send('get-current-settings');
+    showNotification('info', 'Retrieving currently configured database modalities');
     $('.lds-ellipsis').hide('fast');
 });
 

@@ -86,8 +86,8 @@ footer span {
 #convert-content, #compute-content,
 #timing-content, #summarize-content,
 #settings-content, #convert-results,
-#availability-content {
-    margin-top: 8px;
+#availability-content, #extract-content {
+    margin: 8px 0 0 0;
 }
 
 .external-window-instruction {
@@ -144,14 +144,18 @@ footer span {
 }
 
 
-#summarize-content-p, #timing-content-p, #convert-content-p, #compute-content-p, #availability-content-p {
+#summarize-content-p, #timing-content-p,
+#convert-content-p, #compute-content-p,
+#availability-content-p, #extract-content-p {
     font-weight: 400;
     width: 100%;
     letter-spacing: 1px;
 }
 
 
-#summarize-content-h, #timing-content-h, #convert-content-h, #compute-content-h, #availability-content-h {
+#summarize-content-h, #timing-content-h,
+#convert-content-h, #compute-content-h,
+#availability-content-h, #extract-content-h {
     margin: 0 0 10px 0;
     text-align: left;
     color: #f89406;
@@ -922,13 +926,14 @@ label.radio input:checked + span {
 }
 
 /* availability */
-#availability-select-container {
+#availability-select-container,
+#extract-select-container {
     width: 100%;
     height: 125px;
     margin-top: 15px;
 }
 
-.availability-btn {
+.eeg-trg-btn {
     display: block;
     float: left;
     outline: 0;
@@ -945,11 +950,12 @@ label.radio input:checked + span {
     overflow-y: auto;
 }
 
-#trg-select-btn {
+#e-trg-select-btn,
+#a-trg-select-btn {
     margin: 10px 0 0 0;
 }
 
-#run-availability {
+.eeg-trg-run-btn {
     font-size: 16px;
     background: #ccc;
     border-radius: 4px;

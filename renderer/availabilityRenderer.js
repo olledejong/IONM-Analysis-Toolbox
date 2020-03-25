@@ -21,32 +21,33 @@ let var_con = $('#variable-content');
  * @param {string} label - word that is used to checks where the path should be displayed
  */
 ipcRenderer.on('selected-availability', function (event, paths, label) {
-    let trg_select = $('#trg-select-btn');
-    let eeg_select = $('#eeg-select-btn');
+    let trg_select = $('#a-trg-select-btn');
+    let eeg_select = $('#a-eeg-select-btn');
     if (label === 'trg') {
         if (paths.length !== 0) {
+            log.info('paths: ', paths);
             trg_select.html(paths.join('<br>'));
         } else {
             trg_select.html('Click to select a TRG file');
         }
-        checkIfFilesAreGiven();
+        checkIfFilesAreGivenAvailability();
     } else {
         if (paths.length !== 0) {
             eeg_select.html(paths.join('<br>'));
         } else {
             eeg_select.html('Click to select an EEG file');
         }
-        checkIfFilesAreGiven();
+        checkIfFilesAreGivenAvailability();
     }
 });
 
 /**
  * Checks if both the needed files are given. Disables / enables run button
  */
-function checkIfFilesAreGiven() {
+function checkIfFilesAreGivenAvailability() {
     let run_availability = $('#run-availability');
-    let trg_select = $('#trg-select-btn');
-    let eeg_select = $('#eeg-select-btn');
+    let trg_select = $('#a-trg-select-btn');
+    let eeg_select = $('#a-eeg-select-btn');
     if ( trg_select.html().includes('\\') && eeg_select.html().includes('\\') ) {
         run_availability.css({
             'background':'#e87e04',
@@ -67,8 +68,8 @@ function checkIfFilesAreGiven() {
  * Clears the html.
  */
 var_con.on('click', '#run-availability', function() {
-    let trg_select = $('#trg-select-btn');
-    let eeg_select = $('#eeg-select-btn');
+    let trg_select = $('#a-trg-select-btn');
+    let eeg_select = $('#a-eeg-select-btn');
 
     let eeg_file = eeg_select.html();
     let trg_file = trg_select.html();
@@ -81,7 +82,7 @@ var_con.on('click', '#run-availability', function() {
  */
 ipcRenderer.on('set-title-and-preloader-availability', function () {
     let preloader = $('.lds-ellipsis');
-
+    ipcRenderer.send('resize-window', 900, 310);
     preloader.show('fast');
     var_con.html('<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>');
 });
@@ -93,7 +94,7 @@ ipcRenderer.on('set-title-and-preloader-availability', function () {
  */
 ipcRenderer.on('availability-result', function () {
     let preloader = $('.lds-ellipsis');
-    ipcRenderer.send('resize-window', 800, 450);
-    var_con.load('../shared/availability.html');
+    ipcRenderer.send('resize-window', 800, 510);
+    var_con.load('shared/availability.html');
     preloader.hide('fast');
 });
