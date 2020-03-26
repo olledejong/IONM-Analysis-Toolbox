@@ -29,25 +29,39 @@ ipcRenderer.on('selected-extract', function (event, paths, label) {
         } else {
             trg_select.html('Click to select a TRG file');
         }
-        checkIfFilesAreGivenExtract();
+        checkIfExtractFormComplete();
     } else {
         if (paths.length !== 0) {
             eeg_select.html(paths.join('<br>'));
         } else {
             eeg_select.html('Click to select an EEG file');
         }
-        checkIfFilesAreGivenExtract();
+        checkIfExtractFormComplete();
     }
 });
 
+
 /**
- * Checks if both the needed files are given. Disables / enables run button
+ * Calls on the checkIfFormComplete function every time the -w
+ * parameter is altered by the user
  */
-function checkIfFilesAreGivenExtract() {
+var_content.on('change', '#extract-select-container',  function () {
+    log.info('change in extract select container');
+    checkIfExtractFormComplete();
+});
+
+
+/**
+ * Checks if both the needed files and the window argument are given correctly.
+ * Disables / enables run button
+ */
+function checkIfExtractFormComplete() {
     let run_extract = $('#run-extract');
     let trg_select = $('#e-trg-select-btn');
     let eeg_select = $('#e-eeg-select-btn');
-    if ( trg_select.html().includes('\\') && eeg_select.html().includes('\\') ) {
+    let window_size_select = $('#window-size');
+    if ( trg_select.html().includes('\\') && eeg_select.html().includes('\\') &&
+        (window_size_select.val() > 0 && window_size_select.val() <= 10)) {
         run_extract.css({
             'background':'#e87e04',
             'color': 'white',
@@ -62,6 +76,7 @@ function checkIfFilesAreGivenExtract() {
     }
 }
 
+
 /**
  * Tells the main process to run the extract tool / command.
  * Clears the html.
@@ -69,11 +84,13 @@ function checkIfFilesAreGivenExtract() {
 var_content.on('click', '#run-extract', function() {
     let trg_select = $('#e-trg-select-btn');
     let eeg_select = $('#e-eeg-select-btn');
+    let window_size_select = $('#window-size');
 
     let eeg_file = eeg_select.html();
     let trg_file = trg_select.html();
+    let win_size = window_size_select.val();
     var_content.html('');
-    ipcRenderer.send('run-extract', eeg_file, trg_file);
+    ipcRenderer.send('run-extract', eeg_file, trg_file, win_size);
 });
 
 /**
@@ -84,6 +101,7 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
 
     preloader.show('fast');
     var_content.html('<h1 class="external-window-instruction">Please be patient, this could take quite some time..</h1>');
+    ipcRenderer.send('resize-window', 800, 300);
 });
 
 

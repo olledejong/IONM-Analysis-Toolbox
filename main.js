@@ -146,6 +146,8 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
             event.sender.send('selected-database', fileNames.filePaths, label);
         } else if (tool === 'availability') {
             event.sender.send('selected-availability', fileNames.filePaths, label);
+        } else if (tool === 'compute') {
+            event.sender.send('selected-compute', fileNames.filePaths, label);
         } else if (tool === 'extract') {
             event.sender.send('selected-extract', fileNames.filePaths, label);
         }
@@ -385,12 +387,13 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
  *
  * @param {object} event - for purpose of communication with sender
  */
-ipcMain.on('run-compute', function executeComputeCommand(event) {
+ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
     log.info('Executing the compute command');
     event.sender.send('set-title-and-preloader-compute');
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
-    let command = `ionm.py compute -f ${pathsString} -s all`;
+    let command = `ionm.py compute -f ${pathsString} -s ${stats}`;
+    log.info(command);
     exec(command, {
         cwd: pythonSrcDirectory
     }, function (error, stdout, stderr) {
@@ -411,11 +414,12 @@ ipcMain.on('run-compute', function executeComputeCommand(event) {
 /**
  *                          |> EXTRACT EEG <|
  */
-ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path) {
+ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path, window_size) {
     log.info('Executing the extract command');
     event.sender.send('set-title-and-preloader-extract');
 
-    let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}"`;
+    log.info(window_size);
+    let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {

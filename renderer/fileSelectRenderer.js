@@ -150,7 +150,29 @@ variable_content.on('click', '#a-trg-select-btn', function () {
 
 
 /**
- *                      |> EXTRACT <|
+ *                      |> COMPUTE <|
+ * Informs the main process it has to open a select file window and
+ * lets it know the selecting of files is for the purpose of the
+ * availability tool
+ */
+variable_content.on('click', '#compute-select-btn', function () {
+    let tool = 'compute';
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select a converted file',
+        filters: types,
+        properties: ['openFile']
+    };
+    ipcRenderer.send('select-file', options, tool);
+});
+
+
+/**
+ *                       |> EXTRACT <|
  * Informs the main process it has to open a select file window and
  * lets it know the selecting of files is for the purpose of the
  * availability tool

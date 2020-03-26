@@ -13,13 +13,71 @@ const path = require('path');
 let variableCont = $('#variable-content');
 
 /**
+ * Responsible for handling the information that the file select dialog
+ * returns. Displays the file-path inside the select button.
+ *
+ * @param {object} event - for purpose of communication with sender
+ * @param {array} paths - all the selected file-paths in an array
+ */
+ipcRenderer.on('selected-compute', function (event, paths) {
+    let compute_select_btn = $('#compute-select-btn');
+
+    if (paths.length !== 0) {
+        compute_select_btn.html(paths.join('<br>'));
+        checkIfComputeFormComplete();
+    } else {
+        compute_select_btn.html('Click to select a converted file');
+        checkIfComputeFormComplete();
+    }
+});
+
+
+/**
+ * Listens to change of the compute select container. If change, then it runs the
+ * function that checks if a file and the stats argument are given correctly.
+ */
+variableCont.on('change', '#compute-select-container',  function checkIfFormComplete() {
+    log.info('change in compute select container');
+    checkIfComputeFormComplete();
+});
+
+
+/**
+ * Checks if a file and the stats argument are given correctly.
+ * Disables / enables run button
+ */
+function checkIfComputeFormComplete() {
+    let run_compute = $('#run-compute');
+    let compute_select_btn = $('#compute-select-btn');
+    let stats_input_field = $('#stats-input');
+    if ( compute_select_btn.html().includes('\\') &&
+        (stats_input_field.val() === 'all' || stats_input_field.val() === 'auc' || stats_input_field.val() === 'p_p_amplitude')) {
+        run_compute.css({
+            'background':'#e87e04',
+            'color': 'white',
+            'cursor': 'pointer'
+        }).prop('disabled', false);
+    } else {
+        run_compute.css({
+            'background':'#ccc',
+            'color': '#404040',
+            'cursor': 'auto'
+        }).prop('disabled', true);
+    }
+}
+
+/**
  * Tells the main process to run the compute tool / command.
  * Sends message to resize the window
  */
 variableCont.on('click', '#run-compute', function() {
+    let stats_input_field = $('#stats-input');
+    let stats_value = stats_input_field.val();
+    log.info(stats_value);
     ipcRenderer.send('resize-window', 1180, 600);
-    ipcRenderer.send('run-compute');
+    ipcRenderer.send('run-compute', stats_value);
 });
+
 
 /**
  * Loads result page skeleton and the preloader will be showed.
@@ -28,7 +86,7 @@ variableCont.on('click', '#run-compute', function() {
 ipcRenderer.on('set-title-and-preloader-compute', function () {
     $('.lds-ellipsis').show();
     variableCont.html(`<div id="compute-content">
-                            <h1>Please work through the external windows to get to the final result</h1>
+                            <h1 class="external-window-instruction">Please work through the external windows to get to the final result</h1>
                             <div id="successful-computes">
                                 <div id="succeeded-computes">
                                     <h2>Successfully computed<i class="fas fa-check"></i></h2>
