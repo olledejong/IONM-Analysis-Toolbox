@@ -19,6 +19,7 @@ let var_cont = $('#variable-content');
 // globals
 let currentDatabase;
 let currentSrcDirectory;
+let currentDefaultSelectPath;
 
 /**
  * Displays the currently configured src directory path to the user
@@ -32,19 +33,22 @@ ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
     currentSrcDirectory = current_src_dir[0];
 });
 
+
 /**
- * Lets the user know that the python src dir has been successfully configured.
- * Also retrieves the currently configured settings.
+ * Displays the currently configured default select directory's path to the user
+ *
+ * @param {object} event
+ * @param {string} current_default_select_path - currently configured src directory path
  */
-ipcRenderer.on('successfully-set-src-dir', function () {
-    showNotification('success', 'Successfully set the python renderer directory');
-    showNotification('info', 'Retrieving currently configured application settings');
-    ipcRenderer.send('get-current-settings');
+ipcRenderer.on('current-default-select-dir', function (event, current_default_select_path) {
+    log.info('current default select path: ', current_default_select_path);
+    $('#default-select-dir-path').html(current_default_select_path);
+    currentDefaultSelectPath = current_default_select_path[0];
 });
 
 
 /**
- * Displays the currently configured database settings (path)
+ * Displays the currently configured database settings (path) to the user
  *
  * @param {object} event
  * @param {string} database_settings - currently configured database settings (path)
@@ -119,6 +123,24 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
 
 
 /**
+ * Lets the user know that the python src dir has been successfully configured.
+ * Also retrieves the currently configured settings.
+ */
+ipcRenderer.on('successfully-set-src-dir', function () {
+    showNotification('success', 'Successfully set the python renderer directory');
+    showNotification('info', 'Retrieving currently configured application settings');
+    ipcRenderer.send('get-current-settings');
+});
+
+/**
+ * Lets the user know that the default select directory path has been successfully configured.
+ */
+ipcRenderer.on('successfully-set-default-select-dir', function () {
+    showNotification('success', 'Successfully set the default select directory path');
+});
+
+
+/**
  * Tells the main process to write the by the user selected database path to the
  * config.ini file in the python project. Also disables the 'set datbase' button.
  */
@@ -150,6 +172,24 @@ variable_content.on('click', '#set-src-dir', function() {
         'cursor':'auto'
     });
     set_src_dir.prop('disabled', true);
+});
+
+
+/**
+ * Tells the main process to set the by the user selected default select dir path.
+ * Also disables the 'SET DEFAULT SELECT PATH' button.
+ */
+variable_content.on('click', '#set-default-select-dir', function() {
+    let default_select_dir = $('#default-select-dir-path').html();
+    ipcRenderer.send('set-default-select-dir', default_select_dir);
+
+    let set_default_select_dir = $('#set-default-select-dir');
+    set_default_select_dir.css({
+        'background':'#ccc',
+        'color':'#404040',
+        'cursor':'auto'
+    });
+    set_default_select_dir.prop('disabled', true);
 });
 
 
@@ -277,6 +317,34 @@ ipcRenderer.on('selected-database', function (event, selected_database) {
     } else {
         database_path_p.html(currentDatabase);
         set_database.css({
+            'color': '#404040',
+            'cursor': 'auto',
+            'background': '#ccc'
+        }).prop('disabled', true);
+    }
+});
+
+
+/**
+ * Alters design of the 'SET DEFAULT SELECT PATH' button and the displayed path gets updated
+ *
+ * @param {object} event
+ * @param {array} selected_default_path - selected default select path in an array (return type of select modal)
+ */
+ipcRenderer.on('selected-default-select-dir', function (event, selected_default_path) {
+    let set_default_select_dir = $('#set-default-select-dir');
+    let default_select_dir_path = $('#default-select-dir-path');
+
+    if (selected_default_path.length !== 0) {
+        default_select_dir_path.html(selected_default_path);
+        set_default_select_dir.css({
+            'background': '#e87e04',
+            'color': 'white',
+            'cursor': 'pointer'
+        }).prop('disabled', false);
+    } else {
+        default_select_dir_path.html(currentDefaultSelectPath);
+        set_default_select_dir.css({
             'color': '#404040',
             'cursor': 'auto',
             'background': '#ccc'

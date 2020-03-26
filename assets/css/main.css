@@ -48,7 +48,7 @@ footer span {
     min-width: 100%;
     margin-top: 38px;
     position: absolute;
-    padding: 10px 20px 0 20px;
+    padding: 10px 20px 20px 20px;
     overflow-y: visible;
 }
 
@@ -506,7 +506,9 @@ h1 i {
     float: right;
 }
 
-#configure-database, #set-database-path {
+#configure-database,
+#set-database-path,
+#default-select-dir {
     margin: 20px 0 0 0;
 }
 
@@ -554,7 +556,11 @@ h1 i {
     letter-spacing: 1px;
 }
 
-.database-path, #src-dir-path, #modality-input, #description-input {
+.database-path,
+#src-dir-path,
+#modality-input,
+#description-input,
+#default-select-dir-path {
     font-size: 15px;
     overflow-y: auto;
     display: block;
@@ -570,7 +576,10 @@ h1 i {
     text-align: center;
 }
 
-.database-path-p, #set-modalities-p, #src-dir-path-p {
+.database-path-p,
+#set-modalities-p,
+#src-dir-path-p,
+#set-default-select-dir-p {
     text-align: left;
     font-size: 16px;
     margin: 0 0 8px 0;
@@ -578,7 +587,9 @@ h1 i {
     letter-spacing: 1px;
 }
 
-#set-database, #set-src-dir {
+#set-database,
+#set-src-dir,
+#set-default-select-dir {
     float: right;
     cursor: auto;
     background: #ccc;
@@ -1020,7 +1031,7 @@ label.radio input:checked + span {
     color: #404040;
     outline: 0;
     border-radius: 4px;
-    background: #ccc;
+    background: white;
     width: 90%;
     padding: 10px;
     margin: 6px;

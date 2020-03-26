@@ -38,6 +38,7 @@ let selectedFileHolder;
 
 // python renderer directory, retrieved from user-preferences on startup, can be changed via settings
 let pythonSrcDirectory = store.get('python-src-dir');
+let defaultFileSelectionDir = store.get('default-select-path');
 
 // log options configuration
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
@@ -132,6 +133,7 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
  * @param {string} tool - tag that defines where the select-file message came from (purpose: correct handling of select output)
  */
 ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, label) {
+    options.defaultPath = defaultFileSelectionDir;
     // open the actual dialog with the above options
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
@@ -144,6 +146,8 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
             event.sender.send('selected-src-dir', fileNames.filePaths, label);
         } else if (tool === 'database') {
             event.sender.send('selected-database', fileNames.filePaths, label);
+        } else if (tool === 'default-select-dir') {
+            event.sender.send('selected-default-select-dir', fileNames.filePaths, label);
         } else if (tool === 'availability') {
             event.sender.send('selected-availability', fileNames.filePaths, label);
         } else if (tool === 'compute') {
@@ -497,6 +501,9 @@ ipcMain.on('get-version-info', function getVersionInfo(event) {
 ipcMain.on('get-current-settings', function getCurrentSettings(event) {
     // get python renderer dir from user preferences
     if ( store.get('python-src-dir') ) {
+        // get default select directory path
+        event.sender.send('current-default-select-dir', store.get('default-select-path'));
+        // get python src dir
         event.sender.send('current-python-src-dir', store.get('python-src-dir'));
         // get database path
         getDatabaseSettings(event);
@@ -629,7 +636,6 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
  * @param {string} src_dir - path of the to be set python renderer directory
  */
 ipcMain.on('set-python-src-dir', function (event, src_dir) {
-    log.info(event);
     try {
         // store the given path in user-preferences (if already exists it will be updated)
         store.set('python-src-dir', src_dir);
@@ -639,6 +645,30 @@ ipcMain.on('set-python-src-dir', function (event, src_dir) {
         event.sender.send('error', 'An error occurred while trying to set the python renderer directory');
     } finally {
         event.sender.send('successfully-set-src-dir');
+    }
+});
+
+
+/**
+ *                 |> SETTINGS - SET DEFAULT SELECT DIRECTORY <|
+ * Stores new modality in the configured database. This function is either called
+ * via settings or after the converting of a file failes because one or more of the
+ * encountered modalities have not been configured.
+ *
+ * @param {object} event - for purpose of communication with sender
+ * @param {string} default_select_dir - path of the to be set default select dir
+ */
+ipcMain.on('set-default-select-dir', function (event, default_select_dir) {
+    try {
+        log.info('to be set default select dir: ', default_select_dir);
+        // store the given path in user-preferences (if already exists it will be updated)
+        store.set('default-select-path', default_select_dir);
+        // locally set the python renderer dir path for further use in the application
+        defaultFileSelectionDir = default_select_dir;
+    } catch (e) {
+        event.sender.send('error', 'An error occurred while trying to set the default select directory');
+    } finally {
+        event.sender.send('successfully-set-default-select-dir');
     }
 });
 

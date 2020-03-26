@@ -21,7 +21,6 @@ variable_content.on('click', '.csv-select-btn', function() {
     const options = {
         title: 'Select file(s)',
         filters: types,
-        defaultPath: 'D:\\Menno\\NimEclipse',
         properties: ['openFile', 'multiSelections']
     };
     ipcRenderer.send('select-file', options, tool);
@@ -243,8 +242,8 @@ variable_content.on('click', '#select-database-btn', function() {
 /**
  *                        |> SRC DIR <|
  * Informs the main process it has to open a select file window and
- * lets it know the selecting of files is for the purpose of setting
- * the python src dir via the app settings
+ * lets it know the selecting is for the purpose of settinG the
+ * python src dir via the app settings
  */
 variable_content.on('click', '#select-src-dir', function() {
 
@@ -252,6 +251,25 @@ variable_content.on('click', '#select-src-dir', function() {
     // configure the options (allowed types + properties)
     const options = {
         title: 'Select Python Project SRC Directory',
+        properties: ['openDirectory']
+    };
+    ipcRenderer.send('select-file', options, tool);
+});
+
+
+/**
+ *              |> DEFAULT FILE SELECTION DIRECTORY <|
+ * Informs the main process it has to open a select file window and
+ * lets it know the selecting is for the purpose of setting
+ * the default file selection directory when opening selecting files
+ * to run tools on.
+ */
+variable_content.on('click', '#select-default-dir', function() {
+
+    let tool = 'default-select-dir';
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select default file / directory select path',
         properties: ['openDirectory']
     };
     ipcRenderer.send('select-file', options, tool);
