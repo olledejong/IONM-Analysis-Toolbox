@@ -30,7 +30,7 @@ let currentDefaultSelectPath;
 ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
     log.info('current src dir ',current_src_dir);
     $('#src-dir-path').html(current_src_dir);
-    currentSrcDirectory = current_src_dir[0];
+    currentSrcDirectory = current_src_dir;
 });
 
 

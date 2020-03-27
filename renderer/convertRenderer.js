@@ -194,6 +194,7 @@ function generateModalityFormFields(existingFormsOnPage, unknown_modalities) {
  * hides the preloader.
  */
 varContent.on('click', '#submit-all-modalities', function runAddModalityPerForm() {
+    showNotification('warn', 'Do not re-run until the modalities have been stored successfully!');
     // loop trough all 'add modality' forms
     $('.add-modality-after-convert').each(function () {
         let modality_name = $(this).find('.modality-input').val();

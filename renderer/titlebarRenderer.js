@@ -20,10 +20,10 @@ let MyTitleBar = new customTitlebar.Titlebar({
     maximizable: false,
     drag: true,
     shadow: false,
-    icon: 'assets/images/icon.svg'
+    icon: 'assets/images/icon_white.svg'
 });
 MyTitleBar.updateTitle('IONM ANALYSIS TOOLBOX');
-MyTitleBar.updateIcon('assets/images/icon.svg');
+MyTitleBar.updateIcon('assets/images/icon_white.svg');
 
 
 /**

@@ -8,7 +8,6 @@
 // requires (electron)
 const { app, BrowserWindow, dialog} = require('electron');
 const ipcMain = require('electron').ipcMain;
-const debug = require('electron-debug');
 const exec = require('child_process').exec;
 const log = require('electron-log');
 console.log = log.log;
@@ -19,12 +18,12 @@ const Store = require('electron-store');
 const store = new Store();
 log.info('User preferences stored at: ', app.getPath('userData'));
 
-// enable debug
-debug();
-
 // check what environment you're running in
 if (isDev) {
     log.info('Running in development');
+    // enable debug
+    const debug = require('electron-debug');
+    debug();
 } else {
     log.info('Running in production');
 }
