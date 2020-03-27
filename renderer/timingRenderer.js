@@ -37,6 +37,6 @@ ipcRenderer.on('set-title-and-preloader-timing', function () {
  * is done. Also hides preloader.
  */
 ipcRenderer.on('timing-result', function () {
-    variableContent.load('../shared/timing.html');
+    variableContent.load('/shared/timing.html');
     $('.lds-ellipsis').hide('fast');
 });

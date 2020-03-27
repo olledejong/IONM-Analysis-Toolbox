@@ -1,5 +1,5 @@
 /**
- * Script responsible for creating a Windos MSI installer
+ * Script responsible for creating a Windows MSI installer
  */
 
 // 1. Import Modules
@@ -7,8 +7,6 @@ const { MSICreator } = require('electron-wix-msi');
 const path = require('path');
 
 // 2. Define input and output directory.
-// Important: the directories must be absolute, not relative e.g
-// appDirectory: "C:\\Users\sdkca\Desktop\OurCodeWorld-win32-x64",
 const APP_DIR = path.resolve(__dirname, './dist/IONM-Analysis-Toolbox-win32-x64');
 // outputDirectory: "C:\\Users\sdkca\Desktop\windows_installer",
 const OUT_DIR = path.resolve(__dirname, './dist/windows_installer');

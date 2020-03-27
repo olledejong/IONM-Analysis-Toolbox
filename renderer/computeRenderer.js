@@ -4,10 +4,13 @@
  * the main process to execute the tool via a ChildProcess and handling
  * the response of this ChildProcess (error / success)
  */
-
 // requires
 window.$ = window.jQuery = require('jquery');
 const path = require('path');
+
+// globals
+// list of possible statistics user can choose from [ to be altered in the future ]
+let possibleStatsArguments = ['auc', 'all', 'p_p_amplitude'];
 
 // selectors
 let variableCont = $('#variable-content');
@@ -51,7 +54,7 @@ function checkIfComputeFormComplete() {
     let compute_select_btn = $('#compute-select-btn');
     let stats_input_field = $('#stats-input');
     if ( compute_select_btn.html().includes('\\') &&
-        (stats_input_field.val() === 'all' || stats_input_field.val() === 'auc' || stats_input_field.val() === 'p_p_amplitude')) {
+        possibleStatsArguments.includes(stats_input_field.val())) {
         run_compute.css({
             'background':'#e87e04',
             'color': 'white',

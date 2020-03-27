@@ -16,6 +16,7 @@
     "custom-electron-titlebar": "^3.2.2-hotfix62",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^4.1.0",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^5.1.1",
     "jquery": "^3.4.1"
   },
@@ -25,6 +26,7 @@
     "electron": "^8.2.0",
     "electron-debug": "^3.0.1",
     "electron-packager": "^14.2.1",
+    "electron-winstaller": "^4.0.0",
     "electron-wix-msi": "^2.2.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",

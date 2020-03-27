@@ -950,7 +950,6 @@ label.radio input:checked + span {
     float: left;
     outline: 0;
     height: calc(50% - 5px);
-    width: calc(62% - 10px);
     letter-spacing: 2px;
     color: white;
     background: #e87e04;
@@ -961,6 +960,16 @@ label.radio input:checked + span {
     font-size: 16px;
     overflow-y: auto;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24)
+}
+
+#e-eeg-select-btn,
+#e-trg-select-btn {
+    width: calc(62% - 10px);
+}
+
+#a-trg-select-btn,
+#a-eeg-select-btn {
+    width: calc(80% - 10px);
 }
 
 #e-trg-select-btn,
