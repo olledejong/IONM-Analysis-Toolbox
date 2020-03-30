@@ -6,9 +6,6 @@
 // requires
 window.$ = window.jQuery = require('jquery');
 
-// hide preloader
-$('.lds-ellipsis').hide();
-
 // os username
 const username = require('os').userInfo().username.toUpperCase();
 
@@ -20,7 +17,7 @@ __name__ = 'IONM Analysis Toolbox';
 __description__ = 'Graphical User Interface for the purpose of using IONM Analysis tools. Created for the UMCG.';
 __author__ = 'Olle de Jong';
 __maintainer__ = 'Olle de Jong';
-__contact__ = '[\'ol.de.jong@st.hanze.nl\', \'olledejong@gmail.com\']';
+__contact__ = '[\'ol.de.jong@st.hanze.nl\', \'olledejong@gmail.com\', \'+31630583903\']';
 __credits__ = '[\'Gea Drost\', \'Fiete Lange\', \'Sebastiaan Dulfer\']';
 __version__ = '1.0.0';
 __status__ = 'DEVELOPMENT';
@@ -38,6 +35,7 @@ $('#welcome-text').html(`Welcome, ${username}, please select a tool to get start
  */
 $('#welcome-section').click(function () {
     if (variable_content_div.find('#tool-container').length !== 1) {
+        $('.linePreloader').hide('fast');
         removeToastMessages();
         ipcRenderer.send('resize-window', 1142, 798);
         variable_content_div.load('shared/index.html');
@@ -147,7 +145,8 @@ body.delegate('#settings-section', 'click', function () {
     variable_content_div.load('shared/settings.html', function () {
         $('#settings-content').css('display', 'block');
     });
-    showNotification('info', 'Retrieving currently configured application settings');
+    // showNotification('info', 'Retrieving currently configured application settings');
+    $('.linePreloader').show();
 });
 
 
@@ -160,8 +159,10 @@ body.delegate('#settings-section', 'click', function () {
  * info and calls function that generates the GUI version info.
  */
 about_section_button.click(function () {
+    let preloader = $('.linePreloader');
     // only load when not already loaded
     if(variable_content_div.find('#about-app').length !== 1) {
+        preloader.hide('fast');
         removeToastMessages();
         ipcRenderer.send('resize-window', 1070, 625);
         // tell main process to get the python script its version info
@@ -169,7 +170,7 @@ about_section_button.click(function () {
 
         // generate skeleton for information to be displayed in
         variable_content_div.load('shared/about.html');
-        showNotification('info', 'Retrieving version info from the python project');
+        preloader.show();
     }
 });
 
@@ -196,7 +197,7 @@ ipcRenderer.on('script-version-info', function (event, python_version_info) {
         tableHtml.push('<tr><td class="version-first-cell">' + newVal + '</td><td class="version-second-cell">' + partList[i + 1] + '</td></tr>');
     }
     $('#scripts-version-info').html(tableHtml);
-    showNotification('success', 'Successfully retrieved the python project it\'s version info');
+    $('.linePreloader').hide('fast');
 
     // generate the info that tells you stuff about this electron app
     generateElectronAboutInfo();

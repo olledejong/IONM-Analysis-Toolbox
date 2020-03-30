@@ -415,7 +415,8 @@ ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
 
 
 /**
- *                          |> EXTRACT EEG <|
+ *                                  |> EXTRACT EEG <|
+ * Gets available eeg data from every TES-MEP and puts them in a new csv file
  */
 ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path, window_size) {
     log.info('Executing the extract command');
@@ -527,8 +528,10 @@ function getDatabaseSettings(event) {
         let errorMessage = 'An error occurred while retrieving the database path';
         if (error !== null) {
             event.sender.send('error', errorMessage);
+            event.sender.send('current-database-settings', 'error');
         } else if (stderr !== '') {
             event.sender.send('error', errorMessage);
+            event.sender.send('current-database-settings', 'error');
         } else {
             event.sender.send('current-database-settings', stdout);
         }

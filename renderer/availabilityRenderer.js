@@ -81,9 +81,9 @@ var_con.on('click', '#run-availability', function() {
  * Shows the result page skeleton and the preloader will be showed.
  */
 ipcRenderer.on('set-title-and-preloader-availability', function () {
-    let preloader = $('.lds-ellipsis');
-    ipcRenderer.send('resize-window', 900, 310);
-    preloader.show('fast');
+    let preloader = $('.linePreloader');
+    ipcRenderer.send('resize-window', 1030, 310);
+    preloader.show();
     var_con.html('<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>');
 });
 
@@ -93,8 +93,7 @@ ipcRenderer.on('set-title-and-preloader-availability', function () {
  * Hides preloader and sends message to resize window.
  */
 ipcRenderer.on('availability-result', function () {
-    let preloader = $('.lds-ellipsis');
     ipcRenderer.send('resize-window', 800, 510);
     var_con.load('shared/availability.html');
-    preloader.hide('fast');
+    $('.linePreloader').hide('fast');
 });

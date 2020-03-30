@@ -29,7 +29,7 @@ varContent.on('click', '#run-convert', function() {
  * Hides all containers until needed later.
  */
 ipcRenderer.on('set-title-and-preloader-convert', function () {
-    $('.lds-ellipsis').show();
+    $('.linePreloader').show();
     varContent.html(
         `<div id="convert-results">
             <div id="success-and-run-compute">
@@ -68,7 +68,7 @@ ipcRenderer.on('set-title-and-preloader-convert', function () {
  * Shows preloader.
  */
 ipcRenderer.on('set-preloader-rerun-convert', function () {
-    $('.lds-ellipsis').show();
+    $('.linePreloader').show();
     $('#add-modality-form-div').animate({
         opacity: 0
     }, 800, function () {
@@ -91,7 +91,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
     let success_and_compute_container = $('#success-and-run-compute');
     let failed_converts_container = $('#failed-converts');
     let add_modality_forms_container = $('#add-modality-form-div');
-    let preloader = $('.lds-ellipsis');
+    let preloader = $('.linePreloader');
 
     // output parts
     let file_name = convert_output['file-name'];
@@ -126,7 +126,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
         // generate and insert the modality forms
         generateModalityFormFields( existingFormsOnPage, unknown_modalities );
     }
-    preloader.hide('fast');
+    preloader.hide();
 });
 
 
@@ -237,7 +237,7 @@ varContent.on('click', '#submit-all-modalities', function runAddModalityPerForm(
             }).prop('disabled', false);
         });
     });
-    $('.lds-ellipsis').show();
+    $('.linePreloader').show();
 });
 
 
@@ -249,7 +249,7 @@ ipcRenderer.on('set-modality-successful', function (event, name) {
     showNotification('success', ('Successfully stored the modality '+ name));
     // refresh modalities (in case of added via settings)
     ipcRenderer.send('get-current-settings');
-    $('.lds-ellipsis').hide('fast');
+    $('.linePreloader').hide('fast');
 });
 
 

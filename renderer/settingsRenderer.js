@@ -29,8 +29,11 @@ let currentDefaultSelectPath;
  */
 ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
     log.info('current src dir ',current_src_dir);
-    $('#src-dir-path').html(current_src_dir);
     currentSrcDirectory = current_src_dir;
+    setTimeout(function() {
+        $('#src-dir-path').html(currentSrcDirectory);
+    }, 100);
+
 });
 
 
@@ -42,8 +45,10 @@ ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
  */
 ipcRenderer.on('current-default-select-dir', function (event, current_default_select_path) {
     log.info('current default select path: ', current_default_select_path);
-    $('#default-select-dir-path').html(current_default_select_path);
-    currentDefaultSelectPath = current_default_select_path[0];
+    currentDefaultSelectPath = current_default_select_path;
+    setTimeout(function() {
+        $('#default-select-dir-path').html(currentDefaultSelectPath);
+    }, 100);
 });
 
 
@@ -55,8 +60,10 @@ ipcRenderer.on('current-default-select-dir', function (event, current_default_se
  */
 ipcRenderer.on('current-database-settings', function (event, database_settings) {
     if (database_settings.trim().length === 0) {
-        log.info('leeg');
         $('.database-path').html('No path configured');
+    } else if (database_settings === 'error') {
+        // error only occurs when the python src directory is not correct
+        $('.database-path').html('Python src directory is incorrect');
     } else {
         $('.database-path').html(database_settings.replace(/"/g, ''));
         currentDatabase = database_settings.replace(/"/g, '');
@@ -119,6 +126,7 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
             </tr>
          </table>`).insertBefore('#add-new-modality').children(':last').hide().fadeIn(1200);
     }
+    $('.linePreloader').hide('fast');
 });
 
 
@@ -128,7 +136,7 @@ ipcRenderer.on('current-modality-settings', function (event, current_modality_se
  */
 ipcRenderer.on('successfully-set-src-dir', function () {
     showNotification('success', 'Successfully set the python renderer directory');
-    showNotification('info', 'Retrieving currently configured application settings');
+    $('.linePreloader').show();
     ipcRenderer.send('get-current-settings');
 });
 
@@ -136,13 +144,13 @@ ipcRenderer.on('successfully-set-src-dir', function () {
  * Lets the user know that the default select directory path has been successfully configured.
  */
 ipcRenderer.on('successfully-set-default-select-dir', function () {
-    showNotification('success', 'Successfully set the default select directory path');
+    showNotification('success', 'Successfully set the default select path');
 });
 
 
 /**
  * Tells the main process to write the by the user selected database path to the
- * config.ini file in the python project. Also disables the 'set datbase' button.
+ * config.ini file in the python project. Also disables the 'set database' button.
  */
 var_cont.on('click', '#set-database', function() {
     showNotification('info', 'Setting the database path');

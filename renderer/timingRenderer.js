@@ -25,10 +25,11 @@ variableContent.on('click', '#run-timing', function() {
  * Sets result page skeleton and preloader will be shown.
  */
 ipcRenderer.on('set-title-and-preloader-timing', function () {
-    $('.lds-ellipsis').show('fast');
+    $('.linePreloader').show();
+    ipcRenderer.send('resize-window', 980, 310);
     variableContent.html('<h1 class="external-window-instruction">The generated plot(s) will been opened in external window(s)</h1>');
     // hide summarize results div untill it actually gets some results
-    $('#timing-results').hide();
+    $('#timing-results').show();
 });
 
 
@@ -37,6 +38,7 @@ ipcRenderer.on('set-title-and-preloader-timing', function () {
  * is done. Also hides preloader.
  */
 ipcRenderer.on('timing-result', function () {
-    variableContent.load('/shared/timing.html');
-    $('.lds-ellipsis').hide('fast');
+    ipcRenderer.send('resize-window', 800, 450);
+    variableContent.load('shared/availability.html');
+    $('.linePreloader').hide('fast');
 });

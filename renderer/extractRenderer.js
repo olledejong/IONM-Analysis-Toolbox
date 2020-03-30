@@ -46,7 +46,6 @@ ipcRenderer.on('selected-extract', function (event, paths, label) {
  * parameter is altered by the user
  */
 var_content.on('change', '#extract-select-container',  function () {
-    log.info('change in extract select container');
     checkIfExtractFormComplete();
 });
 
@@ -97,9 +96,9 @@ var_content.on('click', '#run-extract', function() {
  * Shows the result page skeleton and the preloader will be showed.
  */
 ipcRenderer.on('set-title-and-preloader-extract', function () {
-    let preloader = $('.lds-ellipsis');
+    let preloader = $('.linePreloader');
 
-    preloader.show('fast');
+    preloader.show();
     var_content.html('<h1 class="external-window-instruction">Please be patient, this could take quite some time..</h1>');
     ipcRenderer.send('resize-window', 800, 300);
 });
@@ -111,8 +110,8 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
  */
 ipcRenderer.on('extract-result', function () {
     showNotification('success', 'Successfully extracted the information into a separate file');
-    let preloader = $('.lds-ellipsis');
+    let preloader = $('.linePreloader');
     ipcRenderer.send('resize-window', 800, 510);
     var_content.load('shared/extract.html');
-    preloader.hide('fast');
+    preloader.hide();
 });

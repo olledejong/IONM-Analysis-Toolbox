@@ -87,7 +87,7 @@ variableCont.on('click', '#run-compute', function() {
  * Hides containers until needed later.
  */
 ipcRenderer.on('set-title-and-preloader-compute', function () {
-    $('.lds-ellipsis').show();
+    $('.linePreloader').show();
     variableCont.html(`<div id="compute-content">
                             <h1 class="external-window-instruction">Please work through the external windows to get to the final result</h1>
                             <div id="successful-computes">
@@ -113,7 +113,7 @@ ipcRenderer.on('compute-result', function (event, stdout, file_path) {
         showNotification('success', `Successfully computed ${file_name} `);
         $(`<tr><td class="name-td">${file_name}</td><td class="msg-td">Successfully computed the statistics of this file. Results can be found in the database</td><td class="filepath-td">${file_path[0]}</td></tr><br>`).insertBefore('#succeeded-computes-p');
     }
-    $('.lds-ellipsis').hide('fast');
+    $('.linePreloader').hide('fast');
     $('#compute-content h1').hide();
     $('#successful-computes').show('fast');
 
