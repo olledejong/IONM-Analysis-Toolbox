@@ -1,18 +1,29 @@
 <div id="settings-content" style="display: none">
+    <div id="set-python-src-dir" class="small-tool">
+        <h4>Set python src directory</h4>
+        <p id="src-dir-path-p">
+            This entire GUI relies on Johan Schneiders and Menno Gerbens their Pyhton Project (see the about section).
+            If this path is not correctly configured, none of the tools will work. Make sure you select the right path.<br>
+            <span class="important-span">NOTE: </span>After configuring this once, the path will be saved in in your user-preferences. Don't worry, you can change this as often as you want.
+        </p>
+        <p id="src-dir-path"></p>
+        <button class="settings-button" id="select-src-dir">SELECT</button>
+        <button class="settings-button" id="set-src-dir" disabled>SET SRC DIRECTORY</button>
+    </div>
+    <div id="default-select-dir" class="small-tool">
+        <h4>Set default select directory</h4>
+        <p id="set-default-select-dir-p">
+            For your convenience you're able to select the default path the file / directory select
+            window opens in. The currently configured default select path is displayed within the white box. Select
+            and set the default select path to your liking.
+        </p>
+        <p id="default-select-dir-path"></p>
+        <button class="settings-button" id="select-default-dir">SELECT</button>
+        <button class="settings-button" id="set-default-select-dir" disabled>SET DEFAULT SELECT PATH</button>
+    </div>
     <div id="small-tools">
-        <div id="set-python-src-dir" class="small-tool">
-            <h4>Select and set python src directory</h4>
-            <p id="src-dir-path-p">
-                This entire GUI relies on Johan Schneiders and Menno Gerbens their Pyhton Project (see the about section).
-                If this path is not correctly configured, none of the tools will work. Make sure you select the right path.<br>
-                <span class="important-span">NOTE: </span>After configuring this once, the path will be saved in in your user-preferences. Don't worry, you can change it as often as you want.
-            </p>
-            <p id="src-dir-path"></p>
-            <button class="settings-button" id="select-src-dir">SELECT</button>
-            <button class="settings-button" id="set-src-dir" disabled>SET SRC DIRECTORY</button>
-        </div>
         <div id="set-database-path" class="small-tool">
-            <h4>Select and set database</h4>
+            <h4>Set database</h4>
             <p class="database-path-p">
                 The currently configured database is displayed within the white box. Select and
                 set the the database you wish to work with.
@@ -33,17 +44,6 @@
             </p>
             <p class="database-path"></p>
             <button class="settings-button" id="setup-database">SETUP DATABASE</button>
-        </div>
-        <div id="default-select-dir" class="small-tool">
-            <h4>Set default select directory</h4>
-            <p id="set-default-select-dir-p">
-                For your convenience you're able to select the default path the file / directory select
-                window opens in. The currently configured default select path is displayed within the white box. Select
-                and set the default select path to your liking.
-            </p>
-            <p id="default-select-dir-path"></p>
-            <button class="settings-button" id="select-default-dir">SELECT</button>
-            <button class="settings-button" id="set-default-select-dir" disabled>SET DEFAULT SELECT PATH</button>
         </div>
     </div>
     <div id="set-modalities">
@@ -82,5 +82,17 @@
             </label>
         </div>
         <button class="settings-button" id="submit-new-modality" disabled>SUBMIT</button>
+    </div>
+    <div id="trace-selection-settings">
+        <h4>Trace selection settings</h4>
+        <p id="trace-selection-settings-p">
+            Settings that alter the user's trace selection experience.<br>
+            <span class="important-span">For now, only the chunk size setting has been implemented.</span>
+        </p>
+        <div id="chunk-size-setting">
+            <label for="chunk-size" id="chunk-size-label">Chunk Size</label>
+            <input type="number" id="chunk-size" name="chunk-size" min="50" max="800" placeholder="600">
+        </div>
+        <button class="settings-button" id="set-trace-selection-settings">SET TRACE SELECTION SETTINGS</button>
     </div>
 </div>

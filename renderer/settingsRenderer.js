@@ -237,7 +237,7 @@ variable_content.on('click', '#hide-modality-form', function() {
     $('#hide-modality-form').hide();
     add_modality.css('z-index', -5);
     add_modality.animate({
-        margin: '-130px 0 0 0', opacity: 0
+        margin: '-270px 0 0 0', opacity: 0
     }, 800);
 
     resetModalityForm();
