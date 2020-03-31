@@ -246,10 +246,10 @@ varContent.on('click', '#submit-all-modalities', function runAddModalityPerForm(
  * toast notification for every modality.
  */
 ipcRenderer.on('set-modality-successful', function (event, name) {
+    $('.linePreloader').hide('fast');
     showNotification('success', ('Successfully stored the modality '+ name));
     // refresh modalities (in case of added via settings)
     ipcRenderer.send('get-current-settings');
-    $('.linePreloader').hide('fast');
 });
 
 

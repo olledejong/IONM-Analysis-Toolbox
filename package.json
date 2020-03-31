@@ -1,5 +1,5 @@
 {
-  "name": "ionm-app",
+  "name": "ionm-analysis-toolbox",
   "version": "1.0.0",
   "description": "GUI for the usage of IONM tools",
   "main": "main.js",
@@ -12,7 +12,7 @@
   "author": "Olle de Jong",
   "license": "ISC",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.12.1",
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "custom-electron-titlebar": "^3.2.2-hotfix62",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^4.1.0",

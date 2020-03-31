@@ -86,13 +86,15 @@
     <div id="trace-selection-settings">
         <h4>Trace selection settings</h4>
         <p id="trace-selection-settings-p">
-            Settings that alter the user's trace selection experience.<br>
+            Settings that alter the user's trace selection experience. The currently configured settings are being
+            displayed in the input fields. Alter these and hit the submit button to update the values.
             <span class="important-span">For now, only the chunk size setting has been implemented.</span>
         </p>
         <div id="chunk-size-setting">
             <label for="chunk-size" id="chunk-size-label">Chunk Size</label>
-            <input type="number" id="chunk-size" name="chunk-size" min="50" max="800" placeholder="600">
+            <label for="chunk-size" id="chunk-size-sublabel">The amount of signals you see at once in a selection window</label>
+            <input type="number" id="chunk-size" name="chunk-size" min="50" max="800">
         </div>
-        <button class="settings-button" id="set-trace-selection-settings">SET TRACE SELECTION SETTINGS</button>
+        <button class="settings-button" id="set-trace-selection-settings">SUBMIT SETTINGS</button>
     </div>
 </div>

@@ -164,7 +164,7 @@ variable_content.on('click', '#compute-select-btn', function () {
     const options = {
         title: 'Select a converted file',
         filters: types,
-        properties: ['openFile']
+        properties: ['openFile', 'multiSelections']
     };
     ipcRenderer.send('select-file', options, tool);
 });

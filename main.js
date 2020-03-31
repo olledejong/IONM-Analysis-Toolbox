@@ -138,7 +138,6 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
         // if selecting is cancelled, do not send back to renderer
         selectedFileHolder = fileNames.filePaths;
         log.info('[ selectFileAndSendBack ][ Sending file path(s) to renderer ]');
-        log.info(fileNames.filePaths);
         if (tool === 'general') {
             event.sender.send('selected-general', fileNames.filePaths, label);
         } else if (tool === 'src-dir') {
@@ -509,6 +508,8 @@ ipcMain.on('get-current-settings', function getCurrentSettings(event) {
         getDatabaseSettings(event);
         // get modalities
         getModalitySettings(event);
+        // get trace selection settings
+        getTraceSelectionSettings(event);
     } else {
         event.sender.send('current-python-src-dir', 'No python src directory configured');
         event.sender.send('current-database-settings', 'No python src directory configured');
@@ -566,6 +567,32 @@ function getModalitySettings(event) {
         }
     });
 }
+
+
+/**
+ * Executes the command that retrieves the current trace selection
+ * settings from the python project's config.ini file
+ *
+ * @param {object} event - for purpose of communication with sender
+ */
+function getTraceSelectionSettings(event) {
+    exec('ionm.py gui_get_trace_settings', {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = 'An error occurred while retrieving the trace selection settings';
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+            event.sender.send('current-trace-settings', 'error');
+        } else if (stderr !== '') {
+            event.sender.send('error', errorMessage);
+            event.sender.send('current-trace-settings', 'error');
+        } else {
+            event.sender.send('current-trace-settings', stdout);
+        }
+    });
+}
+
+
 
 /**
  *                    |> SETTINGS - SET DATABASE PATH <|
@@ -653,9 +680,8 @@ ipcMain.on('set-python-src-dir', function (event, src_dir) {
 
 /**
  *                 |> SETTINGS - SET DEFAULT SELECT DIRECTORY <|
- * Stores new modality in the configured database. This function is either called
- * via settings or after the converting of a file failes because one or more of the
- * encountered modalities have not been configured.
+ * Stores the given default select directory path for user convenience. This way
+ * the user doesnt have to click through multiple windows to get to their data folder.
  *
  * @param {object} event - for purpose of communication with sender
  * @param {string} default_select_dir - path of the to be set default select dir
@@ -673,6 +699,35 @@ ipcMain.on('set-default-select-dir', function (event, default_select_dir) {
         event.sender.send('successfully-set-default-select-dir');
     }
 });
+
+
+/**
+ *                      |> SETTINGS - SET CHUNK SIZE <|
+ * Stores the new chunk size setting in the config.ini file. This function is on
+ * in the settings section of the application
+ *
+ * @param {object} event - for purpose of communication with sender
+ * @param {string} chunk_size - the amount of signals that the user sees at once
+ */
+ipcMain.on('set-chunk-size', function (event, chunk_size) {
+    let command = `ionm.py gui_set_chunk_size ${chunk_size}`;
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = 'An error occurred while trying to set the chunk size setting';
+
+        // if errors occur, send an error message to the renderer process
+        if (error !== null) {
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('chunk-size-set-successful', stdout);
+        }
+    });
+});
+
 
 
 /**
@@ -703,7 +758,6 @@ ipcMain.on('show-confirmation-box', function (event, options) {
  */
 function setupDatabase(event) {
     event.sender.send('setting-up-database');
-
     exec('ionm.py gui_setup', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {

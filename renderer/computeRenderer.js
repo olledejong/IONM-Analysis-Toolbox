@@ -25,8 +25,10 @@ let variableCont = $('#variable-content');
 ipcRenderer.on('selected-compute', function (event, paths) {
     let compute_select_btn = $('#compute-select-btn');
 
-    if (paths.length !== 0) {
-        compute_select_btn.html(paths.join('<br>'));
+    // use generate file names function from fileSelectRenderer.js
+    let finalFileNames = generateFilenames(paths);
+    if (finalFileNames.length !== 0) {
+        compute_select_btn.html(finalFileNames);
         checkIfComputeFormComplete();
     } else {
         compute_select_btn.html('Click to select a converted file');
@@ -53,7 +55,7 @@ function checkIfComputeFormComplete() {
     let run_compute = $('#run-compute');
     let compute_select_btn = $('#compute-select-btn');
     let stats_input_field = $('#stats-input');
-    if ( compute_select_btn.html().includes('\\') &&
+    if ( compute_select_btn.html().includes('TRG') &&
         possibleStatsArguments.includes(stats_input_field.val())) {
         run_compute.css({
             'background':'#e87e04',

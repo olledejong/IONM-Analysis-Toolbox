@@ -20,6 +20,7 @@ let var_cont = $('#variable-content');
 let currentDatabase;
 let currentSrcDirectory;
 let currentDefaultSelectPath;
+let currentChunkSize;
 
 /**
  * Displays the currently configured src directory path to the user
@@ -59,17 +60,38 @@ ipcRenderer.on('current-default-select-dir', function (event, current_default_se
  * @param {string} database_settings - currently configured database settings (path)
  */
 ipcRenderer.on('current-database-settings', function (event, database_settings) {
+    let database_path_holders = $('.database-path');
     if (database_settings.trim().length === 0) {
-        $('.database-path').html('No path configured');
+        database_path_holders.html('No path configured');
     } else if (database_settings === 'error') {
         // error only occurs when the python src directory is not correct
-        $('.database-path').html('Python src directory is incorrect');
+        database_path_holders.html('Python src directory is incorrect');
     } else {
-        $('.database-path').html(database_settings.replace(/"/g, ''));
+        database_path_holders.html(database_settings.replace(/"/g, ''));
         currentDatabase = database_settings.replace(/"/g, '');
     }
 });
 
+
+/**
+ * Displays the currently configured trace selection settings to the user
+ *
+ * @param {object} event
+ * @param {string} trace_selection_settings - currently configured trace selection settings
+ */
+ipcRenderer.on('current-trace-settings', function (event, trace_selection_settings) {
+    let chunk_size = parseInt(trace_selection_settings);
+    let chunk_size_field = $('#chunk-size');
+    if (chunk_size === 0 || chunk_size === null) {
+        chunk_size_field.val('No path configured');
+    } else if (chunk_size_field === 'error') {
+        // error only occurs when the python src directory is not correct
+        chunk_size_field.val('error occurred');
+    } else {
+        chunk_size_field.val(chunk_size);
+        currentChunkSize = chunk_size;
+    }
+});
 
 /**
  * Show the configured modalities to the user in a table.
@@ -144,7 +166,7 @@ ipcRenderer.on('successfully-set-src-dir', function () {
  * Lets the user know that the default select directory path has been successfully configured.
  */
 ipcRenderer.on('successfully-set-default-select-dir', function () {
-    showNotification('success', 'Successfully set the default select path');
+    showNotification('success', 'Successfully set the default select directory path');
 });
 
 
@@ -153,7 +175,7 @@ ipcRenderer.on('successfully-set-default-select-dir', function () {
  * config.ini file in the python project. Also disables the 'set database' button.
  */
 var_cont.on('click', '#set-database', function() {
-    showNotification('info', 'Setting the database path');
+    $('.linePreloader').show();
     ipcRenderer.send('set-database');
 
     let set_database = $('#set-database');
@@ -249,6 +271,9 @@ variable_content.on('click', '#hide-modality-form', function() {
  * the 'set modality' command. Then disables the 'submit new modality' button.
  */
 variable_content.on('click', '#submit-new-modality', function() {
+    // show preloader
+    $('.linePreloader').show();
+    // scope vars
     let submit_new_modality = $('#submit-new-modality');
     let description_input = $('#description-input');
 
@@ -411,7 +436,7 @@ variable_content.on('click', '#setup-database', function () {
  * Lets the user know that the database is being setup on message from main process
  */
 ipcRenderer.on('setting-up-database', function () {
-    showNotification('info', 'Setting up the database');
+    $('.linePreloader').show();
 });
 
 
@@ -424,3 +449,60 @@ ipcRenderer.on('database-setup-successful', function () {
     ipcRenderer.send('get-current-settings');
     showNotification('info', 'Retrieving the modalities for this database');
 });
+
+
+
+// chunk size setting
+/**
+ * Tells the main process to set the chunk size setting.
+ * Also disables the 'SUBMIT SETTINGS' button.
+ */
+variable_content.on('click', '#set-trace-selection-settings', function() {
+    // show preloader
+    $('.linePreloader').show();
+    // scope vars
+    let chunk_size = $('#chunk-size').val();
+    let submit_trace_settings = $('#set-trace-selection-settings');
+
+    // tell main to write the chunk size to the config.ini file
+    ipcRenderer.send('set-chunk-size', chunk_size);
+    currentChunkSize = chunk_size;
+
+    submit_trace_settings.css({
+        'background':'#ccc',
+        'color':'#404040',
+        'cursor':'auto'
+    }).prop('disabled', true);
+});
+
+
+/**
+ * Listener for changes in the add-modality form. When form is filled completed, the
+ * submit button get enabled. When it is not complete, the submit button gets disabled
+ */
+variable_content.on('change', '#trace-selection-settings',  function () {
+    let submit_trace_settings = $('#set-trace-selection-settings');
+    let chunk_size_field = $('#chunk-size');
+    if (chunk_size_field.val().length > 0 &&
+        chunk_size_field.val() >= 50 &&
+        chunk_size_field.val() <= 800) {
+        submit_trace_settings.css({
+            'background': '#e87e04',
+            'color': 'white',
+            'cursor': 'pointer'
+        }).prop('disabled', false);
+    } else {
+        submit_trace_settings.css({
+            'background': '#ccc',
+            'color': '#404040',
+            'cursor': 'auto'
+        }).prop('disabled', true);
+    }
+});
+
+
+ipcRenderer.on('chunk-size-set-successful', function () {
+    $('.linePreloader').hide('fast');
+    showNotification('success', 'Successfully updated the trace selection settings');
+});
+

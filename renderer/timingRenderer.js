@@ -39,6 +39,6 @@ ipcRenderer.on('set-title-and-preloader-timing', function () {
  */
 ipcRenderer.on('timing-result', function () {
     ipcRenderer.send('resize-window', 800, 450);
-    variableContent.load('shared/availability.html');
+    variableContent.load('shared/timing.html');
     $('.linePreloader').hide('fast');
 });
