@@ -1,25 +1,21 @@
 <div id="compute-content">
     <div id="compute-content-description" class="content-description-container">
-        <h3 id="compute-content-h">Compute the statistics of converted Eclipse files</h3>
+        <h3 id="compute-content-h">Compute the statistics of Eclipse files</h3>
         <p id="compute-content-p">
             This tool will compute the desired statistics and store these inside the database. You as the user can
             determine what statistics will be calculated. Type 'all', 'p_p_amplitude' or 'auc' inside the 'Statistics'
-            box. <span class="important-span">In the future there might be more options.</span><br><br>
-            Please select the converted CSV file(s) you wish to compute the statistics of.
+            box.<br>
+            <span class="important-span">In the future there might be more options.</span><br><br>
+            Please select the CSV file(s) you wish to compute the statistics of.
         </p>
     </div>
-<!--    <div id="file-upload-container">-->
-<!--        <button id="file-selectBtn" class="csv-select-btn">Click to select</button>-->
-<!--        <div id="selected-filename-container">-->
-<!--            <p id="selected-filenames">No files selected</p>-->
-<!--            <button class="run-button" id="run-compute" disabled>RUN</button>-->
-<!--        </div>-->
-<!--    </div>-->
     <div id="compute-select-container">
-        <button id="compute-select-btn" class="compute-file-select">Click to select a converted file</button>
+        <button id="compute-select-btn" class="compute-file-select">Click to a select file</button>
         <div id="stats-input-div">
             <label id="stats-input-label">Statistics</label>
-            <input type="text" id="stats-input" name="stats-input" placeholder="all, auc, etc">
+            <select id="stats-input" name="stats-input">
+                <!-- will be dynamicly filled -->
+            </select>
             <label id="stats-input-sublabel">-s argument while using commandline</label>
         </div>
         <button id="run-compute" class="eeg-trg-run-btn" disabled>RUN</button>

@@ -1015,6 +1015,7 @@ label.radio input:checked + span {
     float: left;
     outline: 0;
     height: calc(50% - 5px);
+    width: calc(62% - 10px);
     letter-spacing: 2px;
     color: white;
     background: #e87e04;
@@ -1025,16 +1026,6 @@ label.radio input:checked + span {
     font-size: 16px;
     overflow-y: auto;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24)
-}
-
-#e-eeg-select-btn,
-#e-trg-select-btn {
-    width: calc(62% - 10px);
-}
-
-#a-trg-select-btn,
-#a-eeg-select-btn {
-    width: calc(80% - 10px);
 }
 
 #e-trg-select-btn,
@@ -1078,12 +1069,19 @@ label.radio input:checked + span {
 #window-input-div, #stats-input-div {
     margin: 0 8px 0 0;
     vertical-align: top;
-    width: 17%;
     background: #e87e04;
     display: inline-block;
     height: 100%;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24);
+}
+
+#stats-input-div {
+    width: 21%;
+}
+
+#window-input-div {
+    width: 17%;
 }
 
 #window-input-label {
@@ -1094,17 +1092,24 @@ label.radio input:checked + span {
 
 #stats-input-label {
     display: inline-block;
-    margin: 5px 26px 3px 27px;
+    margin: 5px 41px 3px 42px;
     letter-spacing: 1.5px;
 }
 
-#window-input-sublabel, #stats-input-sublabel {
+#window-input-sublabel {
     margin: 2px 12px;
     font-size: 12px;
     display: inline-block;
 }
 
-#window-size, #stats-input {
+#stats-input-sublabel {
+    margin: 0 19px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.window-size,
+#stats-input {
     color: #404040;
     outline: 0;
     border-radius: 4px;
@@ -1139,7 +1144,7 @@ label.radio input:checked + span {
     float: left;
     outline: 0;
     height: 100%;
-    width: calc(62% - 10px);
+    width: calc(58% - 10px);
     letter-spacing: 2px;
     color: white;
     background: #e87e04;

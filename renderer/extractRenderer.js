@@ -26,15 +26,19 @@ ipcRenderer.on('selected-extract', function (event, paths, label) {
     if (label === 'trg') {
         if (paths.length !== 0) {
             trg_select.html(paths.join('<br>'));
+            trg_select.css('font-size', '13px');
         } else {
             trg_select.html('Click to select a TRG file');
+            trg_select.css('font-size', '16px');
         }
         checkIfExtractFormComplete();
     } else {
         if (paths.length !== 0) {
             eeg_select.html(paths.join('<br>'));
+            eeg_select.css('font-size', '13px');
         } else {
             eeg_select.html('Click to select an EEG file');
+            eeg_select.css('font-size', '16px');
         }
         checkIfExtractFormComplete();
     }
@@ -58,9 +62,9 @@ function checkIfExtractFormComplete() {
     let run_extract = $('#run-extract');
     let trg_select = $('#e-trg-select-btn');
     let eeg_select = $('#e-eeg-select-btn');
-    let window_size_select = $('#window-size');
+    let window_size_extract = $('#window-size-extract');
     if ( trg_select.html().includes('\\') && eeg_select.html().includes('\\') &&
-        (window_size_select.val() > 0 && window_size_select.val() <= 10)) {
+        (window_size_extract.val() > 0 && window_size_extract.val() <= 10)) {
         run_extract.css({
             'background':'#e87e04',
             'color': 'white',
@@ -83,11 +87,11 @@ function checkIfExtractFormComplete() {
 var_content.on('click', '#run-extract', function() {
     let trg_select = $('#e-trg-select-btn');
     let eeg_select = $('#e-eeg-select-btn');
-    let window_size_select = $('#window-size');
+    let window_size_extract = $('#window-size-extract');
 
     let eeg_file = eeg_select.html();
     let trg_file = trg_select.html();
-    let win_size = window_size_select.val();
+    let win_size = window_size_extract.val();
     var_content.html('');
     ipcRenderer.send('run-extract', eeg_file, trg_file, win_size);
 });
@@ -111,7 +115,7 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
 ipcRenderer.on('extract-result', function () {
     showNotification('success', 'Successfully extracted the information into a separate file');
     let preloader = $('.linePreloader');
-    ipcRenderer.send('resize-window', 800, 510);
     var_content.load('shared/extract.html');
+    ipcRenderer.send('resize-window', 800, 530);
     preloader.hide();
 });

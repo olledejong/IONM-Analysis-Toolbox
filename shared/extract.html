@@ -5,7 +5,8 @@
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+            The 'Window Size' argument is the amount of seconds around the MEP <br>
+            <span class="important-span">NOTE: The TRG file you select should only contain MEPs</span>
             <br><br>Please select an EEG file and a TRG file.
         </p>
     </div>
@@ -14,7 +15,7 @@
         <button id="e-trg-select-btn" class="eeg-trg-btn">Click to select a TRG file</button>
         <div id="window-input-div">
             <label id="window-input-label">Window Size</label>
-            <input type="number" id="window-size" name="window-size" min="1" max="10" placeholder="6">
+            <input type="number" class="window-size" id="window-size-extract" name="window-size-extract" min="1" max="10" placeholder="6">
             <label id="window-input-sublabel">-w argument while using commandline</label>
         </div>
         <button id="run-extract" class="eeg-trg-run-btn" disabled>RUN</button>

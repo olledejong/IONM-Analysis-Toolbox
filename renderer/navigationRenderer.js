@@ -91,21 +91,23 @@ body.delegate('#compute-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 500);
     variable_content_div.load('shared/compute.html');
+    // generate select button options for what statistics the user wants to compute
+    generateSelectButtonOptions();
 });
 
 
 /**
- * Loads variable content for the [ EVC section ]
+ * Loads variable content for the [ extract section ]
  */
 body.delegate('#extract-section', 'click', function () {
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 510);
+    ipcRenderer.send('resize-window', 800, 530);
     variable_content_div.load('shared/extract.html');
 });
 
 
 /**
- * Loads variable content for the [ EVC section ]
+ * Loads variable content for the [ validate section ]
  */
 body.delegate('#validate-section', 'click', function () {
     removeToastMessages();
@@ -114,7 +116,7 @@ body.delegate('#validate-section', 'click', function () {
 
 
 /**
- * Loads variable content for the [ EVC section ]
+ * Loads variable content for the [ combine section ]
  */
 body.delegate('#combine-section', 'click', function () {
     removeToastMessages();

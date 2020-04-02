@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . IONM-Analysis-Toolbox --platform win32 --arch x64 --out dist/",
-    "setup": "node build.js"
+    "package": "electron-packager . IONM-Analysis-Toolbox --platform win32 --arch x64 --out dist/",
+    "build": "node build.js"
   },
   "keywords": [],
   "author": "Olle de Jong",

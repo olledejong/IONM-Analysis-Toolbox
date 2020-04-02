@@ -8,12 +8,31 @@
 window.$ = window.jQuery = require('jquery');
 const path = require('path');
 
-// globals
-// list of possible statistics user can choose from [ to be altered in the future ]
-let possibleStatsArguments = ['auc', 'all', 'p_p_amplitude'];
-
-// selectors
+// global selectors
 let variableCont = $('#variable-content');
+
+// list of possible statistics user can choose from [ to be altered in the future ]
+// If the backend changes, you have to add the new arguments in this list!!
+// TODO: ADD TO DEV-README
+let possibleStatsArguments = ['all', 'auc', 'p_p_amplitude'];
+
+/**
+ * Called on by navigationRenderer.js
+ *
+ * Generates the options from which the user can choose regarding
+ * what statistics the user wants to compute.
+ */
+// eslint-disable-next-line no-unused-vars
+function generateSelectButtonOptions() {
+    log.info(possibleStatsArguments.length);
+    log.info('function is being run');
+    for (let i = 0; i < possibleStatsArguments.length; i++) {
+        log.info(`<option value="${possibleStatsArguments[i]}">${possibleStatsArguments[i]}</option>`);
+        setTimeout(function() {
+            $('#stats-input').append(new Option(possibleStatsArguments[i], possibleStatsArguments[i]));
+        }, 100);
+    }
+}
 
 /**
  * Responsible for handling the information that the file select dialog
@@ -31,7 +50,7 @@ ipcRenderer.on('selected-compute', function (event, paths) {
         compute_select_btn.html(finalFileNames);
         checkIfComputeFormComplete();
     } else {
-        compute_select_btn.html('Click to select a converted file');
+        compute_select_btn.html('Click to select a file');
         checkIfComputeFormComplete();
     }
 });

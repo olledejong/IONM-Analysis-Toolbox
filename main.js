@@ -67,7 +67,7 @@ function createWindow () {
     window.loadFile('index.html');
 
     // once everything is loaded, show window
-    window.once('ready-to-show', () => {
+    window.webContents.on('did-finish-load', () => {
         window.show();
     });
 
@@ -297,10 +297,10 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
  * @param {string} trg_file_path - file path to the TRG file selected by the user
  * @param {object} event - for purpose of communication with sender
  */
-ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file_path, trg_file_path) {
+ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file_path, trg_file_path, window_size) {
     event.sender.send('set-title-and-preloader-availability');
 
-    let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}"`;
+    let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {

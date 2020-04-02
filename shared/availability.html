@@ -12,6 +12,11 @@
     <div id="availability-select-container">
         <button id="a-eeg-select-btn" class="eeg-trg-btn">Click to select an EEG file</button>
         <button id="a-trg-select-btn" class="eeg-trg-btn">Click to select a TRG file</button>
+        <div id="window-input-div">
+            <label id="window-input-label">Window Size</label>
+            <input type="number" class="window-size" id="window-size-availability" name="window-size-availability" min="1" max="10" placeholder="6">
+            <label id="window-input-sublabel">-w argument while using commandline</label>
+        </div>
         <button id="run-availability" class="eeg-trg-run-btn" disabled>RUN</button>
     </div>
 </div>

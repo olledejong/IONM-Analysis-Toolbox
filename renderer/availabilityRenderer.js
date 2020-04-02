@@ -27,28 +27,44 @@ ipcRenderer.on('selected-availability', function (event, paths, label) {
         if (paths.length !== 0) {
             log.info('paths: ', paths);
             trg_select.html(paths.join('<br>'));
+            trg_select.css('font-size', '13px');
         } else {
             trg_select.html('Click to select a TRG file');
+            trg_select.css('font-size', '16px');
         }
-        checkIfFilesAreGivenAvailability();
+        checkIfAvailabilityFormComplete();
     } else {
         if (paths.length !== 0) {
             eeg_select.html(paths.join('<br>'));
+            eeg_select.css('font-size', '13px');
         } else {
             eeg_select.html('Click to select an EEG file');
+            eeg_select.css('font-size', '16px');
         }
-        checkIfFilesAreGivenAvailability();
+        checkIfAvailabilityFormComplete();
     }
 });
+
+
+/**
+ * Calls on the checkIfFormComplete function every time the -w
+ * parameter is altered by the user
+ */
+var_con.on('change', '#availability-select-container',  function () {
+    checkIfAvailabilityFormComplete();
+});
+
 
 /**
  * Checks if both the needed files are given. Disables / enables run button
  */
-function checkIfFilesAreGivenAvailability() {
+function checkIfAvailabilityFormComplete() {
     let run_availability = $('#run-availability');
-    let trg_select = $('#a-trg-select-btn');
-    let eeg_select = $('#a-eeg-select-btn');
-    if ( trg_select.html().includes('\\') && eeg_select.html().includes('\\') ) {
+    let trg_select_a = $('#a-trg-select-btn');
+    let eeg_select_a = $('#a-eeg-select-btn');
+    let window_size_availability = $('#window-size-availability');
+    if ( trg_select_a.html().includes('\\') && eeg_select_a.html().includes('\\') &&
+        (window_size_availability.val() > 0 && window_size_availability.val() <= 10) ) {
         run_availability.css({
             'background':'#e87e04',
             'color': 'white',
@@ -70,11 +86,15 @@ function checkIfFilesAreGivenAvailability() {
 var_con.on('click', '#run-availability', function() {
     let trg_select = $('#a-trg-select-btn');
     let eeg_select = $('#a-eeg-select-btn');
+    let window_size_availability = $('#window-size-availability');
+
 
     let eeg_file = eeg_select.html();
     let trg_file = trg_select.html();
+    let win_size = window_size_availability.val();
+    log.info(win_size);
     var_con.html('');
-    ipcRenderer.send('run-availability', eeg_file, trg_file);
+    ipcRenderer.send('run-availability', eeg_file, trg_file, win_size);
 });
 
 /**
