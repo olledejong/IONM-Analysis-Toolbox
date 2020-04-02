@@ -45,9 +45,8 @@ ipcRenderer.on('selected-compute', function (event, paths) {
     let compute_select_btn = $('#compute-select-btn');
 
     // use generate file names function from fileSelectRenderer.js
-    let finalFileNames = generateFilenames(paths);
     if (finalFileNames.length !== 0) {
-        compute_select_btn.html(finalFileNames);
+        compute_select_btn.html(generateFilenames(paths));
         checkIfComputeFormComplete();
     } else {
         compute_select_btn.html('Click to select a file');

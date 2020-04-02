@@ -18,16 +18,6 @@ const Store = require('electron-store');
 const store = new Store();
 log.info('User preferences stored at: ', app.getPath('userData'));
 
-// check what environment you're running in
-if (isDev) {
-    log.info('Running in development');
-    // enable debug
-    const debug = require('electron-debug');
-    debug();
-} else {
-    log.info('Running in production');
-}
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let window;
@@ -45,7 +35,6 @@ log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 /**
  *                         [ CREATE WINDOW ]
  * Creates the GUI window based on some variables to be set by developer.
- * Disable DEV TOOLS window here!
  */
 function createWindow () {
     // Create the browser window
@@ -54,6 +43,7 @@ function createWindow () {
         width: 1142,
         height: 798,
         title: 'IONM Analysis Toolbox',
+        icon: __dirname + './assets/images/app_icon.png',
         resizable: true,
         frame: false,
         webPreferences: {
@@ -71,8 +61,17 @@ function createWindow () {
         window.show();
     });
 
-    // Open the DevTools.
-    window.webContents.openDevTools();
+    // check what environment you're running in
+    if (isDev) {
+        log.info('Running in development');
+        // Open the DevTools.
+        window.webContents.openDevTools();
+        // enable debug
+        const debug = require('electron-debug');
+        debug();
+    } else {
+        log.info('Running in production');
+    }
 
     // Emitted when the window is closed.
     window.on('closed', () => {
@@ -150,6 +149,8 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
             event.sender.send('selected-availability', fileNames.filePaths, label);
         } else if (tool === 'compute') {
             event.sender.send('selected-compute', fileNames.filePaths, label);
+        } else if (tool === 'validate') {
+            event.sender.send('selected-validate', fileNames.filePaths, label);
         } else if (tool === 'extract') {
             event.sender.send('selected-extract', fileNames.filePaths, label);
         }
@@ -167,19 +168,18 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
 ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
     // window sizing logic
     if ( selectedFileHolder.length > 2 ) {
-        window.setMinimumSize(1410, 900);
-        window.setSize(1410, 900);
+        window.setMinimumSize(1430, 900);
+        window.setSize(1430, 900);
     } else if ( selectedFileHolder.length === 2 ) {
-        window.setMinimumSize(1410, 550);
-        window.setSize(1410, 550);
+        window.setMinimumSize(1430, 550);
+        window.setSize(1430, 550);
     } else {
-        window.setMinimumSize(800, 550);
-        window.setSize(800, 550);
+        window.setMinimumSize(720, 535);
+        window.setSize(720, 535);
     }
 
     // issue message to the Renderer process to set result title and loading gif
     event.sender.send('set-title-and-preloader-summarize');
-
     log.info('Creating child-process and running the summarize command');
 
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
@@ -272,6 +272,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
     let command = `ionm.py show_timing ${pathsString}`;
+    log.info('Creating child-process and running the timing command');
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -301,6 +302,7 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
     event.sender.send('set-title-and-preloader-availability');
 
     let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
+    log.info('Creating child-process and running the \'show availability\' command');
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -330,6 +332,7 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
     log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
 
+    log.info('Creating child-process and running the convert command');
     for(let i = 0; i < selectedFileHolder.length; i++) {
         let command = `ionm.py gui_convert "${selectedFileHolder[i]}"`;
         exec(command, {

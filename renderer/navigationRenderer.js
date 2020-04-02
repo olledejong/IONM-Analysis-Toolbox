@@ -50,7 +50,7 @@ body.delegate('#summarize-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 750, 460);
     log.info('loading summarize content ..');
-    variable_content_div.load('shared/summarize.html');
+    variable_content_div.load('shared/summarize.html').hide().fadeIn('slow');
 });
 
 
@@ -60,7 +60,7 @@ body.delegate('#summarize-section', 'click', function () {
 body.delegate('#timing-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 450);
-    variable_content_div.load('shared/timing.html');
+    variable_content_div.load('shared/timing.html').hide().fadeIn('slow');
 });
 
 
@@ -70,7 +70,7 @@ body.delegate('#timing-section', 'click', function () {
 body.delegate('#availability-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 510);
-    variable_content_div.load('shared/availability.html');
+    variable_content_div.load('shared/availability.html').hide().fadeIn('slow');
 });
 
 
@@ -80,7 +80,7 @@ body.delegate('#availability-section', 'click', function () {
 body.delegate('#convert-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 690);
-    variable_content_div.load('shared/convert.html');
+    variable_content_div.load('shared/convert.html').hide().fadeIn('slow');
 });
 
 
@@ -90,7 +90,7 @@ body.delegate('#convert-section', 'click', function () {
 body.delegate('#compute-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 500);
-    variable_content_div.load('shared/compute.html');
+    variable_content_div.load('shared/compute.html').hide().fadeIn('slow');
     // generate select button options for what statistics the user wants to compute
     generateSelectButtonOptions();
 });
@@ -102,7 +102,7 @@ body.delegate('#compute-section', 'click', function () {
 body.delegate('#extract-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 530);
-    variable_content_div.load('shared/extract.html');
+    variable_content_div.load('shared/extract.html').hide().fadeIn('slow');
 });
 
 
@@ -111,7 +111,8 @@ body.delegate('#extract-section', 'click', function () {
  */
 body.delegate('#validate-section', 'click', function () {
     removeToastMessages();
-    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet');
+    ipcRenderer.send('resize-window', 800, 460);
+    variable_content_div.load('shared/validate.html').hide().fadeIn('slow');
 });
 
 
@@ -142,12 +143,8 @@ body.delegate('#settings-section', 'click', function () {
     // tell main process to resize the window, and to retrieve the current settings
     ipcRenderer.send('resize-window', 1200, 850);
     ipcRenderer.send('get-current-settings');
-    // ipcRenderer.send('get-paramter-calc-settings');
-    // ipcRenderer.send('get-trace-selection-settings');
-    variable_content_div.load('shared/settings.html', function () {
-        $('#settings-content').css('display', 'block');
-    });
-    // showNotification('info', 'Retrieving currently configured application settings');
+
+    variable_content_div.load('shared/settings.html').hide().fadeIn('slow');
     $('.linePreloader').show();
 });
 

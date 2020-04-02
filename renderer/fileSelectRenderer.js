@@ -41,8 +41,6 @@ ipcRenderer.on('selected-general', function (event, paths) {
 
     // only do something if there are actually files are selected
     if(paths.length !== 0) {
-        let finalFileNames = generateFilenames(paths);
-
         selected_filenames_p.css({
             'position' : 'relative',
             'left' : '0',
@@ -51,7 +49,7 @@ ipcRenderer.on('selected-general', function (event, paths) {
             'transform': 'none',
         });
         // set text inside the button to selected files
-        selected_filenames_p.html(finalFileNames);
+        selected_filenames_p.html(generateFilenames(paths));
 
         // show run button and enable it
         if ( run_button.prop('disabled') === true ) {
@@ -215,6 +213,27 @@ variable_content.on('click', '#e-trg-select-btn', function () {
     ipcRenderer.send('select-file', options, tool, label);
 });
 
+
+/**
+ *                        |> VALIDATE <|
+ * Informs the main process it has to open a select file window and
+ * lets it know the selecting of files is for the purpose of setting
+ * validating an extracted file
+ */
+variable_content.on('click', '#validate-select-btn', function() {
+    let tool = 'validate';
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select an extracted file',
+        filters: types,
+        properties: ['openFile']
+    };
+    ipcRenderer.send('select-file', options, tool);
+});
 
 
 /**
