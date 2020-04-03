@@ -115,7 +115,7 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
 ipcRenderer.on('extract-result', function () {
     showNotification('success', 'Successfully extracted the information into a separate file');
     let preloader = $('.linePreloader');
-    var_content.load('shared/extract.html');
+    var_content.load('shared/extract.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 530);
     preloader.hide();
 });

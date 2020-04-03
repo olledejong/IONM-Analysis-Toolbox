@@ -168,7 +168,7 @@ about_section_button.click(function () {
         ipcRenderer.send('get-version-info');
 
         // generate skeleton for information to be displayed in
-        variable_content_div.load('shared/about.html');
+        variable_content_div.load('shared/about.html').hide().fadeIn('slow');
         preloader.show();
     }
 });

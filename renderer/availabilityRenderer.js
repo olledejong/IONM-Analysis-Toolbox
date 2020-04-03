@@ -114,6 +114,6 @@ ipcRenderer.on('set-title-and-preloader-availability', function () {
  */
 ipcRenderer.on('availability-result', function () {
     ipcRenderer.send('resize-window', 800, 510);
-    var_con.load('shared/availability.html');
+    var_con.load('shared/availability.html').hide().fadeIn('slow');
     $('.linePreloader').hide('fast');
 });

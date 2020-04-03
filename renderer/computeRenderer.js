@@ -96,7 +96,7 @@ function checkIfComputeFormComplete() {
 variableCont.on('click', '#run-compute', function() {
     let stats_input_field = $('#stats-input');
     let stats_value = stats_input_field.val();
-    log.info(stats_value);
+
     ipcRenderer.send('resize-window', 1180, 600);
     ipcRenderer.send('run-compute', stats_value);
 });
@@ -136,6 +136,5 @@ ipcRenderer.on('compute-result', function (event, stdout, file_path) {
     $('.linePreloader').hide('fast');
     $('#compute-content h1').hide();
     $('#successful-computes').show('fast');
-
 });
 

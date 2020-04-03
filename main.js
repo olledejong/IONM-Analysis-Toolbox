@@ -6,7 +6,7 @@
  * task came from.
  */
 // requires (electron)
-const { app, BrowserWindow, dialog} = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
 const ipcMain = require('electron').ipcMain;
 const exec = require('child_process').exec;
 const log = require('electron-log');
@@ -108,12 +108,11 @@ app.on('activate', () => {
  * @param {int} newY
  */
 ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
-    log.info('Resizing window to ', newX, ' x ', newY);
     try {
         let currentWindowSize = window.getSize();
         if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
             window.setMinimumSize(newX, newY);
-            window.setSize(newX, newY);
+            window.setSize(newX, newY, true);
         }
     } catch (e) {
         event.sender.send('error', 'Something went wrong while trying to resize the browser window');
