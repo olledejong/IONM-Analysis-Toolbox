@@ -1,6 +1,6 @@
 /**
  * This renderer file is responsible for all user interaction in the
- * 'validate' section of the application. It is responsible
+ * 'classify' section of the application. It is responsible
  * for telling the main process to execute the tool via a ChildProcess
  * and handling the response of this ChildProcess (error / success)
  */
@@ -9,7 +9,7 @@
 window.$ = window.jQuery = require('jquery');
 
 // global jQuery selectors
-let varb_cont = $('#variable-content');
+let vc = $('#variable-content');
 
 /**
  * Responsible for handling the information that the file select dialog
@@ -20,9 +20,8 @@ let varb_cont = $('#variable-content');
  * @param {array} paths - all the selected file-paths in an array
  * @param {string} label - word that is used to checks where the path should be displayed
  */
-ipcRenderer.on('selected-validate', function (event, paths) {
-    log.info('Paths in selected-validate: ',paths);
-    let run_btn = $('#run-validate');
+ipcRenderer.on('selected-classify', function (event, paths) {
+    let run_btn = $('#run-classify');
     let selected_filenames = $('#selected-filenames');
     if (paths.length !== 0) {
         selected_filenames.css({
@@ -56,27 +55,27 @@ ipcRenderer.on('selected-validate', function (event, paths) {
 
 
 /**
- * Tells the main process to run the validate tool / command.
+ * Tells the main process to run the classify tool / command.
  * Clears the html.
  */
-varb_cont.on('click', '#run-validate', function() {
+vc.on('click', '#run-classify', function() {
     let selected_filenames = $('#selected-filenames');
 
     let extracted_filepath = selected_filenames.html();
 
-    varb_cont.html('');
-    ipcRenderer.send('run-validate', extracted_filepath);
+    vc.html('');
+    ipcRenderer.send('run-classify', extracted_filepath);
 });
 
 
 /**
  * Shows the result page skeleton and the preloader will be showed.
  */
-ipcRenderer.on('set-title-and-preloader-validate', function () {
+ipcRenderer.on('set-title-and-preloader-classify', function () {
     let preloader = $('.linePreloader');
 
     preloader.show();
-    varb_cont.html('<h1 class="external-window-instruction">The validating can be performed in the external pop-up window(s)</h1>');
+    vc.html('<h1 class="external-window-instruction">The classifying can be performed in the external pop-up window(s)</h1>');
     ipcRenderer.send('resize-window', 1000, 300);
 });
 
@@ -85,10 +84,10 @@ ipcRenderer.on('set-title-and-preloader-validate', function () {
  * Restores original page when user closes external windows and functionality is done
  * Hides preloader and sends message to resize window.
  */
-ipcRenderer.on('validate-result', function () {
-    showNotification('success', 'Successfully validated the file');
+ipcRenderer.on('classify-result', function () {
+    showNotification('success', 'Successfully ran the machine learning algorithm');
     let preloader = $('.linePreloader');
-    varb_cont.load('shared/extract.html').hide().fadeIn('slow');
+    vc.load('shared/classify.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);
     preloader.hide();
 });

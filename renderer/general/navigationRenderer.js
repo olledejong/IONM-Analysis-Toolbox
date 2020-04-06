@@ -55,7 +55,7 @@ body.delegate('#summarize-section', 'click', function () {
     // fade in the html content
     variable_content.load('shared/summarize.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/summarizeRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/summarizeRenderer.js') );
 });
 
 
@@ -69,7 +69,7 @@ body.delegate('#timing-section', 'click', function () {
     // fade in the html content
     variable_content.load('shared/timing.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/timingRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/timingRenderer.js') );
 });
 
 
@@ -83,7 +83,7 @@ body.delegate('#availability-section', 'click', function () {
     // fade in the html content
     variable_content.load('shared/availability.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/availabilityRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/availabilityRenderer.js') );
 });
 
 
@@ -97,7 +97,7 @@ body.delegate('#convert-section', 'click', function () {
     // fade in the html content
     variable_content.load('shared/convert.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/convertRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/convertRenderer.js') );
 });
 
 
@@ -109,7 +109,7 @@ body.delegate('#compute-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 445);
 
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/computeRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/computeRenderer.js') );
     // fade in the html content
     variable_content.load('shared/compute.html').hide().fadeIn('slow');
     // generate select button options for what statistics the user wants to compute
@@ -127,7 +127,7 @@ body.delegate('#extract-section', 'click', function () {
     // fade in the html content
     variable_content.load('shared/extract.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/extractRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/extractRenderer.js') );
 });
 
 
@@ -141,7 +141,7 @@ body.delegate('#validate-section', 'click', function () {
     // fade in the html content
     variable_content.load('shared/validate.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/validateRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/validateRenderer.js') );
 });
 
 
@@ -160,7 +160,12 @@ body.delegate('#combine-section', 'click', function () {
  */
 body.delegate('#classify-section', 'click', function () {
     removeToastMessages();
-    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet');
+    ipcRenderer.send('resize-window', 800, 460);
+
+    // fade in the html content
+    variable_content.load('shared/classify.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/tools/classifyRenderer.js') );
 });
 
 

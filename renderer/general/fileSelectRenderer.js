@@ -237,6 +237,28 @@ variable_content.on('click', '#validate-select-btn', function() {
 
 
 /**
+ *                        |> CLASSIFY <|
+ * Informs the main process it has to open a select file window and
+ * lets it know the selecting of files is for the purpose of setting
+ * validating an extracted file
+ */
+variable_content.on('click', '#classify-select-btn', function() {
+    let tool = 'classify';
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select a converted file',
+        filters: types,
+        properties: ['openFile']
+    };
+    ipcRenderer.send('select-file', options, tool);
+});
+
+
+/**
  *                        |> DATABASE <|
  * Informs the main process it has to open a select file window and
  * lets it know the selecting of files is for the purpose of setting

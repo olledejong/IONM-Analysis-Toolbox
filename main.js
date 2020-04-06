@@ -152,6 +152,8 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
             event.sender.send('selected-validate', fileNames.filePaths, label);
         } else if (tool === 'extract') {
             event.sender.send('selected-extract', fileNames.filePaths, label);
+        } else if (tool === 'classify') {
+            event.sender.send('selected-classify', fileNames.filePaths, label);
         }
     });
 });
@@ -272,6 +274,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
     let command = `ionm.py show_timing ${pathsString}`;
     log.info('Creating child-process and running the timing command');
+    log.info(command);
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -444,12 +447,14 @@ ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path, window_
 
 /**
  *                          |> VALIDATE <|
+ * Creates validation screens for the user to exclude artifact data in the
+ * combined EEG, TES MEP data.
  */
-ipcMain.on('run-validate', function (event) {
+ipcMain.on('run-validate', function (event, extracted_file) {
     log.info('Executing the validate command');
     event.sender.send('set-title-and-preloader-validate');
 
-    let command = `ionm.py validate -f ${selectedFileHolder[0]}`;
+    let command = `ionm.py validate -f ${extracted_file}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -468,7 +473,33 @@ ipcMain.on('run-validate', function (event) {
 
 
 /**
- *                          |> ABOUT / VERSION INFO <|
+ *                       |> CLASSIFY <|
+ * Classifies signals in a file on the presence of F-waves
+ */
+ipcMain.on('run-classify', function (event, converted_file) {
+    log.info('Executing the classify command');
+    event.sender.send('set-title-and-preloader-classify');
+
+    let command = `ionm.py classify -f ${converted_file}`;
+    exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = 'An error occurred while trying to classify for F-waves';
+        if (error !== null) {
+            log.error(error);
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('classify-result');
+        }
+    });
+});
+
+
+/**
+ *                        |> ABOUT / VERSION INFO <|
  * Handles the request for retrieving the python script its version info
  *
  * @param {object} event - for purpose of communication with sender
