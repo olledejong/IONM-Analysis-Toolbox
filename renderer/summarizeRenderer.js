@@ -10,9 +10,6 @@
 // requires
 window.$ = window.jQuery = require('jquery');
 
-// jQuery selectors
-let variable_content = $('#variable-content');
-
 /**
  * On clicking the RUN button on the summarize page, the page
  * will be cleared to be later filled with the skeleton for

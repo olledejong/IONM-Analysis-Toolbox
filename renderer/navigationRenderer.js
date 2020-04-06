@@ -5,6 +5,7 @@
  */
 // requires
 window.$ = window.jQuery = require('jquery');
+const path = require('path');
 
 // os username
 const username = require('os').userInfo().username.toUpperCase();
@@ -24,6 +25,7 @@ __status__ = 'DEVELOPMENT';
 
 // jQuery Selectors
 let about_section_button = $('#about-section');
+let variable_content = $('#variable-content');
 let variable_content_div = $('#variable-content');
 let body = $('body');
 
@@ -34,11 +36,11 @@ $('#welcome-text').html(`Welcome, ${username}, please select a tool to get start
  * Loads variable content for the [ welcome section ]
  */
 $('#welcome-section').click(function () {
-    if (variable_content_div.find('#tool-container').length !== 1) {
+    if (variable_content.find('#tool-container').length !== 1) {
         $('.linePreloader').hide('fast');
         removeToastMessages();
         ipcRenderer.send('resize-window', 1142, 798);
-        variable_content_div.load('shared/index.html');
+        variable_content.load('shared/index.html');
     }
 });
 
@@ -49,8 +51,11 @@ $('#welcome-section').click(function () {
 body.delegate('#summarize-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 750, 460);
-    log.info('loading summarize content ..');
-    variable_content_div.load('shared/summarize.html').hide().fadeIn('slow');
+
+    // fade in the html content
+    variable_content.load('shared/summarize.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/summarizeRenderer.js') );
 });
 
 
@@ -60,7 +65,11 @@ body.delegate('#summarize-section', 'click', function () {
 body.delegate('#timing-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 450);
-    variable_content_div.load('shared/timing.html').hide().fadeIn('slow');
+
+    // fade in the html content
+    variable_content.load('shared/timing.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/timingRenderer.js') );
 });
 
 
@@ -70,7 +79,11 @@ body.delegate('#timing-section', 'click', function () {
 body.delegate('#availability-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 510);
-    variable_content_div.load('shared/availability.html').hide().fadeIn('slow');
+
+    // fade in the html content
+    variable_content.load('shared/availability.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/availabilityRenderer.js') );
 });
 
 
@@ -80,7 +93,11 @@ body.delegate('#availability-section', 'click', function () {
 body.delegate('#convert-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 690);
-    variable_content_div.load('shared/convert.html').hide().fadeIn('slow');
+
+    // fade in the html content
+    variable_content.load('shared/convert.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/convertRenderer.js') );
 });
 
 
@@ -89,10 +106,14 @@ body.delegate('#convert-section', 'click', function () {
  */
 body.delegate('#compute-section', 'click', function () {
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 500);
-    variable_content_div.load('shared/compute.html').hide().fadeIn('slow');
+    ipcRenderer.send('resize-window', 800, 445);
+
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/computeRenderer.js') );
+    // fade in the html content
+    variable_content.load('shared/compute.html').hide().fadeIn('slow');
     // generate select button options for what statistics the user wants to compute
-    generateSelectButtonOptions();
+    generateStatsParameterOptions();
 });
 
 
@@ -102,7 +123,11 @@ body.delegate('#compute-section', 'click', function () {
 body.delegate('#extract-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 530);
-    variable_content_div.load('shared/extract.html').hide().fadeIn('slow');
+
+    // fade in the html content
+    variable_content.load('shared/extract.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/extractRenderer.js') );
 });
 
 
@@ -112,7 +137,11 @@ body.delegate('#extract-section', 'click', function () {
 body.delegate('#validate-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 460);
-    variable_content_div.load('shared/validate.html').hide().fadeIn('slow');
+
+    // fade in the html content
+    variable_content.load('shared/validate.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/validateRenderer.js') );
 });
 
 
@@ -144,7 +173,7 @@ body.delegate('#settings-section', 'click', function () {
     ipcRenderer.send('resize-window', 1200, 850);
     ipcRenderer.send('get-current-settings');
 
-    variable_content_div.load('shared/settings.html').hide().fadeIn('slow');
+    variable_content.load('shared/settings.html').hide().fadeIn('slow');
     $('.linePreloader').show();
 });
 
@@ -160,7 +189,7 @@ body.delegate('#settings-section', 'click', function () {
 about_section_button.click(function () {
     let preloader = $('.linePreloader');
     // only load when not already loaded
-    if(variable_content_div.find('#about-app').length !== 1) {
+    if(variable_content.find('#about-app').length !== 1) {
         preloader.hide('fast');
         removeToastMessages();
         ipcRenderer.send('resize-window', 1070, 625);
@@ -168,7 +197,7 @@ about_section_button.click(function () {
         ipcRenderer.send('get-version-info');
 
         // generate skeleton for information to be displayed in
-        variable_content_div.load('shared/about.html').hide().fadeIn('slow');
+        variable_content.load('shared/about.html').hide().fadeIn('slow');
         preloader.show();
     }
 });
@@ -216,4 +245,43 @@ function generateElectronAboutInfo() {
                                 <tr><td class="version-first-cell">Credits</td><td class="version-second-cell">${__credits__}</td></tr>
                                 <tr><td class="version-first-cell">Version</td><td class="version-second-cell">${__version__}</td></tr>
                                 <tr><td class="version-first-cell">Status</td><td class="version-second-cell">${__status__}</td></tr>`);
+}
+
+
+/**
+ * Checks if a script is already loaded, if not, it get loaded.
+ * Executed whenever the user is navigating to a tool
+ */
+function loadToolScript(location) {
+    // check if script with the src already exists || length of 1 is yes, length of 0 is no
+    let len = $('script').filter(function () {
+        return ($(this).attr('src').includes(location));
+    }).length;
+    // if not exists
+    if ( len === 0 ) {
+        log.info('loading the following script: \n', location);
+        let script = document.createElement('script');
+        script.src = location;
+        document.body.appendChild(script);
+    } else {
+        log.info('the following script is already loaded: \n', location);
+    }
+}
+
+
+/**
+ * Generates the options from which the user can choose regarding
+ * what statistics the user wants to compute.
+ */
+function generateStatsParameterOptions() {
+    // list of possible statistics user can choose from [ to be altered in the future ]
+    // If the backend changes, you have to add the new arguments in this list!!
+    // TODO: ADD TO DEV-README
+    let possibleStatsArguments = ['all', 'auc', 'p_p_amplitude'];
+    // for all possible statistical parameters add these to a select list for the user
+    for (let i = 0; i < possibleStatsArguments.length; i++) {
+        setTimeout(function() {
+            $('#stats-input').append(new Option(possibleStatsArguments[i], possibleStatsArguments[i]));
+        }, 100);
+    }
 }
