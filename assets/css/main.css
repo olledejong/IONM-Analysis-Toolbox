@@ -147,20 +147,14 @@ footer span {
 }
 
 
-#summarize-content-p, #timing-content-p,
-#convert-content-p, #compute-content-p,
-#availability-content-p, #extract-content-p,
-#validate-content-p, #classify-content-p {
+.content-p {
     font-weight: 400;
     width: 100%;
     letter-spacing: 1px;
 }
 
 
-#summarize-content-h, #timing-content-h,
-#convert-content-h, #compute-content-h,
-#availability-content-h, #extract-content-h,
-#validate-content-h, #classify-content-h {
+.content-h {
     margin: 0 0 10px 0;
     text-align: left;
     color: #f89406;
@@ -964,12 +958,16 @@ label.radio input:checked + span {
     margin-top: 17px;
 }
 
+.eeg-trg-btn:hover {
+    transform: translateY(-2px);
+}
+
 .eeg-trg-btn {
+    transition: all 0.2s ease-out;
     display: block;
     float: left;
     outline: 0;
     height: calc(50% - 5px);
-    width: calc(62% - 10px);
     letter-spacing: 2px;
     color: white;
     background: #e87e04;
@@ -979,7 +977,15 @@ label.radio input:checked + span {
     border-radius: 4px;
     font-size: 16px;
     overflow-y: auto;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24)
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.24);
+}
+
+#e-trg-select-btn, #e-eeg-select-btn {
+    width: calc(79% - 10px);
+}
+
+#a-trg-select-btn, #a-eeg-select-btn {
+    width: calc(62% - 10px);
 }
 
 #e-trg-select-btn,
@@ -1094,6 +1100,7 @@ label.radio input:checked + span {
 }
 
 .compute-file-select {
+    transition: all 0.2s ease-out;
     display: block;
     float: left;
     outline: 0;
@@ -1109,4 +1116,8 @@ label.radio input:checked + span {
     font-size: 16px;
     overflow-y: auto;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24);
+}
+
+.compute-file-select:hover {
+    transform: translateY(-2px);
 }

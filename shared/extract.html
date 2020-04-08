@@ -1,7 +1,7 @@
 <div id="extract-content">
     <div id="extract-content-description" class="content-description-container">
-        <h3 id="extract-content-h">Create file(s) with the combination of evoked potentials with its available EEG context</h3>
-        <p id="extract-content-p">
+        <h3 class="content-h">Create file(s) with the combination of evoked potentials with its available EEG context</h3>
+        <p class="content-p">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.<br><br>
@@ -13,11 +13,12 @@
     <div id="extract-select-container">
         <button id="e-eeg-select-btn" class="eeg-trg-btn">Click to select an EEG file</button>
         <button id="e-trg-select-btn" class="eeg-trg-btn">Click to select a TRG file</button>
-        <div id="window-input-div">
-            <label id="window-input-label">Window Size</label>
-            <input type="number" class="window-size" id="window-size-extract" name="window-size-extract" min="1" max="10" placeholder="6">
-            <label id="window-input-sublabel">-w argument while using commandline</label>
-        </div>
+        <!-- option can not be used because backend isn't dynamic enough to handle it -->
+<!--        <div id="window-input-div">-->
+<!--            <label id="window-input-label">Window Size</label>-->
+<!--            <input type="number" class="window-size" id="window-size-extract" name="window-size-extract" min="1" max="10" placeholder="6">-->
+<!--            <label id="window-input-sublabel">-w argument while using commandline</label>-->
+<!--        </div>-->
         <button id="run-extract" class="eeg-trg-run-btn" disabled>RUN</button>
     </div>
 </div>

@@ -136,24 +136,35 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
         // if selecting is cancelled, do not send back to renderer
         selectedFileHolder = fileNames.filePaths;
         log.info('[ selectFileAndSendBack ][ Sending file path(s) to renderer ]');
-        if (tool === 'general') {
+        log.info(tool);
+        switch (tool) {
+        case 'general':
             event.sender.send('selected-general', fileNames.filePaths, label);
-        } else if (tool === 'src-dir') {
+            break;
+        case 'src-dir':
             event.sender.send('selected-src-dir', fileNames.filePaths, label);
-        } else if (tool === 'database') {
+            break;
+        case 'database':
             event.sender.send('selected-database', fileNames.filePaths, label);
-        } else if (tool === 'default-select-dir') {
+            break;
+        case 'default-select-dir':
             event.sender.send('selected-default-select-dir', fileNames.filePaths, label);
-        } else if (tool === 'availability') {
+            break;
+        case 'availability':
             event.sender.send('selected-availability', fileNames.filePaths, label);
-        } else if (tool === 'compute') {
+            break;
+        case 'compute':
             event.sender.send('selected-compute', fileNames.filePaths, label);
-        } else if (tool === 'validate') {
+            break;
+        case 'validate':
             event.sender.send('selected-validate', fileNames.filePaths, label);
-        } else if (tool === 'extract') {
+            break;
+        case 'extract':
             event.sender.send('selected-extract', fileNames.filePaths, label);
-        } else if (tool === 'classify') {
+            break;
+        case 'classify':
             event.sender.send('selected-classify', fileNames.filePaths, label);
+            break;
         }
     });
 });
