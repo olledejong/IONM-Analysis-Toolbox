@@ -25,8 +25,8 @@ __status__ = 'DEVELOPMENT';
 
 // jQuery Selectors
 let about_section_button = $('#about-section');
+let help_section_button = $('#help-section');
 let variable_content = $('#variable-content');
-let variable_content_div = $('#variable-content');
 let body = $('body');
 
 // set welcome message using the username from the OS
@@ -290,3 +290,13 @@ function generateStatsParameterOptions() {
         }, 100);
     }
 }
+
+
+/**
+ * Loads variable content for the [ help section ]
+ */
+help_section_button.click(function () {
+    let target = (__dirname + '/README.pdf');
+    ipcRenderer.send('open-window', target);
+    showNotification('info', 'Support document file should now open in your default PDF viewer');
+});

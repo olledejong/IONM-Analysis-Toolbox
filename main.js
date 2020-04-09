@@ -6,13 +6,16 @@
  * task came from.
  */
 // requires (electron)
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, shell, screen } = require('electron');
 const ipcMain = require('electron').ipcMain;
 const exec = require('child_process').exec;
 const log = require('electron-log');
 console.log = log.log;
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
+
+// array which will hold the PIDs from all processes started in the session.
+let startedProcessesPIDs = [];
 
 // create store object for user preferences
 const store = new Store();
@@ -43,7 +46,7 @@ function createWindow () {
         width: 1142,
         height: 798,
         title: 'IONM Analysis Toolbox',
-        icon: __dirname + './assets/images/app_icon.png',
+        icon: __dirname + './assets/images/app_icon.ico',
         resizable: true,
         frame: false,
         webPreferences: {
@@ -64,11 +67,22 @@ function createWindow () {
     // check what environment you're running in
     if (isDev) {
         log.info('Running in development');
+
         // Open the DevTools.
         window.webContents.openDevTools();
+
         // enable debug
         const debug = require('electron-debug');
         debug();
+
+        // if in dev, if secondary window, open there.
+        let displays = screen.getAllDisplays();
+        let externalDisplay = displays.find((display) => {
+            return display.bounds.x !== 0 || display.bounds.y !== 0;
+        });
+        if (externalDisplay) {
+            window.setPosition(externalDisplay.bounds.x + 150, externalDisplay.bounds.y + 150);
+        }
     } else {
         log.info('Running in production');
     }
@@ -76,6 +90,8 @@ function createWindow () {
     // Emitted when the window is closed.
     window.on('closed', () => {
         window = null;
+        // if main window is closed, quit the app
+        app.quit();
     });
 }
 
@@ -286,7 +302,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     let command = `ionm.py show_timing ${pathsString}`;
     log.info('Creating child-process and running the timing command');
     log.info(command);
-    exec(command, {
+    let show_timing = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to generate the timing plot';
@@ -300,6 +316,8 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
             event.sender.send('timing-result');
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(show_timing.pid);
 });
 
 
@@ -433,12 +451,11 @@ ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
  *                                  |> EXTRACT EEG <|
  * Gets available eeg data from every TES-MEP and puts them in a new csv file
  */
-ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path, window_size) {
+ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path) {
     log.info('Executing the extract command');
     event.sender.send('set-title-and-preloader-extract');
 
-    log.info(window_size);
-    let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
+    let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}"`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
@@ -819,3 +836,10 @@ function setupDatabase(event) {
         }
     });
 }
+
+/**
+ * Opens an external file
+ */
+ipcMain.on('open-window', function (event, target) {
+    shell.openExternal(target);
+});

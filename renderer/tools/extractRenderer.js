@@ -26,19 +26,19 @@ ipcRenderer.on('selected-extract', function (event, paths, label) {
     if (label === 'trg') {
         if (paths.length !== 0) {
             trg_select.html(paths.join('<br>'));
-            trg_select.css('font-size', '13px');
+            trg_select.css('font-size', '14px');
         } else {
             trg_select.html('Click to select a TRG file');
-            trg_select.css('font-size', '16px');
+            trg_select.css('font-size', '14px');
         }
         checkIfExtractFormComplete();
     } else {
         if (paths.length !== 0) {
             eeg_select.html(paths.join('<br>'));
-            eeg_select.css('font-size', '13px');
+            eeg_select.css('font-size', '14px');
         } else {
             eeg_select.html('Click to select an EEG file');
-            eeg_select.css('font-size', '16px');
+            eeg_select.css('font-size', '14px');
         }
         checkIfExtractFormComplete();
     }
@@ -62,9 +62,7 @@ function checkIfExtractFormComplete() {
     let run_extract = $('#run-extract');
     let trg_select = $('#e-trg-select-btn');
     let eeg_select = $('#e-eeg-select-btn');
-    let window_size_extract = $('#window-size-extract');
-    if ( trg_select.html().includes('\\') && eeg_select.html().includes('\\') &&
-        (window_size_extract.val() > 0 && window_size_extract.val() <= 10)) {
+    if ( trg_select.html().includes('\\') && eeg_select.html().includes('\\')) {
         run_extract.css({
             'background':'#e87e04',
             'color': 'white',
@@ -85,6 +83,7 @@ function checkIfExtractFormComplete() {
  * Clears the html.
  */
 var_content.on('click', '#run-extract', function() {
+    ipcRenderer.send('resize-window', 800, 300);
     let trg_select = $('#e-trg-select-btn');
     let eeg_select = $('#e-eeg-select-btn');
     let window_size_extract = $('#window-size-extract');
@@ -104,7 +103,6 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
 
     preloader.show();
     var_content.html('<h1 class="external-window-instruction">Please be patient, this could take quite some time..</h1>');
-    ipcRenderer.send('resize-window', 800, 300);
 });
 
 

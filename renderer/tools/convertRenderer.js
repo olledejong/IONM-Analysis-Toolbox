@@ -110,14 +110,12 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
         showNotification('success', success_msg);
         convert_results_container.show();
 
-    // if iteration does not contain success message (if convert of file failed
+    // if iteration does not contain success message (if convert of file failed)
     } else {
         failedConvertFilePaths.push(filepath_of_run);
-        $(`<tr><td class="filename-td">${file_name}</td><td class="msg-td">${error_msg}</td><td class="file-path-td">${filepath_of_run}</td></tr><br>`).insertBefore('#failed-converts-p');
+        $(`<tr><td class="filename-td">${file_name}</td><td class="msg-td">Modalities missing in database:<br>${unknown_modalities}</td><td class="file-path-td">${filepath_of_run}</td></tr><br>`).insertBefore('#failed-converts-p');
         add_modality_forms_container.show();
         failed_converts_container.show();
-
-
 
         showNotification('error', short_error_msg);
         convert_results_container.show();

@@ -48,9 +48,7 @@ variableCont.on('change', '#compute-select-container',  function checkIfFormComp
 function checkIfComputeFormComplete() {
     let run_compute = $('#run-compute');
     let compute_select_btn = $('#compute-select-btn');
-    let stats_input_field = $('#stats-input');
-    if ( compute_select_btn.html().includes('TRG') &&
-        possibleStatsArguments.includes(stats_input_field.val())) {
+    if ( compute_select_btn.html().includes('TRG') ) {
         run_compute.css({
             'background':'#e87e04',
             'color': 'white',
@@ -73,7 +71,7 @@ variableCont.on('click', '#run-compute', function() {
     let stats_input_field = $('#stats-input');
     let stats_value = stats_input_field.val();
 
-    ipcRenderer.send('resize-window', 1180, 600);
+    ipcRenderer.send('resize-window', 1100, 300);
     ipcRenderer.send('run-compute', stats_value);
 });
 
@@ -103,6 +101,8 @@ ipcRenderer.on('set-title-and-preloader-compute', function () {
  * compute task. Hides preloader and shows the results.
  */
 ipcRenderer.on('compute-result', function (event, stdout, file_path) {
+    ipcRenderer.send('resize-window', 1200, 500);
+
     for (let i = 0; i < file_path.length; i++) {
         log.info(file_path);
         let file_name = path.parse(file_path[i]).base.trim();

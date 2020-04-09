@@ -213,6 +213,10 @@ footer span {
     background: #757575;
 }
 
+#help-section {
+    float: right;
+}
+
 
 /* active menu button specific styling */
 .active {
@@ -289,7 +293,7 @@ th {
 
 #about-app h1, #about-scripts h1 {
     font-weight: 600;
-    border-bottom: 1px solid white;
+    border-bottom: 2px solid white;
     letter-spacing: 1.5px;
     margin: 0 0 10px 0;
     color: #f89406;
@@ -915,10 +919,7 @@ label.radio input:checked + span {
 
 #succeeded-computes td {
     padding: 0 30px 0 0;
-}
-
-#succeeded-computes .name-td {
-    white-space:nowrap;
+    word-break: break-word;
 }
 
 #failed-converts h1 i {
@@ -1014,11 +1015,12 @@ label.radio input:checked + span {
 }
 
 .msg-td {
-    width: 25%;
+    width: 45%;
 }
 
 .file-path-td {
-    width: 55%;
+    width: 38%;
+    word-break: break-all;
 }
 
 .tool-description-p {
@@ -1100,6 +1102,7 @@ label.radio input:checked + span {
 }
 
 .compute-file-select {
+    padding: 8px;
     transition: all 0.2s ease-out;
     display: block;
     float: left;
