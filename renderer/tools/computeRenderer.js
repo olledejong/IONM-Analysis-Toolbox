@@ -36,7 +36,6 @@ ipcRenderer.on('selected-compute', function (event, paths) {
  * function that checks if a file and the stats argument are given correctly.
  */
 variableCont.on('change', '#compute-select-container',  function checkIfFormComplete() {
-    log.info('change in compute select container');
     checkIfComputeFormComplete();
 });
 

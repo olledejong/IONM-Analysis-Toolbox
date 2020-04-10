@@ -63,7 +63,7 @@ varb_cont.on('click', '#run-validate', function() {
 
     // file selected by user
     let extracted_filepath = selected_filenames.html();
-
+    log.info(extracted_filepath);
     varb_cont.html('');
     ipcRenderer.send('run-validate', extracted_filepath);
 });

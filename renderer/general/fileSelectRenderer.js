@@ -150,7 +150,7 @@ variable_content.on('click', '#a-trg-select-btn', function () {
  *                      |> COMPUTE <|
  * Informs the main process it has to open a select file window and
  * lets it know the selecting of files is for the purpose of the
- * availability tool
+ * compute tool
  */
 variable_content.on('click', '#compute-select-btn', function () {
     let tool = 'compute';
@@ -172,7 +172,7 @@ variable_content.on('click', '#compute-select-btn', function () {
  *                       |> EXTRACT <|
  * Informs the main process it has to open a select file window and
  * lets it know the selecting of files is for the purpose of the
- * availability tool
+ * extract tool
  */
 variable_content.on('click', '#e-eeg-select-btn', function () {
     let tool = 'extract';
@@ -195,7 +195,7 @@ variable_content.on('click', '#e-eeg-select-btn', function () {
  *                      |> EXTRACT <|
  * Informs the main process it has to open a select file window and
  * lets it know the selecting of files is for the purpose of the
- * availability tool
+ * extract tool
  */
 variable_content.on('click', '#e-trg-select-btn', function () {
     let tool = 'extract';
@@ -229,6 +229,28 @@ variable_content.on('click', '#validate-select-btn', function() {
     // configure the options (allowed types + properties)
     const options = {
         title: 'Select an extracted file',
+        filters: types,
+        properties: ['openFile']
+    };
+    ipcRenderer.send('select-file', options, tool);
+});
+
+
+/**
+ *                        |> COMBINE <|
+ * Informs the main process it has to open a select file window and
+ * lets it know the selecting of files is for the purpose of setting
+ * validating an extracted file
+ */
+variable_content.on('click', '#combine-select-btn', function() {
+    let tool = 'combine';
+    // configure which types of files are allowed
+    let types = [
+        {name: 'Only extensions allowed:', extensions: ['csv', 'xlsx'] }
+    ];
+    // configure the options (allowed types + properties)
+    const options = {
+        title: 'Select a file',
         filters: types,
         properties: ['openFile']
     };

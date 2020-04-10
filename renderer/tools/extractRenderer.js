@@ -102,7 +102,7 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
     let preloader = $('.linePreloader');
 
     preloader.show();
-    var_content.html('<h1 class="external-window-instruction">Please be patient, this could take quite some time..</h1>');
+    var_content.html('<h1 class="external-window-instruction">Extracting the data, this could take quite some time..</h1>');
 });
 
 

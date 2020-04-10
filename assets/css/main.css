@@ -89,7 +89,7 @@ footer span {
 #settings-content, #convert-results,
 #availability-content, #extract-content,
 #summarize-results, #validate-content,
-#classify-content {
+#classify-content, #combine-content {
     margin: 10px 0 0 0;
 }
 
@@ -212,11 +212,6 @@ footer span {
 .taskbar-div:hover {
     background: #757575;
 }
-
-#help-section {
-    float: right;
-}
-
 
 /* active menu button specific styling */
 .active {
@@ -753,7 +748,7 @@ h1 i {
 .error-msg {
     position: fixed;
     right: -455px;
-    top: 32px;
+    top: 30px;
     z-index: 1001;
     opacity: 0;
     font-size: 16px;
@@ -953,7 +948,8 @@ label.radio input:checked + span {
 /* availability */
 #availability-select-container,
 #extract-select-container,
-#compute-select-container {
+#compute-select-container,
+#combine-select-container {
     width: 100%;
     height: 125px;
     margin-top: 17px;
@@ -1028,50 +1024,41 @@ label.radio input:checked + span {
     font-size: 15px;
 }
 
-#window-input-div, #stats-input-div {
+.secondary-input-container {
     margin: 0 8px 0 0;
     vertical-align: top;
     background: #e87e04;
     display: inline-block;
     height: 100%;
+    width: 17%;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24);
 }
 
-#stats-input-div {
-    width: 21%;
-}
-
-#window-input-div {
-    width: 17%;
+.secondary-input-label {
+    letter-spacing: 1.5px;
+    display: inline-block;
 }
 
 #window-input-label {
-    display: inline-block;
     margin: 5px 11px 3px 11px;
-    letter-spacing: 1.5px;
 }
 
 #stats-input-label {
-    display: inline-block;
-    margin: 5px 41px 3px 42px;
-    letter-spacing: 1.5px;
+    margin: 5px 26px 3px 27px;
 }
 
-#window-input-sublabel {
+#patient-input-label {
+    margin: 5px 23px 3px 22px;
+}
+
+.secondary-input-sublabel {
     margin: 2px 12px;
     font-size: 12px;
     display: inline-block;
 }
 
-#stats-input-sublabel {
-    margin: 0 19px;
-    font-size: 14px;
-    display: inline-block;
-}
-
-.window-size,
-#stats-input {
+.secondary-input-field {
     color: #404040;
     outline: 0;
     border-radius: 4px;
@@ -1101,16 +1088,18 @@ label.radio input:checked + span {
     font-size: 15px;
 }
 
-.compute-file-select {
+.compute-file-select,
+.combine-file-select {
+    word-break: break-word;
     padding: 8px;
     transition: all 0.2s ease-out;
     display: block;
     float: left;
     outline: 0;
     height: 100%;
-    width: calc(58% - 10px);
     letter-spacing: 2px;
     color: white;
+    width: calc(62% - 10px);
     background: #e87e04;
     border: 0;
     cursor: pointer;
@@ -1123,4 +1112,35 @@ label.radio input:checked + span {
 
 .compute-file-select:hover {
     transform: translateY(-2px);
+}
+
+#memory {
+    border-radius: 7px 4px 4px 7px;
+    align-items: center;
+    height: 16px;
+    display: inline-block;
+    width: 110px;
+    background: white;
+    position: absolute;
+    right: 13px;
+    top: 10px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)
+}
+
+#memory-usage {
+    border-radius: 5px 0 0 5px;
+    position: relative;
+    background: rgb(232, 126, 4);
+    height: 100%;
+    width: 80%;
+    display: inline-block;
+}
+
+.tooltip {
+    position: absolute;
+}
+
+.tooltip i {
+    margin-top: 18px;
+    float: right;
 }

@@ -13,6 +13,7 @@ const log = require('electron-log');
 console.log = log.log;
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
+const taskKill = require('taskkill');
 
 // array which will hold the PIDs from all processes started in the session.
 let startedProcessesPIDs = [];
@@ -56,6 +57,12 @@ function createWindow () {
         }
     });
 
+    window.on('unresponsive', function () {
+        dialog.showErrorBox('Oh no, the application has become unresponsive!',
+            'Please quit the application and try to restart it. Force quit it via Task Manager if you have to.');
+
+    });
+
     // and load the index.html of the app.
     window.loadFile('index.html');
 
@@ -68,7 +75,7 @@ function createWindow () {
     if (isDev) {
         log.info('Running in development');
 
-        // Open the DevTools.
+        // open the DevTools.
         window.webContents.openDevTools();
 
         // enable debug
@@ -97,21 +104,37 @@ function createWindow () {
 
 app.on('ready', createWindow);
 
-// Quit when all windows are closed.
+// quit when all windows are closed.
 app.on('window-all-closed', () => {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 });
 
+// when app started
 app.on('activate', () => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (window === null) {
-        createWindow();
-    }
+    createWindow();
+});
+
+// before app quits
+app.on('before-quit', () => {
+    // kill all child processes
+    (async () => {
+        await taskKill(startedProcessesPIDs);
+    })();
+
+    // kill all python processes that are still on background
+    // TODO might not be the thing you want if user is running other python processes other than the
+    // TODO ones this app creates
+    let command = 'taskkill /F /IM python.exe';
+    log.info(command);
+    exec(command, function(error, stdout, stderr) {
+        if (error !== null) {
+            log.error(error);
+        } else if (stderr !== '') {
+            log.error(stderr);
+        } else {
+            log.info(stdout);
+        }
+    });
 });
 
 
@@ -151,8 +174,6 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
         selectedFileHolder = fileNames.filePaths;
-        log.info('[ selectFileAndSendBack ][ Sending file path(s) to renderer ]');
-        log.info(tool);
         switch (tool) {
         case 'general':
             event.sender.send('selected-general', fileNames.filePaths, label);
@@ -178,6 +199,9 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
         case 'extract':
             event.sender.send('selected-extract', fileNames.filePaths, label);
             break;
+        case 'combine':
+            event.sender.send('selected-combine', fileNames.filePaths, label);
+            break;
         case 'classify':
             event.sender.send('selected-classify', fileNames.filePaths, label);
             break;
@@ -196,11 +220,11 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
 ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
     // window sizing logic
     if ( selectedFileHolder.length > 2 ) {
-        window.setMinimumSize(1430, 900);
-        window.setSize(1430, 900);
+        window.setMinimumSize(1360, 900);
+        window.setSize(1360, 900);
     } else if ( selectedFileHolder.length === 2 ) {
-        window.setMinimumSize(1430, 550);
-        window.setSize(1430, 550);
+        window.setMinimumSize(1360, 550);
+        window.setSize(1360, 550);
     } else {
         window.setMinimumSize(720, 535);
         window.setSize(720, 535);
@@ -213,7 +237,7 @@ ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < selectedFileHolder.length; i++) {
         let command = `ionm.py summarize "${selectedFileHolder[i]}"`;
-        exec(command, {
+        let summarize = exec(command, {
             cwd: pythonSrcDirectory
         }, function(error, stdout, stderr) {
             let summarize_error_message = 'An error occurred while summarizing one or more files';
@@ -233,6 +257,8 @@ ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
                 event.sender.send('summarize-result', JSONstring);
             }
         });
+        // add PID to global array for the purpose of child process exit failsafe
+        startedProcessesPIDs.push(summarize.pid);
     }
 });
 
@@ -334,7 +360,7 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
 
     let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
     log.info('Creating child-process and running the \'show availability\' command');
-    exec(command, {
+    let availability = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to generate the EEG availability plot';
@@ -348,6 +374,8 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
             event.sender.send('availability-result');
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(availability.pid);
 });
 
 
@@ -366,7 +394,7 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
     log.info('Creating child-process and running the convert command');
     for(let i = 0; i < selectedFileHolder.length; i++) {
         let command = `ionm.py gui_convert "${selectedFileHolder[i]}"`;
-        exec(command, {
+        let convert = exec(command, {
             cwd: pythonSrcDirectory
         }, function (error, stdout, stderr) {
             let errorMessage = 'An error occurred while trying to run the convert command';
@@ -380,6 +408,8 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
                 event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
             }
         });
+        // add PID to global array for the purpose of child process exit failsafe
+        startedProcessesPIDs.push(convert.pid);
     }
 });
 
@@ -399,7 +429,7 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
 
     for(let i = 0; i < failedConvertFilePaths.length; i++) {
         let command = `ionm.py gui_convert "${failedConvertFilePaths[i]}"`;
-        exec(command, {
+        let rerunConvert = exec(command, {
             cwd: pythonSrcDirectory
         }, function (error, stdout, stderr) {
             let errorMessage = 'An error occurred while trying to run the convert command';
@@ -413,6 +443,8 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
                 event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
             }
         });
+        // add PID to global array for the purpose of child process exit failsafe
+        startedProcessesPIDs.push(rerunConvert.pid);
     }
 });
 
@@ -429,8 +461,7 @@ ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
     let command = `ionm.py compute -f ${pathsString} -s ${stats}`;
-    log.info(command);
-    exec(command, {
+    let compute = exec(command, {
         cwd: pythonSrcDirectory
     }, function (error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to run the compute command';
@@ -444,6 +475,8 @@ ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
             event.sender.send('compute-result', stdout, selectedFileHolder);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(compute.pid);
 });
 
 
@@ -456,7 +489,7 @@ ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path) {
     event.sender.send('set-title-and-preloader-extract');
 
     let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}"`;
-    exec(command, {
+    let extract = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to extract the data from the files';
@@ -470,6 +503,8 @@ ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path) {
             event.sender.send('extract-result');
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(extract.pid);
 });
 
 
@@ -483,7 +518,7 @@ ipcMain.on('run-validate', function (event, extracted_file) {
     event.sender.send('set-title-and-preloader-validate');
 
     let command = `ionm.py validate -f ${extracted_file}`;
-    exec(command, {
+    let validate = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to validate the file';
@@ -497,6 +532,38 @@ ipcMain.on('run-validate', function (event, extracted_file) {
             event.sender.send('validate-result');
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(validate.pid);
+});
+
+
+/**
+ *                          |> VALIDATE <|
+ * Creates validation screens for the user to exclude artifact data in the
+ * combined EEG, TES MEP data.
+ */
+ipcMain.on('run-combine', function (event, extracted_file, patient_id) {
+    log.info('Executing the combine command');
+    event.sender.send('set-title-and-preloader-combine');
+
+    let command = `ionm.py combine -f ${extracted_file} -p ${patient_id}`;
+    let combine = exec(command, {
+        cwd: pythonSrcDirectory
+    }, function(error, stdout, stderr) {
+        let errorMessage = 'An error occurred while trying to combine the file';
+        if (error !== null) {
+            log.error(error);
+            event.sender.send('error', errorMessage);
+        } else if (stderr !== '') {
+            log.error(stderr);
+            event.sender.send('error', errorMessage);
+        } else {
+            event.sender.send('combine-result');
+        }
+    });
+    // add PID to global array for the purpose of child process exit failsafe
+    console.log('Child process started with PID:', combine.pid);
+    startedProcessesPIDs.push(combine.pid);
 });
 
 
@@ -509,7 +576,7 @@ ipcMain.on('run-classify', function (event, converted_file) {
     event.sender.send('set-title-and-preloader-classify');
 
     let command = `ionm.py classify -f ${converted_file}`;
-    exec(command, {
+    let classify = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to classify for F-waves';
@@ -523,6 +590,8 @@ ipcMain.on('run-classify', function (event, converted_file) {
             event.sender.send('classify-result');
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(classify.pid);
 });
 
 
@@ -534,7 +603,7 @@ ipcMain.on('run-classify', function (event, converted_file) {
  */
 ipcMain.on('get-version-info', function getVersionInfo(event) {
     log.info('Executing the version command');
-    exec('ionm.py version', {
+    let get_version_info = exec('ionm.py version', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while retrieving the python version info';
@@ -548,6 +617,8 @@ ipcMain.on('get-version-info', function getVersionInfo(event) {
             event.sender.send('script-version-info', stdout);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(get_version_info.pid);
 });
 
 
@@ -584,7 +655,7 @@ ipcMain.on('get-current-settings', function getCurrentSettings(event) {
  * @param {object} event - for purpose of communication with sender
  */
 function getDatabaseSettings(event) {
-    exec('ionm.py gui_get_database', {
+    let get_database = exec('ionm.py gui_get_database', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while retrieving the database path';
@@ -598,6 +669,8 @@ function getDatabaseSettings(event) {
             event.sender.send('current-database-settings', stdout);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(get_database.pid);
 }
 
 /**
@@ -607,7 +680,7 @@ function getDatabaseSettings(event) {
  * @param {object} event - for purpose of communication with sender
  */
 function getModalitySettings(event) {
-    exec('ionm.py gui_get_modalities', {
+    let get_modalities = exec('ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while retrieving the existing modalities';
@@ -627,6 +700,8 @@ function getModalitySettings(event) {
             event.sender.send('current-modality-settings', stdout);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(get_modalities.pid);
 }
 
 
@@ -637,7 +712,7 @@ function getModalitySettings(event) {
  * @param {object} event - for purpose of communication with sender
  */
 function getTraceSelectionSettings(event) {
-    exec('ionm.py gui_get_trace_settings', {
+    let get_trace_setting = exec('ionm.py gui_get_trace_settings', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while retrieving the trace selection settings';
@@ -651,6 +726,8 @@ function getTraceSelectionSettings(event) {
             event.sender.send('current-trace-settings', stdout);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(get_trace_setting.pid);
 }
 
 
@@ -667,7 +744,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
     let new_database_path = selectedFileHolder[0];
 
     let command = 'ionm.py gui_set_database "' + new_database_path + '"';
-    exec(command, {
+    let set_database = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to set the database';
@@ -682,6 +759,8 @@ ipcMain.on('set-database', function setDatabasePath(event) {
             event.sender.send('database-set-successful', stdout);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(set_database.pid);
 });
 
 
@@ -698,7 +777,7 @@ ipcMain.on('set-database', function setDatabasePath(event) {
  */
 ipcMain.on('set-new-modality', function setModality(event, name, type, strategy) {
     let command = `ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
-    exec(command, {
+    let set_modality = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to set the modality';
@@ -714,6 +793,8 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
             event.sender.send('set-modality-successful', name);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(set_modality.pid);
 });
 
 /**
@@ -772,7 +853,7 @@ ipcMain.on('set-default-select-dir', function (event, default_select_dir) {
  */
 ipcMain.on('set-chunk-size', function (event, chunk_size) {
     let command = `ionm.py gui_set_chunk_size ${chunk_size}`;
-    exec(command, {
+    let set_chunk_setting = exec(command, {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to set the chunk size setting';
@@ -787,6 +868,8 @@ ipcMain.on('set-chunk-size', function (event, chunk_size) {
             event.sender.send('chunk-size-set-successful', stdout);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(set_chunk_setting.pid);
 });
 
 
@@ -819,7 +902,7 @@ ipcMain.on('show-confirmation-box', function (event, options) {
  */
 function setupDatabase(event) {
     event.sender.send('setting-up-database');
-    exec('ionm.py gui_setup', {
+    let setup_database = exec('ionm.py gui_setup', {
         cwd: pythonSrcDirectory
     }, function(error, stdout, stderr) {
         let errorMessage = 'An error occurred while trying to setup the database';
@@ -835,6 +918,8 @@ function setupDatabase(event) {
             event.sender.send('database-setup-successful', stdout);
         }
     });
+    // add PID to global array for the purpose of child process exit failsafe
+    startedProcessesPIDs.push(setup_database.pid);
 }
 
 /**
@@ -843,3 +928,11 @@ function setupDatabase(event) {
 ipcMain.on('open-window', function (event, target) {
     shell.openExternal(target);
 });
+
+setInterval(function(){
+    // get memory usage
+    let systemMemoryInfo = process.getSystemMemoryInfo();
+    let memoryUsed = (systemMemoryInfo['total'] - systemMemoryInfo['free']);
+    let percOfMemUsed = ((memoryUsed / systemMemoryInfo['total']) * 100);
+    window.webContents.send('memory-usage', Math.round(percOfMemUsed));
+}, 1000);

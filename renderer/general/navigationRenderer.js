@@ -150,7 +150,12 @@ body.delegate('#validate-section', 'click', function () {
  */
 body.delegate('#combine-section', 'click', function () {
     removeToastMessages();
-    showNotification('warning', 'I\'m sorry, but this part hasn\'t been fully implemented yet');
+    ipcRenderer.send('resize-window', 800, 440);
+
+    // fade in the html content
+    variable_content.load('shared/combine.html').hide().fadeIn('slow');
+    // load the needed script
+    loadToolScript( path.join(__dirname, '/renderer/tools/combineRenderer.js') );
 });
 
 
@@ -296,7 +301,11 @@ function generateStatsParameterOptions() {
  * Loads variable content for the [ help section ]
  */
 help_section_button.click(function () {
-    let target = (__dirname + '/README.pdf');
+    let target = path.join(__dirname, '/README.pdf');
     ipcRenderer.send('open-window', target);
     showNotification('info', 'Support document file should now open in your default PDF viewer');
+});
+
+ipcRenderer.on('memory-usage', function (event, memoryUsage) {
+    $('#memory-usage').css('width', (memoryUsage + '%'));
 });
