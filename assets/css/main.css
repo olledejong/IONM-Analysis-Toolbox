@@ -1136,11 +1136,14 @@ label.radio input:checked + span {
     display: inline-block;
 }
 
-.tooltip {
+#memory-usage-perc {
+    cursor: context-menu;
+    z-index: 200;
     position: absolute;
-}
-
-.tooltip i {
-    margin-top: 18px;
-    float: right;
+    height: 100%;
+    font-size: 11px;
+    margin: 0 0 0 4px;
+    line-height: 15px;
+    color: #404040;
+    transition: all 0.2s ease-out;
 }

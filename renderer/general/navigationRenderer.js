@@ -20,7 +20,7 @@ __author__ = 'Olle de Jong';
 __maintainer__ = 'Olle de Jong';
 __contact__ = '[\'ol.de.jong@st.hanze.nl\', \'olledejong@gmail.com\', \'+31630583903\']';
 __credits__ = '[\'Gea Drost\', \'Fiete Lange\', \'Sebastiaan Dulfer\']';
-__version__ = '1.0.0';
+__version__ = require('electron').remote.app.getVersion();
 __status__ = 'DEVELOPMENT';
 
 // jQuery Selectors
@@ -206,6 +206,11 @@ about_section_button.click(function () {
         // tell main process to get the python script its version info
         ipcRenderer.send('get-version-info');
 
+        // generate the info that tells you stuff about this electron app
+        setTimeout(function () {
+            generateElectronAboutInfo();
+        }, 100);
+
         // generate skeleton for information to be displayed in
         variable_content.load('shared/about.html').hide().fadeIn('slow');
         preloader.show();
@@ -236,9 +241,6 @@ ipcRenderer.on('script-version-info', function (event, python_version_info) {
     }
     $('#scripts-version-info').html(tableHtml);
     $('.linePreloader').hide('fast');
-
-    // generate the info that tells you stuff about this electron app
-    generateElectronAboutInfo();
 });
 
 
@@ -269,12 +271,12 @@ function loadToolScript(location) {
     }).length;
     // if not exists
     if ( len === 0 ) {
-        log.info('loading the following script: \n', location);
+        log.info('loading the following script:', location.substring(location.lastIndexOf('\\')+1));
         let script = document.createElement('script');
         script.src = location;
         document.body.appendChild(script);
     } else {
-        log.info('the following script is already loaded: \n', location);
+        log.info('the following script is already loaded:', location.substring(location.lastIndexOf('\\')+1));
     }
 }
 
@@ -306,6 +308,10 @@ help_section_button.click(function () {
     showNotification('info', 'Support document file should now open in your default PDF viewer');
 });
 
+/**
+ * Displays the memory usage to the user
+ */
 ipcRenderer.on('memory-usage', function (event, memoryUsage) {
     $('#memory-usage').css('width', (memoryUsage + '%'));
+    $('#memory-usage-perc').html('MEM: ' + memoryUsage + '%');
 });

@@ -91,29 +91,28 @@ function createWindow () {
         log.info('Running in production');
     }
 
-    // TODO implement app crash handling
-    // // when the app crashes, relaunch
-    // window.webContents.on('crashed', () => {
-    //     app.relaunch();
-    //     app.quit();
-    // });
-    //
-    // setTimeout(function () {
-    //     process.crash();
-    // }, 5000);
+    // renderer crash results in restart
+    window.webContents.on('crashed', () => {
+        app.relaunch();
+        app.quit();
+    });
 }
+
+
 
 // when app started, create window
 app.on('ready', createWindow);
 
 // when (only) window is closed
 app.on('window-all-closed', async () => {
-    log.info('Quitting..');
+    // stop sending memory usage to window renderer
+    clearInterval(getMemoryUsageInterval);
+    log.info('Attempting to quit the application..');
     log.info('Looking for unwanted running processes..');
     new Promise(function(resolve) {
         cleanUpProcesses(resolve);
     }).then(function () {
-        log.info('Now actually quitting..');
+        log.info('Now actually quitting, bye..');
         app.quit();
     });
 });
@@ -131,8 +130,9 @@ function cleanUpProcesses(resolve) {
     function (err, resultList) {
         let i = 0;
         let numberOfProcessesFound = resultList.length;
-        if (err) {
-            throw new Error(err);
+        if (numberOfProcessesFound === 0) {
+            log.info('Encountered no unwanted running processes!');
+            resolve('done');
         }
         // for every python process that was found
         resultList.forEach(function (process) {
@@ -153,7 +153,7 @@ function cleanUpProcesses(resolve) {
                 });
             }
         });
-        // if iteration is equal to length of python processes found
+        // if iteration count is equal to length of python processes found
         if (i === numberOfProcessesFound) {
             resolve('done');
         }
@@ -915,14 +915,10 @@ ipcMain.on('open-window', function (event, target) {
     shell.openExternal(target);
 });
 
-setInterval(function(){
+const getMemoryUsageInterval = setInterval(function getMemoryUsage(){
     // get memory usage
     let systemMemoryInfo = process.getSystemMemoryInfo();
     let memoryUsed = (systemMemoryInfo['total'] - systemMemoryInfo['free']);
     let percOfMemUsed = ((memoryUsed / systemMemoryInfo['total']) * 100);
-    try {
-        window.webContents.send('memory-usage', Math.round(percOfMemUsed));
-    } catch (err) {
-        log.warn('Tried updating the CPU usage bar, but the window is already closed. Ignoring this error..');
-    }
+    window.webContents.send('memory-usage', Math.round(percOfMemUsed));
 }, 1000);
