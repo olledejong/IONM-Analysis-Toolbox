@@ -14,7 +14,6 @@ console.log = log.log;
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const ps = require('ps-node');
-const { autoUpdater } = require('electron-updater');
 
 // create store object for user preferences
 const store = new Store();
@@ -57,7 +56,6 @@ function createWindow () {
     window.on('unresponsive', function () {
         dialog.showErrorBox('Oh no, the application has become unresponsive!',
             'Please quit the application and try to restart it. Force quit it via Task Manager if you have to.');
-
     });
 
     // and load the index.html of the app.
@@ -66,7 +64,6 @@ function createWindow () {
     // once everything is loaded, show window
     window.webContents.on('did-finish-load', () => {
         window.show();
-        autoUpdater.checkForUpdatesAndNotify();
     });
 
     // check what environment you're running in
@@ -158,21 +155,6 @@ function cleanUpProcesses(resolve) {
         }
     });
 }
-
-//==================================================================
-// Auto-updater
-//==================================================================
-autoUpdater.on('update-available', () => {
-    window.webContents.send('update_available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-    window.webContents.send('update_downloaded');
-});
-
-ipcMain.on('restart_app', () => {
-    autoUpdater.quitAndInstall();
-});
 
 
 /**

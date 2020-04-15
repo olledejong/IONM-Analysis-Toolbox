@@ -312,26 +312,7 @@ help_section_button.click(function () {
 /**
  * Displays the memory usage to the user
  */
-ipcRenderer.on('memory-usage', function (event, memoryUsage) {
+ipcRenderer.on('memory-usage', (event, memoryUsage) => {
     $('#memory-usage').css('width', (memoryUsage + '%'));
     $('#memory-usage-perc').html('MEM: ' + memoryUsage + '%');
-});
-
-$('#restart-button').click(function () {
-    ipcRenderer.send('restart_app');
-});
-
-$('#close-button').click(function () {
-    $('#notification').hide();
-});
-
-ipcRenderer.on('update_available', () => {
-    $('#message').html('A new update is available. Downloading now...');
-    $('#notification').show();
-});
-
-ipcRenderer.on('update_downloaded', () => {
-    $('#message').html('Update downloaded. It will be installed on restart. Restart now?');
-    $('#restart-button').show();
-    $('#notification').show();
 });
