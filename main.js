@@ -33,10 +33,9 @@ let defaultFileSelectionDir = store.get('default-select-path');
 // log options configuration
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 
-/**
- *                         [ CREATE WINDOW ]
- * Creates the GUI window based on some variables to be set by developer.
- */
+//==================================================================
+// Create browser window / the app its logic
+//==================================================================
 function createWindow () {
     // Create the browser window
     window = new BrowserWindow({
@@ -98,8 +97,6 @@ function createWindow () {
     });
 }
 
-
-
 // when app started, create window
 app.on('ready', createWindow);
 
@@ -107,6 +104,7 @@ app.on('ready', createWindow);
 app.on('window-all-closed', async () => {
     // stop sending memory usage to window renderer
     clearInterval(getMemoryUsageInterval);
+    // clean up background processes
     log.info('Attempting to quit the application..');
     log.info('Looking for unwanted running processes..');
     new Promise(function(resolve) {
@@ -116,7 +114,6 @@ app.on('window-all-closed', async () => {
         app.quit();
     });
 });
-
 
 /**
  * Cleans up all remaining running python processes created by this
