@@ -45,7 +45,7 @@ function createWindow () {
         height: 798,
         title: 'IONM Analysis Toolbox',
         icon: __dirname + './assets/images/app_icon.ico',
-        resizable: true,
+        resizable: false,
         frame: false,
         webPreferences: {
             webSecurity: true,
@@ -66,9 +66,6 @@ function createWindow () {
     // once everything is loaded, show window
     window.webContents.on('did-finish-load', () => {
         window.show();
-    });
-
-    window.once('ready-to-show', () => {
         autoUpdater.checkForUpdatesAndNotify();
     });
 
