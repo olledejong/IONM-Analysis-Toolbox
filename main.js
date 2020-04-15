@@ -877,7 +877,6 @@ ipcMain.on('set-chunk-size', function (event, chunk_size) {
 });
 
 
-
 /**
  *                |> CONFIRMATION BOX - SETUP DATABASE <|
  * Shows a confirmation box to the user for safety purposes. Used only for

@@ -1122,7 +1122,7 @@ label.radio input:checked + span {
     width: 110px;
     background: white;
     position: absolute;
-    right: 50px;
+    right: 13px;
     top: 11.4px;
     box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
 }
@@ -1148,8 +1148,16 @@ label.radio input:checked + span {
     transition: all 0.2s ease-out;
 }
 
-#restart {
-    margin: -1px -2px 0 0;
-    position: absolute;
-    right: 0;
+#notification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 200px;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.hidden {
+    display: none;
 }

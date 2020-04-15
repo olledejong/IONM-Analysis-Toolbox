@@ -21,9 +21,6 @@
                 <span id="memory-usage-perc"></span>
                 <span id="memory-usage"></span>
             </div>
-            <div id="restart" class="taskbar-div">
-                <i class="fas fa-redo-alt"></i>
-            </div>
         </div>
 
         <!-- most important div. it dynamically gets filled with different content all the time. -->
@@ -100,6 +97,16 @@
             </div>
         </div>
         <div class="linePreloader"></div>
+        <!-- app update notification -->
+        <div id="notification" class="hidden">
+            <p id="message"></p>
+            <button id="close-button">
+                Close
+            </button>
+            <button id="restart-button" class="hidden">
+                Restart
+            </button>
+        </div>
     </body>
 
     <!-- load the scripts-->
