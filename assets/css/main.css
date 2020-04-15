@@ -1122,9 +1122,9 @@ label.radio input:checked + span {
     width: 110px;
     background: white;
     position: absolute;
-    right: 13px;
-    top: 10px;
-    box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23)
+    right: 50px;
+    top: 11.4px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
 }
 
 #memory-usage {
@@ -1146,4 +1146,10 @@ label.radio input:checked + span {
     line-height: 15px;
     color: #404040;
     transition: all 0.2s ease-out;
+}
+
+#restart {
+    margin: -1px -2px 0 0;
+    position: absolute;
+    right: 0;
 }

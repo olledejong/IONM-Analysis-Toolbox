@@ -3,9 +3,11 @@
  * Following a click event the accompanying variable content
  * will be displayed to the user.
  */
+
 // requires
 window.$ = window.jQuery = require('jquery');
 const path = require('path');
+const notifier = require('node-notifier');
 
 // os username
 const username = require('os').userInfo().username.toUpperCase();
@@ -314,4 +316,27 @@ help_section_button.click(function () {
 ipcRenderer.on('memory-usage', function (event, memoryUsage) {
     $('#memory-usage').css('width', (memoryUsage + '%'));
     $('#memory-usage-perc').html('MEM: ' + memoryUsage + '%');
+});
+
+ipcRenderer.on('update_available', () => {
+    ipcRenderer.removeAllListeners('update_available');
+    notifier.notify({
+        title: 'Update available!',
+        message: 'Download starting now..'
+    });
+});
+
+ipcRenderer.on('update_downloaded', () => {
+    ipcRenderer.removeAllListeners('update_downloaded');
+    notifier.notify({
+        title: 'Update successfully downloaded!',
+        message: 'Please restart the application manually..'
+    });
+    // message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
+    // restartButton.classList.remove('hidden');
+    // notification.classList.remove('hidden');
+});
+
+$('#restart').click(function () {
+    ipcRenderer.send('restart_app');
 });

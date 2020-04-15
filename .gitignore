@@ -2,3 +2,4 @@
 .idea
 /package/
 /dist/
+electron-builder.yml

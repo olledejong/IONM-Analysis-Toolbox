@@ -14,6 +14,7 @@ console.log = log.log;
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const ps = require('ps-node');
+const { autoUpdater } = require('electron-updater');
 
 // create store object for user preferences
 const store = new Store();
@@ -65,6 +66,10 @@ function createWindow () {
     // once everything is loaded, show window
     window.webContents.on('did-finish-load', () => {
         window.show();
+    });
+
+    window.once('ready-to-show', () => {
+        autoUpdater.checkForUpdatesAndNotify();
     });
 
     // check what environment you're running in
@@ -156,6 +161,20 @@ function cleanUpProcesses(resolve) {
         }
     });
 }
+
+//==================================================================
+// Auto-updater
+//==================================================================
+autoUpdater.on('update-available', () => {
+    window.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+    window.webContents.send('update_downloaded');
+});
+
+ipcMain.on('restart_app', () => {
+    autoUpdater.quitAndInstall();
+});
 
 
 /**
@@ -905,13 +924,16 @@ function setupDatabase(event) {
     });
 }
 
-/**
- * Opens an external file
- */
+//==================================================================
+// Opens an external file using shell
+// ==================================================================
 ipcMain.on('open-window', function (event, target) {
     shell.openExternal(target);
 });
 
+//==================================================================
+// Machine memory usage
+//==================================================================
 const getMemoryUsageInterval = setInterval(function getMemoryUsage(){
     // get memory usage
     let systemMemoryInfo = process.getSystemMemoryInfo();
