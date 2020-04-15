@@ -1149,15 +1149,29 @@ label.radio input:checked + span {
 }
 
 #notification {
+    color: #404040;
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    bottom: 12px;
+    left: 12px;
     width: 200px;
     padding: 20px;
     border-radius: 5px;
-    background-color: white;
+    background-color: #f7f7f7;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    display: none;
 }
-.hidden {
+
+#close-button, #restart-button {
+    cursor: pointer;
+    outline: 0;
+    color: white;
+    padding: 7px;
+    background: rgb(232, 126, 4);
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
+}
+
+#restart-button {
     display: none;
 }

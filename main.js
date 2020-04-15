@@ -168,6 +168,7 @@ function cleanUpProcesses(resolve) {
 autoUpdater.on('update-available', () => {
     window.webContents.send('update_available');
 });
+
 autoUpdater.on('update-downloaded', () => {
     window.webContents.send('update_downloaded');
 });

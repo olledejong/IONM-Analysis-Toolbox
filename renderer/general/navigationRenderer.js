@@ -7,7 +7,6 @@
 // requires
 window.$ = window.jQuery = require('jquery');
 const path = require('path');
-const notifier = require('node-notifier');
 
 // os username
 const username = require('os').userInfo().username.toUpperCase();
@@ -318,21 +317,21 @@ ipcRenderer.on('memory-usage', function (event, memoryUsage) {
     $('#memory-usage-perc').html('MEM: ' + memoryUsage + '%');
 });
 
-$('#restart').click(function () {
+$('#restart-button').click(function () {
     ipcRenderer.send('restart_app');
 });
 
-const notification = document.getElementById('notification');
-const message = document.getElementById('message');
-const restartButton = document.getElementById('restart-button');
-ipcRenderer.on('update_available', () => {
-    ipcRenderer.removeAllListeners('update_available');
-    message.innerText = 'A new update is available. Downloading now...';
-    notification.classList.remove('hidden');
+$('#close-button').click(function () {
+    $('#notification').hide();
 });
+
+ipcRenderer.on('update_available', () => {
+    $('#message').html('A new update is available. Downloading now...');
+    $('#notification').show();
+});
+
 ipcRenderer.on('update_downloaded', () => {
-    ipcRenderer.removeAllListeners('update_downloaded');
-    message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
-    restartButton.classList.remove('hidden');
-    notification.classList.remove('hidden');
+    $('#message').html('Update downloaded. It will be installed on restart. Restart now?');
+    $('#restart-button').show();
+    $('#notification').show();
 });
