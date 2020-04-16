@@ -165,8 +165,11 @@ function cleanUpProcesses(resolve) {
 // Auto-updates
 //==================================================================
 function sendStatusToWindow(text, level) {
-    log.info(text);
-    window.webContents.send('message', text, level);
+    try {
+        window.webContents.send('message', text, level);
+    } catch (e) {
+        log.info('Browser window probably already closed, no biggie, ignoring..');
+    }
 }
 
 autoUpdater.on('update-available', () => {
