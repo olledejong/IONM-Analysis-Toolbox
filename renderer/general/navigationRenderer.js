@@ -9,7 +9,7 @@ window.$ = window.jQuery = require('jquery');
 const path = require('path');
 
 // os username
-const username = require('os').userInfo().username.toUpperCase();
+const username = require('os').userInfo().username;
 
 // log options configuration for all renderer processes
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
@@ -31,11 +31,11 @@ let variable_content = $('#variable-content');
 let body = $('body');
 
 // set welcome message using the username from the OS
-$('#welcome-text').html(`Welcome, ${username}, please select a tool to get started`);
+$('#welcome-text').html(`Welcome ${username}, please select a tool to get started`);
 
-/**
- * Loads variable content for the [ welcome section ]
- */
+//==================================================================
+// Home page
+//==================================================================
 $('#welcome-section').click(function () {
     if (variable_content.find('#tool-container').length !== 1) {
         $('.linePreloader').hide('fast');
@@ -46,9 +46,9 @@ $('#welcome-section').click(function () {
 });
 
 
-/**
- * Loads variable content for the [ summarize section ]
- */
+//==================================================================
+// Summarize section
+//==================================================================
 body.delegate('#summarize-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 750, 460);
@@ -60,9 +60,9 @@ body.delegate('#summarize-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ timing section ]
- */
+//==================================================================
+// Show-timing section
+//==================================================================
 body.delegate('#timing-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 450);
@@ -74,9 +74,9 @@ body.delegate('#timing-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ availability section ]
- */
+//==================================================================
+// Show availability section
+//==================================================================
 body.delegate('#availability-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 510);
@@ -88,9 +88,9 @@ body.delegate('#availability-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ convert section ]
- */
+//==================================================================
+// Convert section
+//==================================================================
 body.delegate('#convert-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 690);
@@ -102,9 +102,9 @@ body.delegate('#convert-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ compute section ]
- */
+//==================================================================
+// Compute section
+//==================================================================
 body.delegate('#compute-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 445);
@@ -118,9 +118,9 @@ body.delegate('#compute-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ extract section ]
- */
+//==================================================================
+// Extract section
+//==================================================================
 body.delegate('#extract-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 530);
@@ -132,9 +132,9 @@ body.delegate('#extract-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ validate section ]
- */
+//==================================================================
+// Validate section
+//==================================================================
 body.delegate('#validate-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 460);
@@ -146,9 +146,9 @@ body.delegate('#validate-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ combine section ]
- */
+//==================================================================
+// Combine section
+//==================================================================
 body.delegate('#combine-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 440);
@@ -161,9 +161,9 @@ body.delegate('#combine-section', 'click', function () {
 
 
 
-/**
- * Loads variable content for the [ classify section ]
- */
+//==================================================================
+// Classify section
+//==================================================================
 body.delegate('#classify-section', 'click', function () {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 460);
@@ -175,9 +175,9 @@ body.delegate('#classify-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ settings section ]
- */
+//==================================================================
+// Application settings section
+//==================================================================
 body.delegate('#settings-section', 'click', function () {
     removeToastMessages();
     // tell main process to resize the window, and to retrieve the current settings
@@ -189,14 +189,9 @@ body.delegate('#settings-section', 'click', function () {
 });
 
 
-/**
- * Loads variable content for the [ about section ]
- *
- * Following a click on the about button, its variable content will be displayed.
- * Eventually two tables will be created.
- * This function tells the main process to retrieve the python script its version
- * info and calls function that generates the GUI version info.
- */
+//==================================================================
+// About section
+//==================================================================
 about_section_button.click(function () {
     let preloader = $('.linePreloader');
     // only load when not already loaded
@@ -219,14 +214,13 @@ about_section_button.click(function () {
 });
 
 
-/**
- * Parses the version info coming from the main process into a neat
- * looking table and displays this to the user.
- *
- * @param {object} error
- * @param {object} python_version_info
- * @param {object} stdErr
- */
+//==================================================================
+// Handles the requested python about/version info
+//
+// @param {object} error
+// @param {object} python_version_info
+// @param {object} stdErr
+//==================================================================
 ipcRenderer.on('script-version-info', function (event, python_version_info) {
     let tableHtml = [];
     let i;
@@ -245,26 +239,28 @@ ipcRenderer.on('script-version-info', function (event, python_version_info) {
 });
 
 
-/**
- * Generates and sets the version info for this Electron application
- * note: globals can be found at the top of this file
- */
+//==================================================================
+// Generates and sets the version info for this Electron application
+// note: globals can be found at the top of this file
+//==================================================================
 function generateElectronAboutInfo() {
-    $('#app-version-info').html(`<tr><td class="version-first-cell">Name</td><td class="version-second-cell">${__name__}</td></tr>
-                                <tr><td class="version-first-cell">Description</td><td class="version-second-cell">${__description__}</td></tr>
-                                <tr><td class="version-first-cell">Author</td><td class="version-second-cell">${__author__}</td></tr>
-                                <tr><td class="version-first-cell">Maintainer</td><td class="version-second-cell">${__maintainer__}</td></tr>
-                                <tr><td class="version-first-cell">Contact</td><td class="version-second-cell">${__contact__}</td></tr>
-                                <tr><td class="version-first-cell">Credits</td><td class="version-second-cell">${__credits__}</td></tr>
-                                <tr><td class="version-first-cell">Version</td><td class="version-second-cell">${__version__}</td></tr>
-                                <tr><td class="version-first-cell">Status</td><td class="version-second-cell">${__status__}</td></tr>`);
+    $('#app-version-info').html(
+        `<tr><td class="version-first-cell">Name</td><td class="version-second-cell">${__name__}</td></tr>
+        <tr><td class="version-first-cell">Description</td><td class="version-second-cell">${__description__}</td></tr>
+        <tr><td class="version-first-cell">Author</td><td class="version-second-cell">${__author__}</td></tr>
+        <tr><td class="version-first-cell">Maintainer</td><td class="version-second-cell">${__maintainer__}</td></tr>
+        <tr><td class="version-first-cell">Contact</td><td class="version-second-cell">${__contact__}</td></tr>
+        <tr><td class="version-first-cell">Credits</td><td class="version-second-cell">${__credits__}</td></tr>
+        <tr><td class="version-first-cell">Version</td><td class="version-second-cell">${__version__}</td></tr>
+        <tr><td class="version-first-cell">Status</td><td class="version-second-cell">${__status__}</td></tr>`);
 }
 
 
-/**
- * Checks if a script is already loaded, if not, it get loaded.
- * Executed whenever the user is navigating to a tool
- */
+//==================================================================
+// Loads tool script when not already loaded
+//
+// @param {string} location - path to script location
+//==================================================================
 function loadToolScript(location) {
     // check if script with the src already exists || length of 1 is yes, length of 0 is no
     let len = $('script').filter(function () {
@@ -282,10 +278,10 @@ function loadToolScript(location) {
 }
 
 
-/**
- * Generates the options from which the user can choose regarding
- * what statistics the user wants to compute.
- */
+//==================================================================
+// Generates the options from which the user can choose
+// regarding what statistics the user wants to compute.
+//==================================================================
 function generateStatsParameterOptions() {
     // list of possible statistics user can choose from [ to be altered in the future ]
     // If the backend changes, you have to add the new arguments in this list!!
@@ -300,19 +296,28 @@ function generateStatsParameterOptions() {
 }
 
 
-/**
- * Loads variable content for the [ help section ]
- */
+//==================================================================
+// Tells main process to open the README
+//==================================================================
 help_section_button.click(function () {
     let target = path.join(__dirname, '/README.pdf');
     ipcRenderer.send('open-window', target);
     showNotification('info', 'Support document file should now open in your default PDF viewer');
 });
 
-/**
- * Displays the memory usage to the user
- */
+
+//==================================================================
+// Displays machine total memory usage (updates every second)
+//==================================================================
 ipcRenderer.on('memory-usage', (event, memoryUsage) => {
     $('#memory-usage').css('width', (memoryUsage + '%'));
     $('#memory-usage-perc').html('MEM: ' + memoryUsage + '%');
+});
+
+
+//==================================================================
+// Displays machine total memory usage (updates every second)
+//==================================================================
+ipcRenderer.on('message', (event, message) => {
+    showNotification('info', message);
 });

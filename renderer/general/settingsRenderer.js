@@ -20,7 +20,6 @@ let var_cont = $('#variable-content');
 let currentDatabase;
 let currentSrcDirectory;
 let currentDefaultSelectPath;
-let currentChunkSize;
 
 /**
  * Displays the currently configured src directory path to the user
@@ -29,7 +28,6 @@ let currentChunkSize;
  * @param {string} current_src_dir - currently configured src directory path
  */
 ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
-    log.info('current src dir ',current_src_dir);
     currentSrcDirectory = current_src_dir;
     setTimeout(function() {
         $('#src-dir-path').html(currentSrcDirectory);
@@ -45,7 +43,6 @@ ipcRenderer.on('current-python-src-dir', function (event, current_src_dir) {
  * @param {string} current_default_select_path - currently configured src directory path
  */
 ipcRenderer.on('current-default-select-dir', function (event, current_default_select_path) {
-    log.info('current default select path: ', current_default_select_path);
     currentDefaultSelectPath = current_default_select_path;
     setTimeout(function() {
         $('#default-select-dir-path').html(currentDefaultSelectPath);
@@ -89,7 +86,6 @@ ipcRenderer.on('current-trace-settings', function (event, trace_selection_settin
         chunk_size_field.val('error occurred');
     } else {
         chunk_size_field.val(chunk_size);
-        currentChunkSize = chunk_size;
     }
 });
 

@@ -14,6 +14,7 @@ console.log = log.log;
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const ps = require('ps-node');
+const { autoUpdater } = require('electron-updater');
 
 // create store object for user preferences
 const store = new Store();
@@ -97,7 +98,10 @@ function createWindow () {
 }
 
 // when app started, create window
-app.on('ready', createWindow);
+app.on('ready', () => {
+    createWindow();
+    autoUpdater.checkForUpdates();
+});
 
 // when (only) window is closed
 app.on('window-all-closed', async () => {
@@ -155,6 +159,43 @@ function cleanUpProcesses(resolve) {
         }
     });
 }
+
+//==================================================================
+// Auto-updates
+//==================================================================
+function sendStatusToWindow(text) {
+    log.info(text);
+    window.webContents.send('message', text);
+}
+
+autoUpdater.on('checking-for-update', () => {
+    sendStatusToWindow('Checking for update...');
+});
+autoUpdater.on('update-available', () => {
+    sendStatusToWindow('Update available.');
+});
+autoUpdater.on('update-not-available', () => {
+    sendStatusToWindow('Update not available.');
+});
+autoUpdater.on('error', (err) => {
+    sendStatusToWindow('Error in auto-updater. ' + err);
+});
+autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
+    sendStatusToWindow(log_message);
+});
+autoUpdater.on('update-downloaded', () => {
+    // Wait 5 seconds, then quit and install
+    // In your application, you don't need to wait 5 seconds.
+    // You could call autoUpdater.quitAndInstall(); immediately
+    sendStatusToWindow('Update downloaded');
+
+    // setTimeout(function() {
+    //     autoUpdater.quitAndInstall();
+    // }, 5000);
+});
 
 
 /**
