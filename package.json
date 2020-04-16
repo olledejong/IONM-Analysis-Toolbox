@@ -1,6 +1,6 @@
 {
   "name": "ionm-analysis-toolbox",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "GUI for the usage of IONM analysis tools",
   "author": "Olle de Jong",
   "icon": "assets/images/app_icon.ico",

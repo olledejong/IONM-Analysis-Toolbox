@@ -105,6 +105,7 @@ app.on('ready', () => {
 
 // when (only) window is closed
 app.on('window-all-closed', async () => {
+    window = null;
     // stop sending memory usage to window renderer
     clearInterval(getMemoryUsageInterval);
     // clean up background processes
