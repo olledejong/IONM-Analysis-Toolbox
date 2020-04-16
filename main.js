@@ -54,7 +54,7 @@ function createWindow () {
         }
     });
 
-    window.on('unresponsive', function () {
+    window.on('unresponsive', () => {
         dialog.showErrorBox('Oh no, the application has become unresponsive!',
             'Please quit the application and try to restart it. Force quit it via Task Manager if you have to.');
     });
@@ -111,24 +111,24 @@ app.on('window-all-closed', async () => {
     // clean up background processes
     log.info('Attempting to quit the application..');
     log.info('Looking for unwanted running processes..');
-    new Promise(function(resolve) {
+    new Promise((resolve) => {
         cleanUpProcesses(resolve);
-    }).then(function () {
+    }).then(() => {
         log.info('Now actually quitting, bye..');
         app.quit();
     });
 });
 
-/**
- * Cleans up all remaining running python processes created by this
- * application its session.
- * @param resolve
- */
+
+//==================================================================
+// Cleans up all remaining running python processes created by this
+// application its session.
+//
+// @param resolve - return type of a promise
+//==================================================================
 function cleanUpProcesses(resolve) {
     // simple lookup for python processes
-    ps.lookup({
-        command: 'python.exe'},
-    function (err, resultList) {
+    ps.lookup({command: 'python.exe'}, (err, resultList) => {
         let i = 0;
         let numberOfProcessesFound = resultList.length;
         if (numberOfProcessesFound === 0) {
@@ -136,14 +136,14 @@ function cleanUpProcesses(resolve) {
             resolve('done');
         }
         // for every python process that was found
-        resultList.forEach(function (process) {
+        resultList.forEach((process) => {
             i++;
             // if process was created by this application
             if (process.arguments[0].includes('ionm.py')) {
                 log.info(`Killing a '${process.arguments[1]}' tool process..`);
                 // kill the unwanted background process
                 let command = `taskkill /F /pid ${process.pid}`;
-                exec(command, function(error, stdout, stderr) {
+                exec(command, (error, stdout, stderr) => {
                     if (error !== null) {
                         log.error(error);
                     } else if (stderr !== '') {
@@ -162,7 +162,13 @@ function cleanUpProcesses(resolve) {
 }
 
 //==================================================================
-// Auto-updates
+//                         AUTO-UPDATER
+//==================================================================
+// Resizes the browser window, can be called from one of the
+// renderer processes for the purpose fitting the content better
+//
+// @param {string} text - the message itself
+// @param {string} level - the level of significance of the message
 //==================================================================
 function sendStatusToWindow(text, level) {
     try {
@@ -183,21 +189,23 @@ autoUpdater.on('update-downloaded', () => {
     // Wait 5 seconds, then quit and install
     sendStatusToWindow('Update downloaded! Restarting now!', 'warn');
 
-    setTimeout(function() {
+    setTimeout(() => {
         autoUpdater.quitAndInstall();
     }, 5000);
 });
 
 
-/**
- *                         |> RESIZE BROWSER WINDOW <|
- * Resizes the browser window, can be called from one of the renderer processes
- *
- * @param {object} event - for purpose of communication with sender
- * @param {int} newX
- * @param {int} newY
- */
-ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
+//==================================================================
+//                    RESIZE BROWSER WINDOW
+//==================================================================
+// Resizes the browser window, can be called from one of the
+// renderer processes for the purpose fitting the content better
+//
+// @param {object} event - for purpose of communication with sender
+// @param {int} newX
+// @param {int} newY
+//==================================================================
+ipcMain.on('resize-window', (event, newX, newY) => {
     try {
         let currentWindowSize = window.getSize();
         if ( currentWindowSize[0] !== newX && currentWindowSize[1] !== newY) {
@@ -209,17 +217,19 @@ ipcMain.on('resize-window', function resizeBrowserWindow(event, newX, newY) {
     }
 });
 
-
-/**
- *                       |> FILE SELECT AND STORE PATHS <|
- * Opens a dialog where the user can select files. If canceled, do nothing
- * if completed, store the paths to files in the array selectedFileHolder.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {Object} options - Options for the showOpenDialog method (directory or file / multi selection or single file etc)
- * @param {string} tool - tag that defines where the select-file message came from (purpose: correct handling of select output)
- */
-ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, label) {
+//========================================================================
+//                    FILE SELECT AND STORE PATHS
+//========================================================================
+// Opens a dialog where the user can select files. If canceled, do nothing
+// if completed, store the paths to files in the array selectedFileHolder.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {Object} options - Options for the showOpenDialog method
+//        (directory or file / multi selection or single file etc)
+// @param {string} tool - tag that defines where the select-file message
+//         came from (purpose: correct handling of select output)
+//========================================================================
+ipcMain.on('select-file', (event, options, tool, label) => {
     options.defaultPath = defaultFileSelectionDir;
     // open the actual dialog with the above options
     dialog.showOpenDialog(window, options).then(fileNames => {
@@ -261,14 +271,16 @@ ipcMain.on('select-file', function selectFileAndSendBack(event, options, tool, l
 });
 
 
-/**
- *                              |> SUMMARIZE 1/2 <|
- * Performs the summarize command and parses the outcome into JSON data by calling on
- * createJsonString().This gets sent back to the renderer process where it is displayed.
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
+//==========================================================================
+//                           SUMMARIZE 1/2
+//==========================================================================
+// Performs the summarize command and parses the outcome into JSON data by 
+// calling on createJsonString().This gets sent back to the renderer process
+// where it is displayed.
+//
+// @param {object} event - for purpose of communication with sender
+//==========================================================================
+ipcMain.on('run-summarize', (event) => {
     // window sizing logic
     if ( selectedFileHolder.length > 2 ) {
         window.setMinimumSize(1360, 900);
@@ -290,7 +302,7 @@ ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
         let command = `ionm.py summarize "${selectedFileHolder[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
-        }, function(error, stdout, stderr) {
+        }, (error, stdout, stderr) => {
             let summarize_error_message = 'An error occurred while summarizing one or more files';
 
             // if errors occur, send an error message to the renderer process
@@ -311,21 +323,21 @@ ipcMain.on('run-summarize', function executeSummarizeCommand(event) {
     }
 });
 
-
-/**
- *                          |> SUMMARIZE 1/2 <|
- * Generates JSON formatted string for front-end convenience by taking the
- * command line output and logically splitting and processing this.
- *
- * @param stdout
- * @returns {string} JSON_string - contains the JSON formatted information as string
- */
+//==================================================================================
+//                                SUMMARIZE 2/2
+//==================================================================================
+// Generates JSON formatted string for front-end convenience by taking the command 
+// line output and logically splitting and processing this.
+// 
+// @param {object} stdout - unprocessed output from summarize execution
+// @returns {string} JSON_string - contains the JSON formatted information as string
+//===================================================================================
 function createJsonString(stdout) {
     let JSON_string = '{';
     let newOut = stdout.replace(/#/g, '').replace(/\r/g, '');
     let lines = newOut.split('\n');
 
-    let filtered = lines.filter(function (val) {
+    let filtered = lines.filter((val) => {
         return (val.length > 1);
     });
 
@@ -362,13 +374,15 @@ function createJsonString(stdout) {
 }
 
 
-/**
- *                              |> SHOW TIMING <|
- * Executes the 'show timing' command and informs the renderer when it is completed
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('run-timing', function executeShowTimingCommand(event) {
+//==================================================================
+//                           SHOW TIMING
+//==================================================================
+// Executes the 'show timing' command and informs the renderer when 
+// it is completed
+// 
+// @param {object} event - for purpose of communication with sender
+//==================================================================
+ipcMain.on('run-timing', (event) => {
     window.setMinimumSize(850, 400);
     window.setSize(850, 400);
     event.sender.send('set-title-and-preloader-timing');
@@ -379,7 +393,7 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
     log.info(command);
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to generate the timing plot';
         if (error !== null) {
             log.error(error);
@@ -394,22 +408,24 @@ ipcMain.on('run-timing', function executeShowTimingCommand(event) {
 });
 
 
-/**
- *                          |> SHOW EEG AVAILABILITY <|
- * Executes the availability command to generate EEG availability plots for the given files
- *
- * @param {string} eeg_file_path - file path to the EEG file selected by the user
- * @param {string} trg_file_path - file path to the TRG file selected by the user
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_file_path, trg_file_path, window_size) {
+//=====================================================================
+//                       SHOW EEG AVAILABILITY
+//=====================================================================
+// Executes the availability command to generate EEG availability plots
+// for the given files.
+//
+// @param {string} eeg_file_path - file path to the selected EEG file
+// @param {string} trg_file_path - file path to the selected TRG file
+// @param {object} event - for purpose of communication with sender
+//=====================================================================
+ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size) => {
     event.sender.send('set-title-and-preloader-availability');
 
     let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
     log.info('Creating child-process and running the \'show availability\' command');
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to generate the EEG availability plot';
         if (error !== null) {
             log.error(error);
@@ -424,15 +440,15 @@ ipcMain.on('run-availability', function executeAvailabilityCommand(event, eeg_fi
 });
 
 
-
-/**
- *                          |> CONVERT FILE(S) <|
- * Executes the convert command to convert the CVS files exported by the Eclipse
- * software into multiple custom CSV files: one separate file per modality.
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('run-convert', function executeConvertCommand(event) {
+//=====================================================================
+//                              CONVERT
+//=====================================================================
+// Executes the convert command to convert the CVS files exported by the Eclipse
+// software into multiple custom CSV files: one separate file per modality.
+//
+// @param {object} event - for purpose of communication with sender
+//=====================================================================
+ipcMain.on('run-convert', (event) => {
     log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
 
@@ -441,7 +457,7 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
         let command = `ionm.py gui_convert "${selectedFileHolder[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
-        }, function (error, stdout, stderr) {
+        }, (error, stdout, stderr) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
@@ -457,16 +473,17 @@ ipcMain.on('run-convert', function executeConvertCommand(event) {
 });
 
 
-/**
- *                              |> RE-RUN CONVERT <|
- * When an initial convert task fails, the user will be asked to insert the modalities
- * via forms because of which the convert failed. After this, the user gets the option
- * to re-run the convert command using the file-paths of the files that weren't correctly
- * converted in the first place.
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedConvertFilePaths) {
+//============================================================================
+//                             RE-RUN CONVERT
+//============================================================================
+// When an initial convert task fails, the user will be asked to insert the
+// modalities via forms because of which the convert failed. After this, the
+// user gets the option to re-run the convert command using the file-paths of
+// the files that weren't correctly
+//
+// @param {object} event - for purpose of communication with sender
+//============================================================================
+ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
     log.info('Re-running the convert command using the file-paths of the converts that failed before');
     event.sender.send('set-preloader-rerun-convert');
 
@@ -474,7 +491,7 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
         let command = `ionm.py gui_convert "${failedConvertFilePaths[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
-        }, function (error, stdout, stderr) {
+        }, (error, stdout, stderr) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
@@ -490,13 +507,16 @@ ipcMain.on('rerun-convert', function executeReRunConvertCommand(event, failedCon
 });
 
 
-/**
- *                      |> COMPUTE STATISTICS OF FILE(S) <|
- * Computes the statistics of converted files and writes these to the database
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
+//==============================================================================
+//                            COMPUTE STATISTICS
+//==============================================================================
+// Calls the python compute function which computes the statistics of converted
+// files and writes these to the database.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} stats - determines which types of statistics will be computed
+//==============================================================================
+ipcMain.on('run-compute', (event, stats) => {
     log.info('Executing the compute command');
     event.sender.send('set-title-and-preloader-compute');
 
@@ -504,7 +524,7 @@ ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
     let command = `ionm.py compute -f ${pathsString} -s ${stats}`;
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function (error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to run the compute command';
         if (error !== null) {
             log.error(error);
@@ -519,18 +539,24 @@ ipcMain.on('run-compute', function executeComputeCommand(event, stats) {
 });
 
 
-/**
- *                                  |> EXTRACT EEG <|
- * Gets available eeg data from every TES-MEP and puts them in a new csv file
- */
-ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path) {
+//============================================================================
+//                              EXTRACT EEG
+//============================================================================
+// Gets eeg data from every TES-MEP where it is available and puts them in a
+// new csv file.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} eeg_file_path - file path to selected eeg file
+// @param {string} trg_file_path - file path to selected trg file
+//============================================================================
+ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
     log.info('Executing the extract command');
     event.sender.send('set-title-and-preloader-extract');
 
     let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}"`;
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to extract the data from the files';
         if (error !== null) {
             log.error(error);
@@ -545,19 +571,23 @@ ipcMain.on('run-extract', function (event, eeg_file_path, trg_file_path) {
 });
 
 
-/**
- *                          |> VALIDATE <|
- * Creates validation screens for the user to exclude artifact data in the
- * combined EEG, TES MEP data.
- */
-ipcMain.on('run-validate', function (event, extracted_file) {
+//============================================================================
+//                                VALIDATE
+//============================================================================
+// Creates validation screens for the user to exclude artifact data in the
+// combined EEG, TES MEP data.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} extracted_file - path to the selected extracted file
+//============================================================================
+ipcMain.on('run-validate', (event, extracted_file) => {
     log.info('Executing the validate command');
     event.sender.send('set-title-and-preloader-validate');
 
     let command = `ionm.py validate -f ${extracted_file}`;
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to validate the file';
         if (error !== null) {
             log.error(error);
@@ -572,19 +602,24 @@ ipcMain.on('run-validate', function (event, extracted_file) {
 });
 
 
-/**
- *                          |> VALIDATE <|
- * Creates validation screens for the user to exclude artifact data in the
- * combined EEG, TES MEP data.
- */
-ipcMain.on('run-combine', function (event, extracted_file, patient_id) {
+//============================================================================
+//                                COMBINE
+//============================================================================
+// Combines statistics from the database with values from an output file of a
+// program created by Jan-Willem. Also adds the patient ID to the output file.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} extracted_file - path to the selected extracted file
+// @param {int} patient_id - identifier that points to a patient
+//============================================================================
+ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
     log.info('Executing the combine command');
     event.sender.send('set-title-and-preloader-combine');
 
     let command = `ionm.py combine -f ${extracted_file} -p ${patient_id}`;
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to combine the file';
         if (error !== null) {
             log.error(error);
@@ -599,18 +634,23 @@ ipcMain.on('run-combine', function (event, extracted_file, patient_id) {
 });
 
 
-/**
- *                       |> CLASSIFY <|
- * Classifies signals in a file on the presence of F-waves
- */
-ipcMain.on('run-classify', function (event, converted_file) {
+//============================================================================
+//                                CLASSIFY
+//============================================================================
+// Classifies signals in a file on the presence of F-waves
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} extracted_file - path to the selected extracted file
+// @param {int} patient_id - identifier that points to a patient
+//============================================================================
+ipcMain.on('run-classify', (event, converted_file) => {
     log.info('Executing the classify command');
     event.sender.send('set-title-and-preloader-classify');
 
     let command = `ionm.py classify -f ${converted_file}`;
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to classify for F-waves';
         if (error !== null) {
             log.error(error);
@@ -625,17 +665,19 @@ ipcMain.on('run-classify', function (event, converted_file) {
 });
 
 
-/**
- *                        |> ABOUT / VERSION INFO <|
- * Handles the request for retrieving the python script its version info
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('get-version-info', function getVersionInfo(event) {
+//=============================================================================
+//                           ABOUT / VERSION INFO
+//=============================================================================
+// Handles the request for retrieving the python script its version info. Sends
+// the output back to the front-end.
+//
+// @param {object} event - for purpose of communication with sender
+//=============================================================================
+ipcMain.on('get-version-info', (event) => {
     log.info('Executing the version command');
     exec('ionm.py version', {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the python version info';
         if (error !== null) {
             log.error(error);
@@ -650,14 +692,16 @@ ipcMain.on('get-version-info', function getVersionInfo(event) {
 });
 
 
-/**
- *                           |> GET CURRENT APP SETTINGS <|
- * Handles the retrieving of the current database settings (for now only DB path).
- * This is done by calling the ionm.py function gui_get_database
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('get-current-settings', function getCurrentSettings(event) {
+//===================================================================================
+//                             GET CURRENT APP SETTINGS
+//===================================================================================
+// Handles the retrieving of the current database settings (db / modalities / trace)
+// This is done by calling the ionm.py functions gui_get_database, gui_get_modalities
+// and gui_get_trace_settings
+//
+// @param {object} event - for purpose of communication with sender
+//===================================================================================
+ipcMain.on('get-current-settings', (event) => {
     // get python renderer dir from user preferences
     if ( store.get('python-src-dir') ) {
         // get default select directory path
@@ -676,16 +720,10 @@ ipcMain.on('get-current-settings', function getCurrentSettings(event) {
     }
 });
 
-/**
- * Executes the command that retrieves the current database settings from
- * the python project's config.ini file
- *
- * @param {object} event - for purpose of communication with sender
- */
 function getDatabaseSettings(event) {
     exec('ionm.py gui_get_database', {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the database path';
         if (error !== null) {
             event.sender.send('error', errorMessage);
@@ -699,16 +737,10 @@ function getDatabaseSettings(event) {
     });
 }
 
-/**
- * Executes the command that retrieves the current configured modalities from
- * the database via the python project
- *
- * @param {object} event - for purpose of communication with sender
- */
 function getModalitySettings(event) {
     exec('ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the existing modalities';
 
         // if errors occur, send an error message to the renderer process
@@ -728,17 +760,10 @@ function getModalitySettings(event) {
     });
 }
 
-
-/**
- * Executes the command that retrieves the current trace selection
- * settings from the python project's config.ini file
- *
- * @param {object} event - for purpose of communication with sender
- */
 function getTraceSelectionSettings(event) {
     exec('ionm.py gui_get_trace_settings', {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the trace selection settings';
         if (error !== null) {
             event.sender.send('error', errorMessage);
@@ -753,22 +778,22 @@ function getTraceSelectionSettings(event) {
 }
 
 
-
-/**
- *                    |> SETTINGS - SET DATABASE PATH <|
- * Writes the database path given by user to the config.ini by executing
- * the gui_set_database function in the python project
- *
- * @param {object} event - for purpose of communication with sender
- */
-ipcMain.on('set-database', function setDatabasePath(event) {
+//==========================================================================
+//                      SETTINGS - SET DATABASE PATH
+//==========================================================================
+// Writes the database path given by user to the config.ini by executing
+// the gui_set_database function in the python project.
+//
+// @param {object} event - for purpose of communication with sender
+//==========================================================================
+ipcMain.on('set-database', (event) => {
     // only one file can end up here, but it still is in a list
     let new_database_path = selectedFileHolder[0];
 
     let command = 'ionm.py gui_set_database "' + new_database_path + '"';
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to set the database';
 
         // if errors occur, send an error message to the renderer process
@@ -784,22 +809,23 @@ ipcMain.on('set-database', function setDatabasePath(event) {
 });
 
 
-/**
- *                      |> SETTINGS - SET NEW MODALITY <|
- * Stores new modality in the configured database. This function is either called
- * via settings or after the converting of a file failes because one or more of the
- * encountered modalities have not been configured.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {string} name - name of the to be stored modality
- * @param {string} type - type of the to be stored modality (TRIGGERED or FREE_RUNNING)
- * @param {string} strategy - strategy of the to be stored modality (DIRECT or AVERAGE)
- */
-ipcMain.on('set-new-modality', function setModality(event, name, type, strategy) {
+//=====================================================================================
+//                            SETTINGS - SET NEW MODALITY
+//=====================================================================================
+// Stores new modality in the configured database. This function is either called via
+// settings or after the converting of a file failes because one or more of the
+// encountered modalities have not been configured.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} name - name of the to be stored modality
+// @param {string} type - type of the to be stored modality (TRIGGERED or FREE_RUNNING)
+// @param {string} strategy - strategy of the to be stored modality (DIRECT or AVERAGE)
+//=====================================================================================
+ipcMain.on('set-new-modality', (event, name, type, strategy) => {
     let command = `ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to set the modality';
 
         // if errors occur, send an error message to the renderer process
@@ -815,16 +841,17 @@ ipcMain.on('set-new-modality', function setModality(event, name, type, strategy)
     });
 });
 
-/**
- *                      |> SETTINGS - SET PYTHON SRC DIR <|
- * Stores new modality in the configured database. This function is either called
- * via settings or after the converting of a file failes because one or more of the
- * encountered modalities have not been configured.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {string} src_dir - path of the to be set python renderer directory
- */
-ipcMain.on('set-python-src-dir', function (event, src_dir) {
+
+//==========================================================================
+//                      SETTINGS - SET PYTHON SRC DIR
+//==========================================================================
+// Stores the location of the python project in the user its AppData using
+// electron-store module. Also saves it in the application session.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} src_dir - path of the to be set python renderer directory
+//==========================================================================
+ipcMain.on('set-python-src-dir', (event, src_dir) => {
     try {
         // store the given path in user-preferences (if already exists it will be updated)
         store.set('python-src-dir', src_dir);
@@ -838,15 +865,16 @@ ipcMain.on('set-python-src-dir', function (event, src_dir) {
 });
 
 
-/**
- *                 |> SETTINGS - SET DEFAULT SELECT DIRECTORY <|
- * Stores the given default select directory path for user convenience. This way
- * the user doesnt have to click through multiple windows to get to their data folder.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {string} default_select_dir - path of the to be set default select dir
- */
-ipcMain.on('set-default-select-dir', function (event, default_select_dir) {
+//====================================================================================
+//                     SETTINGS - SET DEFAULT SELECT DIRECTORY
+//====================================================================================
+// Stores the given default select directory path for user convenience. This way
+// the user doesnt have to click through multiple windows to get to their data folder.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} default_select_dir - path of the to be set default select dir
+//====================================================================================
+ipcMain.on('set-default-select-dir', (event, default_select_dir) => {
     try {
         log.info('to be set default select dir: ', default_select_dir);
         // store the given path in user-preferences (if already exists it will be updated)
@@ -861,19 +889,20 @@ ipcMain.on('set-default-select-dir', function (event, default_select_dir) {
 });
 
 
-/**
- *                      |> SETTINGS - SET CHUNK SIZE <|
- * Stores the new chunk size setting in the config.ini file. This function is on
- * in the settings section of the application
- *
- * @param {object} event - for purpose of communication with sender
- * @param {string} chunk_size - the amount of signals that the user sees at once
- */
-ipcMain.on('set-chunk-size', function (event, chunk_size) {
+//===============================================================================
+//                        SETTINGS - SET CHUNK SIZE
+//===============================================================================
+// Stores the new chunk size setting in the config.ini file. This function is on
+// in the settings section of the application
+//
+// @param {object} event - for purpose of communication with sender
+// @param {string} chunk_size - the amount of signals that the user sees at once
+//===============================================================================
+ipcMain.on('set-chunk-size', (event, chunk_size) => {
     let command = `ionm.py gui_set_chunk_size ${chunk_size}`;
     exec(command, {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to set the chunk size setting';
 
         // if errors occur, send an error message to the renderer process
@@ -889,15 +918,16 @@ ipcMain.on('set-chunk-size', function (event, chunk_size) {
 });
 
 
-/**
- *                |> CONFIRMATION BOX - SETUP DATABASE <|
- * Shows a confirmation box to the user for safety purposes. Used only for
- * sensitive user decisions.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {object} options - options for the to be thrown confirmation box
- */
-ipcMain.on('show-confirmation-box', function (event, options) {
+//===============================================================================
+//                   SETTINGS - SETUP DATABASE CONFIRMATION BOX
+//===============================================================================
+// Shows a confirmation box to the user for safety purposes. Used only for
+// sensitive user decisions.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {object} options - options for the to be thrown confirmation box
+//===============================================================================
+ipcMain.on('show-confirmation-box', (event, options) => {
     dialog.showMessageBox(window, options).then(r => {
         if (r.response !== 0) {
             event.sender.send('cancelled');
@@ -908,18 +938,19 @@ ipcMain.on('show-confirmation-box', function (event, options) {
 });
 
 
-/**
- *                        |> SETUP DATABASE <|
- * Executes the python function that sets up the database via a ChildProcess
- * Only executed if user proceeds from confirmation box
- *
- * @param {object} event - for purpose of communication with sender
- */
+//===============================================================================
+//                         SETTINGS - SETUP DATABASE
+//===============================================================================
+// Executes the python function that sets up the database via a ChildProcess
+// Only executed if user proceeds from confirmation box.
+//
+// @param {object} event - for purpose of communication with sender
+//===============================================================================
 function setupDatabase(event) {
     event.sender.send('setting-up-database');
     exec('ionm.py gui_setup', {
         cwd: pythonSrcDirectory
-    }, function(error, stdout, stderr) {
+    }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to setup the database';
 
         // if errors occur, send an error message to the renderer process
@@ -938,14 +969,14 @@ function setupDatabase(event) {
 //==================================================================
 // Opens an external file using shell
 // ==================================================================
-ipcMain.on('open-window', function (event, target) {
+ipcMain.on('open-window', (event, target) => {
     shell.openExternal(target);
 });
 
 //==================================================================
 // Machine memory usage
 //==================================================================
-const getMemoryUsageInterval = setInterval(function getMemoryUsage(){
+const getMemoryUsageInterval = setInterval(() => {
     // get memory usage
     let systemMemoryInfo = process.getSystemMemoryInfo();
     let memoryUsed = (systemMemoryInfo['total'] - systemMemoryInfo['free']);
