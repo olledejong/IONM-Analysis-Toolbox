@@ -318,6 +318,6 @@ ipcRenderer.on('memory-usage', (event, memoryUsage) => {
 //==================================================================
 // Displays machine total memory usage (updates every second)
 //==================================================================
-ipcRenderer.on('message', (event, message) => {
-    showNotification('info', message);
+ipcRenderer.on('message', (event, message, level) => {
+    showNotification(level, message);
 });

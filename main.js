@@ -65,6 +65,7 @@ function createWindow () {
     // once everything is loaded, show window
     window.webContents.on('did-finish-load', () => {
         window.show();
+        autoUpdater.checkForUpdates();
     });
 
     // check what environment you're running in
@@ -100,7 +101,6 @@ function createWindow () {
 // when app started, create window
 app.on('ready', () => {
     createWindow();
-    autoUpdater.checkForUpdates();
 });
 
 // when (only) window is closed
@@ -164,38 +164,25 @@ function cleanUpProcesses(resolve) {
 //==================================================================
 // Auto-updates
 //==================================================================
-function sendStatusToWindow(text) {
+function sendStatusToWindow(text, level) {
     log.info(text);
-    window.webContents.send('message', text);
+    window.webContents.send('message', text, level);
 }
 
-autoUpdater.on('checking-for-update', () => {
-    sendStatusToWindow('Checking for update...');
-});
 autoUpdater.on('update-available', () => {
-    sendStatusToWindow('Update available.');
-});
-autoUpdater.on('update-not-available', () => {
-    sendStatusToWindow('Update not available.');
+    sendStatusToWindow('Update available! Downloading..', 'info');
 });
 autoUpdater.on('error', (err) => {
     sendStatusToWindow('Error in auto-updater. ' + err);
 });
-autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-    log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
-    sendStatusToWindow(log_message);
-});
+
 autoUpdater.on('update-downloaded', () => {
     // Wait 5 seconds, then quit and install
-    // In your application, you don't need to wait 5 seconds.
-    // You could call autoUpdater.quitAndInstall(); immediately
-    sendStatusToWindow('Update downloaded');
+    sendStatusToWindow('Update downloaded! Restarting now!', 'warn');
 
-    // setTimeout(function() {
-    //     autoUpdater.quitAndInstall();
-    // }, 5000);
+    setTimeout(function() {
+        autoUpdater.quitAndInstall();
+    }, 5000);
 });
 
 
