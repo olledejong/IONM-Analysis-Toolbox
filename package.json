@@ -1,6 +1,6 @@
 {
   "name": "ionm-analysis-toolbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GUI for the usage of IONM analysis tools",
   "author": "Olle de Jong",
   "icon": "assets/images/app_icon.ico",
@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder build --win --publish never",
-    "deploy": "electron-builder build --win --publish always"
+    "build": "electron-builder build --win --ia32 --publish never",
+    "deploy": "electron-builder build --win --ia32 --publish always"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
