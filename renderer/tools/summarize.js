@@ -43,7 +43,7 @@ ipcRenderer.on('set-title-and-preloader-summarize', function () {
  * @param {string} JSON_result
  */
 ipcRenderer.on('summarize-result', function displaySummarizeResults(event, JSON_result) {
-    log.info('[ summarizeRenderer.js ][ displaySummarizeResults() is being executed ]');
+    log.info('[ summarize.js ][ displaySummarizeResults() is being executed ]');
     // parse the JSON string into a JSON object
     let JSON_obj = JSON.parse(JSON_result);
 
@@ -53,10 +53,11 @@ ipcRenderer.on('summarize-result', function displaySummarizeResults(event, JSON_
     // because of JS promises the code between the curly brackets is
     // only executed when the function generateTable() is finished
     generateTable(JSON_obj).then(function appendTableToHTML(result) {
+        log.info(result);
         let selector = $('#table-' + result[1]);
 
-        selector.append(result[0]);
-        log.info('[ summarizeRenderer.js ][ Appending table rows to table '+ result[1] +' ]');
+        selector.append(result[0]).hide().fadeIn(800);
+        log.info('[ summarize.js ][ Appending table rows to table '+ result[1] +' ]');
         // fade out the preloader
         $('.linePreloader').hide('fast');
     });

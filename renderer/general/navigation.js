@@ -41,7 +41,7 @@ $('#welcome-section').click(function () {
         $('.linePreloader').hide('fast');
         removeToastMessages();
         ipcRenderer.send('resize-window', 1142, 798);
-        variable_content.load('shared/index.html');
+        variable_content.load('components/index.html');
     }
 });
 
@@ -54,9 +54,9 @@ body.delegate('#summarize-section', 'click', function () {
     ipcRenderer.send('resize-window', 750, 460);
 
     // fade in the html content
-    variable_content.load('shared/summarize.html').hide().fadeIn('slow');
+    variable_content.load('components/summarize.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/summarizeRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/summarize.js') );
 });
 
 
@@ -68,9 +68,9 @@ body.delegate('#timing-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 450);
 
     // fade in the html content
-    variable_content.load('shared/timing.html').hide().fadeIn('slow');
+    variable_content.load('components/timing.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/timingRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/timing.js') );
 });
 
 
@@ -82,9 +82,9 @@ body.delegate('#availability-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 510);
 
     // fade in the html content
-    variable_content.load('shared/availability.html').hide().fadeIn('slow');
+    variable_content.load('components/availability.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/availabilityRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/availability.js') );
 });
 
 
@@ -96,9 +96,9 @@ body.delegate('#convert-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 690);
 
     // fade in the html content
-    variable_content.load('shared/convert.html').hide().fadeIn('slow');
+    variable_content.load('components/convert.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/convertRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/convert.js') );
 });
 
 
@@ -110,9 +110,9 @@ body.delegate('#compute-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 445);
 
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/computeRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/compute.js') );
     // fade in the html content
-    variable_content.load('shared/compute.html').hide().fadeIn('slow');
+    variable_content.load('components/compute.html').hide().fadeIn('slow');
     // generate select button options for what statistics the user wants to compute
     generateStatsParameterOptions();
 });
@@ -126,9 +126,9 @@ body.delegate('#extract-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 530);
 
     // fade in the html content
-    variable_content.load('shared/extract.html').hide().fadeIn('slow');
+    variable_content.load('components/extract.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/extractRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/extract.js') );
 });
 
 
@@ -140,9 +140,9 @@ body.delegate('#validate-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 460);
 
     // fade in the html content
-    variable_content.load('shared/validate.html').hide().fadeIn('slow');
+    variable_content.load('components/validate.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/validateRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/validate.js') );
 });
 
 
@@ -154,9 +154,9 @@ body.delegate('#combine-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 440);
 
     // fade in the html content
-    variable_content.load('shared/combine.html').hide().fadeIn('slow');
+    variable_content.load('components/combine.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/combineRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/combine.js') );
 });
 
 
@@ -169,9 +169,9 @@ body.delegate('#classify-section', 'click', function () {
     ipcRenderer.send('resize-window', 800, 460);
 
     // fade in the html content
-    variable_content.load('shared/classify.html').hide().fadeIn('slow');
+    variable_content.load('components/classify.html').hide().fadeIn('slow');
     // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/classifyRenderer.js') );
+    loadToolScript( path.join(__dirname, '/renderer/tools/classify.js') );
 });
 
 
@@ -184,7 +184,7 @@ body.delegate('#settings-section', 'click', function () {
     ipcRenderer.send('resize-window', 1200, 850);
     ipcRenderer.send('get-current-settings');
 
-    variable_content.load('shared/settings.html').hide().fadeIn('slow');
+    variable_content.load('components/settings.html').hide().fadeIn('slow');
     $('.linePreloader').show();
 });
 
@@ -208,7 +208,7 @@ about_section_button.click(function () {
         }, 100);
 
         // generate skeleton for information to be displayed in
-        variable_content.load('shared/about.html').hide().fadeIn('slow');
+        variable_content.load('components/about.html').hide().fadeIn('slow');
         preloader.show();
     }
 });

@@ -87,7 +87,7 @@ ipcRenderer.on('set-title-and-preloader-classify', function () {
 ipcRenderer.on('classify-result', function () {
     showNotification('success', 'Successfully ran the machine learning algorithm');
     let preloader = $('.linePreloader');
-    vc.load('shared/classify.html').hide().fadeIn('slow');
+    vc.load('components/classify.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);
     preloader.hide();
 });

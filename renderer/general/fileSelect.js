@@ -129,7 +129,7 @@ variable_content.on('click', '#a-eeg-select-btn', function () {
  * lets it know the selecting of files is for the purpose of the
  * availability tool
  */
-variable_content.on('click', '#a-trg-select-btn', function () {
+variable_content.on('click', '#a-trg-select-btn', () => {
     let tool = 'availability';
     let label = 'trg';
     // configure which types of files are allowed

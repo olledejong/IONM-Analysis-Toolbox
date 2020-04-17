@@ -22,7 +22,7 @@ let variab_cont = $('#variable-content');
  */
 ipcRenderer.on('selected-combine', function (event, paths) {
     let combine_select_btn = $('#combine-select-btn');
-    // use generate file names function from fileSelectRenderer.js
+    // use generate file names function from fileSelect.js
     if (paths.length !== 0) {
         combine_select_btn.html(paths);
         combine_select_btn.css('font-size', '13px');
@@ -104,7 +104,7 @@ ipcRenderer.on('set-title-and-preloader-combine', function () {
 ipcRenderer.on('combine-result', function () {
     showNotification('success', 'Successfully combined the file');
     let preloader = $('.linePreloader');
-    variab_cont.load('shared/combine.html').hide().fadeIn('slow');
+    variab_cont.load('components/combine.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);
     preloader.hide();
 });
