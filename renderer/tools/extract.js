@@ -111,7 +111,7 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
  * Hides preloader and sends message to resize window.
  */
 ipcRenderer.on('extract-result', function () {
-    showNotification('success', 'Successfully extracted the information into a separate file');
+    showNotification('success', 'Successfully extracted the information into a separate file', 5000);
     let preloader = $('.linePreloader');
     var_content.load('components/extract.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 530);

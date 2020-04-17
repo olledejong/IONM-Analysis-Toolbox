@@ -86,7 +86,7 @@ ipcRenderer.on('set-title-and-preloader-validate', function () {
  * Hides preloader and sends message to resize window.
  */
 ipcRenderer.on('validate-result', function () {
-    showNotification('success', 'Successfully validated the file');
+    showNotification('success', 'Successfully validated the file', 5000);
     let preloader = $('.linePreloader');
     varb_cont.load('components/validate.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);

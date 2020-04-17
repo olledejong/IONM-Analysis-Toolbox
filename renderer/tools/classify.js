@@ -85,7 +85,7 @@ ipcRenderer.on('set-title-and-preloader-classify', function () {
  * Hides preloader and sends message to resize window.
  */
 ipcRenderer.on('classify-result', function () {
-    showNotification('success', 'Successfully ran the machine learning algorithm');
+    showNotification('success', 'Successfully ran the classifier over the file', 5000);
     let preloader = $('.linePreloader');
     vc.load('components/classify.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);

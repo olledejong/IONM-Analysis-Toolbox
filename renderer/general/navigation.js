@@ -165,13 +165,14 @@ body.delegate('#combine-section', 'click', function () {
 // Classify section
 //==================================================================
 body.delegate('#classify-section', 'click', function () {
-    removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 460);
-
-    // fade in the html content
-    variable_content.load('components/classify.html').hide().fadeIn('slow');
-    // load the needed script
-    loadToolScript( path.join(__dirname, '/renderer/tools/classify.js') );
+    // removeToastMessages();
+    // ipcRenderer.send('resize-window', 800, 460);
+    //
+    // // fade in the html content
+    // variable_content.load('components/classify.html').hide().fadeIn('slow');
+    // // load the needed script
+    // loadToolScript( path.join(__dirname, '/renderer/tools/classify.js') );
+    showNotification('warn', 'This tool hasn\'t been fully implemented yet', 5000);
 });
 
 
@@ -302,7 +303,7 @@ function generateStatsParameterOptions() {
 help_section_button.click(function () {
     let target = path.join(__dirname, '/README.pdf');
     ipcRenderer.send('open-window', target);
-    showNotification('info', 'Support document file should now open in your default PDF viewer');
+    showNotification('info', 'Support document file should now open in your default PDF viewer', 5000);
 });
 
 
@@ -319,5 +320,5 @@ ipcRenderer.on('memory-usage', (event, memoryUsage) => {
 // Displays machine total memory usage (updates every second)
 //==================================================================
 ipcRenderer.on('message', (event, message, level) => {
-    showNotification(level, message);
+    showNotification(level, message, 5000);
 });

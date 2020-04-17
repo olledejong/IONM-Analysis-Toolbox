@@ -102,7 +102,7 @@ ipcRenderer.on('set-title-and-preloader-combine', function () {
  * Hides preloader and sends message to resize window.
  */
 ipcRenderer.on('combine-result', function () {
-    showNotification('success', 'Successfully combined the file');
+    showNotification('success', 'Successfully combined the file with the database parameters', 5000);
     let preloader = $('.linePreloader');
     variab_cont.load('components/combine.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);

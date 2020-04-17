@@ -97,7 +97,6 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
     let file_name = convert_output['file-name'];
     let success_msg = convert_output['success-msg'];
     let short_error_msg = convert_output['short-error-msg'];
-    let error_msg = convert_output['error-msg'];
     let unknown_modalities = convert_output['unknown-modalities'];
 
     // if iteration has a success message in it (if convert of file succeeded)
@@ -107,7 +106,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
         succeeded_converts_containter.show();
         success_and_compute_container.show();
 
-        showNotification('success', success_msg);
+        showNotification('success', success_msg, 5000);
         convert_results_container.show();
 
     // if iteration does not contain success message (if convert of file failed)
@@ -117,7 +116,7 @@ ipcRenderer.on('convert-result', function displayConvertResultContent(event, con
         add_modality_forms_container.show();
         failed_converts_container.show();
 
-        showNotification('error', short_error_msg);
+        showNotification('error', short_error_msg, 5000);
         convert_results_container.show();
 
         let existingFormsOnPage = getExistingModalities();
@@ -192,7 +191,7 @@ function generateModalityFormFields(existingFormsOnPage, unknown_modalities) {
  * hides the preloader.
  */
 varContent.on('click', '#submit-all-modalities', function runAddModalityPerForm() {
-    showNotification('warn', 'Do not re-run until the modalities have been stored successfully!');
+    showNotification('warn', 'Do not re-run until the modalities have been stored successfully!', 'indefinitely');
     // loop trough all 'add modality' forms
     $('.add-modality-after-convert').each(function () {
         let modality_name = $(this).find('.modality-input').val();
@@ -245,7 +244,7 @@ varContent.on('click', '#submit-all-modalities', function runAddModalityPerForm(
  */
 ipcRenderer.on('set-modality-successful', function (event, name) {
     $('.linePreloader').hide('fast');
-    showNotification('success', ('Successfully stored the modality '+ name));
+    showNotification('success', ('Successfully stored the modality '+ name), 5000);
     // refresh modalities (in case of added via settings)
     ipcRenderer.send('get-current-settings');
 });

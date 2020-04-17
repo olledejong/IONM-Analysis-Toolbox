@@ -105,7 +105,7 @@ ipcRenderer.on('compute-result', function (event, stdout, file_path) {
     for (let i = 0; i < file_path.length; i++) {
         log.info(file_path);
         let file_name = path.parse(file_path[i]).base.trim();
-        showNotification('success', `Successfully computed ${file_name} `);
+        showNotification('success', `Successfully computed ${file_name}`, 5000);
         $(`<tr><td class="name-td">${file_name}</td><td class="msg-td">Successfully computed the statistics of this file. Results can be found in the database</td><td class="filepath-td">${file_path[0]}</td></tr><br>`).insertBefore('#succeeded-computes-p');
     }
     $('.linePreloader').hide('fast');
