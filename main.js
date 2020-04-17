@@ -440,14 +440,15 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
 });
 
 
-//=====================================================================
+//====================================================================
 //                              CONVERT
-//=====================================================================
-// Executes the convert command to convert the CVS files exported by the Eclipse
-// software into multiple custom CSV files: one separate file per modality.
+//====================================================================
+// Executes the convert command to convert the CVS files exported by
+// the Eclipse software into multiple custom CSV files: one separate
+// file per modality.
 //
 // @param {object} event - for purpose of communication with sender
-//=====================================================================
+//====================================================================
 ipcMain.on('run-convert', (event) => {
     log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
@@ -786,10 +787,7 @@ function getTraceSelectionSettings(event) {
 //
 // @param {object} event - for purpose of communication with sender
 //==========================================================================
-ipcMain.on('set-database', (event) => {
-    // only one file can end up here, but it still is in a list
-    let new_database_path = selectedFileHolder[0];
-
+ipcMain.on('set-database', (event, new_database_path) => {
     let command = 'ionm.py gui_set_database "' + new_database_path + '"';
     exec(command, {
         cwd: pythonSrcDirectory
