@@ -181,13 +181,18 @@ function sendStatusToWindow(text, level) {
 autoUpdater.on('update-available', () => {
     sendStatusToWindow('Update available! Downloading..', 'info');
 });
+
+autoUpdater.on('update-not-available', () => {
+    log.info('There is no update available.');
+});
+
 autoUpdater.on('error', (err) => {
     sendStatusToWindow('Error in auto-updater. ' + err);
 });
 
 autoUpdater.on('update-downloaded', () => {
     // Wait 5 seconds, then quit and install
-    sendStatusToWindow('Update downloaded! Restarting now!', 'warn');
+    sendStatusToWindow('Update downloaded, restarting now!', 'warn');
 
     setTimeout(() => {
         autoUpdater.quitAndInstall();
@@ -299,7 +304,7 @@ ipcMain.on('run-summarize', (event) => {
 
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < selectedFileHolder.length; i++) {
-        let command = `inm.py summarize "${selectedFileHolder[i]}"`;
+        let command = `ionm.py summarize "${selectedFileHolder[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
@@ -308,10 +313,10 @@ ipcMain.on('run-summarize', (event) => {
             // if errors occur, send an error message to the renderer process
             if (error !== null) {
                 log.error(error);
-                event.sender.send('error', summarize_error_message, 'indefinitely');
+                event.sender.send('error', summarize_error_message, 'indefinitely', 'summarize');
             } else if (stderr !== '') {
                 log.error(stderr);
-                event.sender.send('error', summarize_error_message, 'indefinitely');
+                event.sender.send('error', summarize_error_message, 'indefinitely', 'summarize');
             } else {
                 // build json string using the command output
                 let JSONstring = createJsonString(stdout);
@@ -383,8 +388,6 @@ function createJsonString(stdout) {
 // @param {object} event - for purpose of communication with sender
 //==================================================================
 ipcMain.on('run-timing', (event) => {
-    window.setMinimumSize(850, 400);
-    window.setSize(850, 400);
     event.sender.send('set-title-and-preloader-timing');
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
@@ -397,10 +400,10 @@ ipcMain.on('run-timing', (event) => {
         let errorMessage = 'An error occurred while trying to generate the timing plot';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'timing');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'timing');
         } else {
             event.sender.send('timing-result');
         }
@@ -429,10 +432,10 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
         let errorMessage = 'An error occurred while trying to generate the EEG availability plot';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'availability');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'availability');
         } else {
             event.sender.send('availability-result');
         }
@@ -462,10 +465,10 @@ ipcMain.on('run-convert', (event) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
-                event.sender.send('error', errorMessage, 'indefinitely');
+                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
             } else if (stderr !== '') {
                 log.error(stderr);
-                event.sender.send('error', errorMessage, 'indefinitely');
+                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
             } else {
                 event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
             }
@@ -496,10 +499,10 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
-                event.sender.send('error', errorMessage, 'indefinitely');
+                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
             } else if (stderr !== '') {
                 log.error(stderr);
-                event.sender.send('error', errorMessage, 'indefinitely');
+                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
             } else {
                 event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
             }
@@ -529,10 +532,10 @@ ipcMain.on('run-compute', (event, stats) => {
         let errorMessage = 'An error occurred while trying to run the compute command';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'compute');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'compute');
         } else {
             event.sender.send('compute-result', stdout, selectedFileHolder);
         }
@@ -561,10 +564,10 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
         let errorMessage = 'An error occurred while trying to extract the data from the files';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'extract');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'extract');
         } else {
             event.sender.send('extract-result');
         }
@@ -592,10 +595,10 @@ ipcMain.on('run-validate', (event, extracted_file) => {
         let errorMessage = 'An error occurred while trying to validate the file';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'validate');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'validate');
         } else {
             event.sender.send('validate-result');
         }
@@ -624,10 +627,10 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
         let errorMessage = 'An error occurred while trying to combine the file';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'combine');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'combine');
         } else {
             event.sender.send('combine-result');
         }
@@ -655,10 +658,10 @@ ipcMain.on('run-classify', (event, converted_file) => {
         let errorMessage = 'An error occurred while trying to classify for F-waves';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'classify');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage, 'indefinitely', 'classify');
         } else {
             event.sender.send('classify-result');
         }

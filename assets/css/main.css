@@ -203,6 +203,7 @@ footer span {
     height: 100%;
     position: relative;
     box-sizing: border-box;
+    transition: all 0.2s ease-out;
 }
 
 .taskbar-div label {
@@ -210,12 +211,12 @@ footer span {
 }
 
 .taskbar-div:hover {
-    background: #757575;
+    transform: translateY(-2px);
 }
 
 /* active menu button specific styling */
 .active {
-    /*color: #FF7D00;*/
+    color: #f89406;
 }
 
 #about-section {
@@ -746,6 +747,7 @@ h1 i {
 .success-msg,
 .warning-msg,
 .error-msg {
+    text-align: center;
     position: fixed;
     right: -455px;
     top: 30px;
@@ -762,6 +764,28 @@ h1 i {
     padding: 6px 10px;
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
+}
+
+.info-msg p,
+.success-msg p,
+.warning-msg p,
+.error-msg p {
+    display: inline-block;
+}
+
+.info-msg i,
+.success-msg i,
+.warning-msg i,
+.error-msg i {
+    float: left;
+    margin: 3px 0 0 0;
+}
+
+#close-toast {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .info-msg {
@@ -1176,3 +1200,4 @@ label.radio input:checked + span {
 #restart-button {
     display: none;
 }
+

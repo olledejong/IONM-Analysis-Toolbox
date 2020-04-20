@@ -1,16 +1,56 @@
 // selectors
 let bdy = $('body');
+let vr_cn = $('#variable-content');
 
 //==================================================================
-//                      GLOBAL ERROR HANDLER
+//                 IPC-MAIN ERROR MESSAGE HANDLER
 //==================================================================
 // Whenever the message 'error' is sent by the main process, a toast
 // notification using a custom message will be displayed to the user.
 //
 // @param error_message
 //==================================================================
-ipcRenderer.on('error', (event, error_message, duration) => {
+ipcRenderer.on('error', (event, error_message, duration, tool) => {
     showNotification('error', error_message, duration);
+    switch (tool) {
+    case 'summarize':
+        vr_cn.load('components/summarize.html');
+        ipcRenderer.send('resize-window', 750, 460);
+        break;
+    case 'timing':
+        vr_cn.load('components/timing.html');
+        ipcRenderer.send('resize-window', 800, 450);
+        break;
+    case 'availability':
+        vr_cn.load('components/availability.html');
+        ipcRenderer.send('resize-window', 800, 510);
+        break;
+    case 'convert':
+        vr_cn.load('components/convert.html');
+        ipcRenderer.send('resize-window', 800, 690);
+        break;
+    case 'compute':
+        vr_cn.load('components/compute.html');
+        ipcRenderer.send('resize-window', 800, 445);
+        break;
+    case 'validate':
+        vr_cn.load('components/validate.html');
+        ipcRenderer.send('resize-window', 800, 460);
+        break;
+    case 'extract':
+        vr_cn.load('components/extract.html');
+        ipcRenderer.send('resize-window', 800, 530);
+        break;
+    case 'combine':
+        vr_cn.load('components/combine.html');
+        ipcRenderer.send('resize-window', 750, 460);
+        break;
+    case 'classify':
+        vr_cn.load('components/classify.html');
+        ipcRenderer.send('resize-window', 800, 460);
+        break;
+    }
+    // hide preloader
     $('.linePreloader').hide('fast');
 });
 
@@ -35,13 +75,13 @@ function showNotification(type, message, duration) {
 
     // add notification element to page according to type
     if (type === 'error') {
-        container_after_titlebar.append(`<div id="${r}" class="error-msg"><i class="fas fa-times-circle"></i>&nbsp;&nbsp;${message}</div>`);
+        container_after_titlebar.append(`<div id="${r}" class="error-msg"><i class="fas fa-times-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
     } else if (type === 'info') {
-        container_after_titlebar.append(`<div id="${r}" class="info-msg"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;${message}</div>`);
+        container_after_titlebar.append(`<div id="${r}" class="info-msg"><i class="fas fa-info-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
     } else if (type === 'success') {
-        container_after_titlebar.append(`<div id="${r}" class="success-msg"><i class="fas fa-check"></i>&nbsp;&nbsp;${message}</div>`);
+        container_after_titlebar.append(`<div id="${r}" class="success-msg"><i class="fas fa-check"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
     } else {
-        container_after_titlebar.append(`<div id="${r}" class="warning-msg"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;${message}</div>`);
+        container_after_titlebar.append(`<div id="${r}" class="warning-msg"><i class="fas fa-exclamation-triangle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
     }
 
     let tempNotificationElement = $('#'+r);
@@ -87,32 +127,46 @@ function removeToastMessages() {
 //==================================================================
 // On click event handlers for all toast notifications
 //==================================================================
-bdy.delegate('.warning-msg', 'click', function () {
-    let id = this.id;
-    removeNotification(id);
+bdy.on('click', '.warning-msg', (e) => {
+    removeNotification(e);
 });
 
-bdy.delegate('.error-msg', 'click', function () {
-    let id = this.id;
-    removeNotification(id);
+bdy.on('click', '.error-msg', (e) => {
+    removeNotification(e);
 });
 
-bdy.delegate('.info-msg', 'click', function () {
-    let id = this.id;
-    removeNotification(id);
+bdy.on('click', '.info-msg', (e) => {
+    removeNotification(e);
 });
 
-bdy.delegate('.success-msg', 'click', function () {
-    let id = this.id;
-    removeNotification(id);
+bdy.on('click', '.success-msg', (e) => {
+    removeNotification(e);
 });
 
 //==================================================================
 // Removes the clicked notification
 //==================================================================
-function removeNotification(id) {
-    let properId = '#' + id;
-    $(properId).fadeOut(800, function () {
-        this.remove();
-    })
+function removeNotification(e) {
+    let parent = $(e.target).parent();
+    if ( parent.attr('class') !== 'container-after-titlebar' ) {
+        let properId = '#' + parent.attr('id');
+        $(properId).remove();
+    } else {
+        let properId = '#' + e.target.id;
+        $(properId).remove();
+    }
 }
+
+//==================================================================
+// Shows the user it can close a notification by clicking on it
+//==================================================================
+bdy.on('mouseenter', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) => {
+    let id = '#' + e.target.id;
+    $(id).css('min-width', (($(id).width() + 20) + 'px'));
+    $(id).children( '#toast-message' ).css('opacity', '0.1');
+    $(id).children( '#close-toast' ).show();
+}).on('mouseleave', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) => {
+    let id = '#' + e.target.id;
+    $(id).children( '#toast-message' ).css('opacity', '1.0');
+    $(id).children( '#close-toast' ).hide();
+});
