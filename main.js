@@ -140,7 +140,7 @@ function cleanUpProcesses(resolve) {
             i++;
             // if process was created by this application
             if (process.arguments[0].includes('ionm.py')) {
-                log.info(`Killing a '${process.arguments[1]}' tool process..`);
+                log.info(`Killing a '${process.arguments[1]}' process..`);
                 // kill the unwanted background process
                 let command = `taskkill /F /pid ${process.pid}`;
                 exec(command, (error, stdout, stderr) => {
@@ -240,37 +240,41 @@ ipcMain.on('select-file', (event, options, tool, label) => {
     dialog.showOpenDialog(window, options).then(fileNames => {
         // if selecting is cancelled, do not send back to renderer
         selectedFileHolder = fileNames.filePaths;
-        switch (tool) {
-        case 'general':
-            event.sender.send('selected-general', fileNames.filePaths, label);
-            break;
-        case 'src-dir':
-            event.sender.send('selected-src-dir', fileNames.filePaths, label);
-            break;
-        case 'database':
-            event.sender.send('selected-database', fileNames.filePaths, label);
-            break;
-        case 'default-select-dir':
-            event.sender.send('selected-default-select-dir', fileNames.filePaths, label);
-            break;
-        case 'availability':
-            event.sender.send('selected-availability', fileNames.filePaths, label);
-            break;
-        case 'compute':
-            event.sender.send('selected-compute', fileNames.filePaths, label);
-            break;
-        case 'validate':
-            event.sender.send('selected-validate', fileNames.filePaths, label);
-            break;
-        case 'extract':
-            event.sender.send('selected-extract', fileNames.filePaths, label);
-            break;
-        case 'combine':
-            event.sender.send('selected-combine', fileNames.filePaths, label);
-            break;
-        case 'classify':
-            event.sender.send('selected-classify', fileNames.filePaths, label);
-            break;
+        try {
+            switch (tool) {
+            case 'general':
+                event.sender.send('selected-general', fileNames.filePaths, label);
+                break;
+            case 'src-dir':
+                event.sender.send('selected-src-dir', fileNames.filePaths, label);
+                break;
+            case 'database':
+                event.sender.send('selected-database', fileNames.filePaths, label);
+                break;
+            case 'default-select-dir':
+                event.sender.send('selected-default-select-dir', fileNames.filePaths, label);
+                break;
+            case 'availability':
+                event.sender.send('selected-availability', fileNames.filePaths, label);
+                break;
+            case 'compute':
+                event.sender.send('selected-compute', fileNames.filePaths, label);
+                break;
+            case 'validate':
+                event.sender.send('selected-validate', fileNames.filePaths, label);
+                break;
+            case 'extract':
+                event.sender.send('selected-extract', fileNames.filePaths, label);
+                break;
+            case 'combine':
+                event.sender.send('selected-combine', fileNames.filePaths, label);
+                break;
+            case 'classify':
+                event.sender.send('selected-classify', fileNames.filePaths, label);
+                break;
+            }
+        } catch (e) {
+            log.error(e);
         }
     });
 });
@@ -320,9 +324,15 @@ ipcMain.on('run-summarize', (event) => {
             } else {
                 // build json string using the command output
                 let JSONstring = createJsonString(stdout);
-
+                
                 // send the json string back to the renderer to be displayed
-                event.sender.send('summarize-result', JSONstring);
+                try {
+                    event.sender.send('summarize-result', JSONstring);
+                } catch (e) {
+                    log.info('Sending result to the renderer was unsuccessful. ' +
+                        'Probably caused because of the window already being closed.');
+                    log.error(e);
+                }
             }
         });
     }
@@ -405,7 +415,14 @@ ipcMain.on('run-timing', (event) => {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely', 'timing');
         } else {
-            event.sender.send('timing-result');
+            try {
+                event.sender.send('timing-result');
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                    'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
+            
         }
     });
 });
@@ -437,7 +454,14 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely', 'availability');
         } else {
-            event.sender.send('availability-result');
+            try {
+                event.sender.send('availability-result');
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                    'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
+            
         }
     });
 });
@@ -470,7 +494,14 @@ ipcMain.on('run-convert', (event) => {
                 log.error(stderr);
                 event.sender.send('error', errorMessage, 'indefinitely', 'convert');
             } else {
-                event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
+                try {
+                    event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
+                } catch (e) {
+                    log.info('Sending result to the renderer was unsuccessful. ' +
+                        'Probably caused because of the window already being closed.');
+                    log.error(e);
+                }
+                
             }
         });
     }
@@ -504,7 +535,14 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
                 log.error(stderr);
                 event.sender.send('error', errorMessage, 'indefinitely', 'convert');
             } else {
-                event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
+                try {
+                    event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
+                } catch (e) {
+                    log.info('Sending result to the renderer was unsuccessful. ' +
+                        'Probably caused because of the window already being closed.');
+                    log.error(e);
+                }
+                
             }
         });
     }
@@ -537,7 +575,14 @@ ipcMain.on('run-compute', (event, stats) => {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely', 'compute');
         } else {
-            event.sender.send('compute-result', stdout, selectedFileHolder);
+            try {
+                event.sender.send('compute-result', stdout, selectedFileHolder);
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                    'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
+            
         }
     });
 });
@@ -569,7 +614,14 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely', 'extract');
         } else {
-            event.sender.send('extract-result');
+            try {
+                event.sender.send('extract-result');
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                    'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
+            
         }
     });
 });
@@ -600,7 +652,14 @@ ipcMain.on('run-validate', (event, extracted_file) => {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely', 'validate');
         } else {
-            event.sender.send('validate-result');
+            try {
+                event.sender.send('validate-result');
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                    'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
+            
         }
     });
 });
@@ -632,7 +691,13 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely', 'combine');
         } else {
-            event.sender.send('combine-result');
+            try {
+                event.sender.send('combine-result');
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                    'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
         }
     });
 });
@@ -663,7 +728,13 @@ ipcMain.on('run-classify', (event, converted_file) => {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely', 'classify');
         } else {
-            event.sender.send('classify-result');
+            try {
+                event.sender.send('classify-result');
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                        'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
         }
     });
 });
@@ -690,7 +761,13 @@ ipcMain.on('get-version-info', (event) => {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'indefinitely');
         } else {
-            event.sender.send('script-version-info', stdout);
+            try {
+                event.sender.send('script-version-info', stdout);
+            } catch (e) {
+                log.info('Sending result to the renderer was unsuccessful. ' +
+                    'Probably caused because of the window already being closed.');
+                log.error(e);
+            }
         }
     });
 });

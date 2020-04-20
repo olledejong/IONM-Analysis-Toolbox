@@ -34,7 +34,7 @@ variable_content.on('click', '.csv-select-btn', function() {
  * @param {object} event
  * @param {array} paths - contains paths of all selected files
  */
-ipcRenderer.on('selected-general', function (event, paths) {
+ipcRenderer.on('selected-general', (event, paths) => {
     // jQuery selector(s)
     let run_button = $('.run-button');
     let selected_filenames_p = $('#selected-filenames');
@@ -106,7 +106,7 @@ function generateFilenames(paths) {
  * lets it know the selecting of files is for the purpose of the
  * availability tool
  */
-variable_content.on('click', '#a-eeg-select-btn', function () {
+variable_content.on('click', '#a-eeg-select-btn', () => {
     let tool = 'availability';
     let label = 'eeg';
     // configure which types of files are allowed
@@ -152,7 +152,7 @@ variable_content.on('click', '#a-trg-select-btn', () => {
  * lets it know the selecting of files is for the purpose of the
  * compute tool
  */
-variable_content.on('click', '#compute-select-btn', function () {
+variable_content.on('click', '#compute-select-btn', () => {
     let tool = 'compute';
     // configure which types of files are allowed
     let types = [
@@ -174,7 +174,7 @@ variable_content.on('click', '#compute-select-btn', function () {
  * lets it know the selecting of files is for the purpose of the
  * extract tool
  */
-variable_content.on('click', '#e-eeg-select-btn', function () {
+variable_content.on('click', '#e-eeg-select-btn', () => {
     let tool = 'extract';
     let label = 'eeg';
     // configure which types of files are allowed
@@ -197,7 +197,7 @@ variable_content.on('click', '#e-eeg-select-btn', function () {
  * lets it know the selecting of files is for the purpose of the
  * extract tool
  */
-variable_content.on('click', '#e-trg-select-btn', function () {
+variable_content.on('click', '#e-trg-select-btn', () => {
     let tool = 'extract';
     let label = 'trg';
     // configure which types of files are allowed

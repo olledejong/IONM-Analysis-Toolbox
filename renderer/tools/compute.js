@@ -17,7 +17,7 @@ let variableCont = $('#variable-content');
  * @param {object} event - for purpose of communication with sender
  * @param {array} paths - all the selected file-paths in an array
  */
-ipcRenderer.on('selected-compute', function (event, paths) {
+ipcRenderer.on('selected-compute', (event, paths) => {
     let compute_select_btn = $('#compute-select-btn');
 
     // use generate file names function from fileSelect.js
@@ -79,7 +79,7 @@ variableCont.on('click', '#run-compute', function() {
  * Loads result page skeleton and the preloader will be showed.
  * Hides containers until needed later.
  */
-ipcRenderer.on('set-title-and-preloader-compute', function () {
+ipcRenderer.on('set-title-and-preloader-compute', () => {
     $('.linePreloader').show();
     variableCont.html(`<div id="compute-content">
                             <h1 class="external-window-instruction">Please work through the external windows to get to the final result</h1>
@@ -99,7 +99,7 @@ ipcRenderer.on('set-title-and-preloader-compute', function () {
  * Shows the result skeleton and fills it for every successfully completed
  * compute task. Hides preloader and shows the results.
  */
-ipcRenderer.on('compute-result', function (event, stdout, file_path) {
+ipcRenderer.on('compute-result', (event, stdout, file_path) => {
     ipcRenderer.send('resize-window', 1200, 500);
 
     for (let i = 0; i < file_path.length; i++) {

@@ -203,15 +203,10 @@ footer span {
     height: 100%;
     position: relative;
     box-sizing: border-box;
-    transition: all 0.2s ease-out;
 }
 
 .taskbar-div label {
     cursor: pointer;
-}
-
-.taskbar-div:hover {
-    transform: translateY(-2px);
 }
 
 /* active menu button specific styling */
@@ -782,10 +777,15 @@ h1 i {
 }
 
 #close-toast {
-    display: none;
+    opacity: 0;
+    transition: all 0.2s ease-out;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+}
+
+#toast-message {
+    transition: all 0.2s ease-out;
 }
 
 .info-msg {
@@ -804,13 +804,6 @@ h1 i {
     color: #D8000C;
     background-color: #FFBABA;
 }
-
-/*
-info / error / succes msg icons
-<i class="fas fa-info-circle"></i>
-<i class="fas fa-check"></i>
-<i class="fas fa-times-circle"></i>
-*/
 
 .important-span {
     font-weight: 700;

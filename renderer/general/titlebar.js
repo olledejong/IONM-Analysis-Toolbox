@@ -1,15 +1,14 @@
-/**
- * This file does everything that has to do with the title bar
- * and the menu bar.
- */
+//==================================================================
+//                       Titlebar Generator
+//==================================================================
+// This file generates a custom title bar by using the npm package
+// electron-custom-titlebar.
+//==================================================================
 
-// REQUIRES
+// requires
 const customTitlebar = require('custom-electron-titlebar');
 const { remote } = require('electron');
-// eslint-disable-next-line no-unused-vars
-const ipcRenderer = require('electron').ipcRenderer;
-const log = require('electron-log');
-console.log = log.log;
+window.$ = window.jQuery = require('jquery');
 
 // Create custom title bar and set characteristics
 let MyTitleBar = new customTitlebar.Titlebar({
@@ -25,12 +24,6 @@ let MyTitleBar = new customTitlebar.Titlebar({
 MyTitleBar.updateTitle('IONM ANALYSIS TOOLBOX');
 MyTitleBar.updateIcon('assets/images/app_icon.png');
 
-
-/**
- * Adds the classname 'active' to the active menu element
- *
- * @type {HTMLElement}
- */
 // This piece of code listens to the click on menu
 // buttons and changes the color accordingly.
 let taskbar = document.getElementById('taskbar');

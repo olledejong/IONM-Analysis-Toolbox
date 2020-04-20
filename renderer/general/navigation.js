@@ -7,6 +7,10 @@
 // requires
 window.$ = window.jQuery = require('jquery');
 const path = require('path');
+const ipcRenderer = require('electron').ipcRenderer;
+// eslint-disable-next-line no-unused-vars
+const log = require('electron-log');
+console.log = log.log;
 
 // os username
 const username = require('os').userInfo().username;
@@ -36,7 +40,7 @@ $('#welcome-text').html(`Welcome ${username}, please select a tool to get starte
 //==================================================================
 // Home page
 //==================================================================
-$('#welcome-section').click(function () {
+$('#welcome-section').on('click', () => {
     if (variable_content.find('#tool-container').length !== 1) {
         $('.linePreloader').hide('fast');
         removeToastMessages();
@@ -49,7 +53,7 @@ $('#welcome-section').click(function () {
 //==================================================================
 // Summarize section
 //==================================================================
-body.delegate('#summarize-section', 'click', function () {
+body.on('click', '#summarize-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 750, 460);
 
@@ -63,7 +67,7 @@ body.delegate('#summarize-section', 'click', function () {
 //==================================================================
 // Show-timing section
 //==================================================================
-body.delegate('#timing-section', 'click', function () {
+body.on('click', '#timing-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 450);
 
@@ -77,7 +81,7 @@ body.delegate('#timing-section', 'click', function () {
 //==================================================================
 // Show availability section
 //==================================================================
-body.delegate('#availability-section', 'click', function () {
+body.on('click', '#availability-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 510);
 
@@ -91,7 +95,7 @@ body.delegate('#availability-section', 'click', function () {
 //==================================================================
 // Convert section
 //==================================================================
-body.delegate('#convert-section', 'click', function () {
+body.on('click', '#convert-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 690);
 
@@ -105,7 +109,7 @@ body.delegate('#convert-section', 'click', function () {
 //==================================================================
 // Compute section
 //==================================================================
-body.delegate('#compute-section', 'click', function () {
+body.on('click', '#compute-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 445);
 
@@ -121,7 +125,7 @@ body.delegate('#compute-section', 'click', function () {
 //==================================================================
 // Extract section
 //==================================================================
-body.delegate('#extract-section', 'click', function () {
+body.on('click', '#extract-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 530);
 
@@ -135,7 +139,7 @@ body.delegate('#extract-section', 'click', function () {
 //==================================================================
 // Validate section
 //==================================================================
-body.delegate('#validate-section', 'click', function () {
+body.on('click', '#validate-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 460);
 
@@ -149,7 +153,7 @@ body.delegate('#validate-section', 'click', function () {
 //==================================================================
 // Combine section
 //==================================================================
-body.delegate('#combine-section', 'click', function () {
+body.on('click', '#combine-section', () => {
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 440);
 
@@ -164,7 +168,7 @@ body.delegate('#combine-section', 'click', function () {
 //==================================================================
 // Classify section
 //==================================================================
-body.delegate('#classify-section', 'click', function () {
+body.on('click', '#classify-section', () => {
     // removeToastMessages();
     // ipcRenderer.send('resize-window', 800, 460);
     //
@@ -179,7 +183,7 @@ body.delegate('#classify-section', 'click', function () {
 //==================================================================
 // Application settings section
 //==================================================================
-body.delegate('#settings-section', 'click', function () {
+body.on('click', '#settings-section', () => {
     removeToastMessages();
     // tell main process to resize the window, and to retrieve the current settings
     ipcRenderer.send('resize-window', 1200, 850);
@@ -193,7 +197,7 @@ body.delegate('#settings-section', 'click', function () {
 //==================================================================
 // About section
 //==================================================================
-about_section_button.click(function () {
+about_section_button.click( () => {
     let preloader = $('.linePreloader');
     // only load when not already loaded
     if(variable_content.find('#about-app').length !== 1) {
@@ -204,7 +208,7 @@ about_section_button.click(function () {
         ipcRenderer.send('get-version-info');
 
         // generate the info that tells you stuff about this electron app
-        setTimeout(function () {
+        setTimeout( () => {
             generateElectronAboutInfo();
         }, 100);
 
@@ -222,7 +226,7 @@ about_section_button.click(function () {
 // @param {object} python_version_info
 // @param {object} stdErr
 //==================================================================
-ipcRenderer.on('script-version-info', function (event, python_version_info) {
+ipcRenderer.on('script-version-info', (event, python_version_info) => {
     let tableHtml = [];
     let i;
 
@@ -300,7 +304,7 @@ function generateStatsParameterOptions() {
 //==================================================================
 // Tells main process to open the README
 //==================================================================
-help_section_button.click(function () {
+help_section_button.click( () => {
     let target = path.join(__dirname, '/README.pdf');
     ipcRenderer.send('open-window', target);
     showNotification('info', 'Support document file should now open in your default PDF viewer', 5000);

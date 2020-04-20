@@ -1,3 +1,10 @@
+//==================================================================
+//                       Message Factory
+//==================================================================
+// This file handles all aspects of handling errors and presenting
+// informative messages to the user.
+//==================================================================
+
 // selectors
 let bdy = $('body');
 let vr_cn = $('#variable-content');
@@ -32,6 +39,7 @@ ipcRenderer.on('error', (event, error_message, duration, tool) => {
     case 'compute':
         vr_cn.load('components/compute.html');
         ipcRenderer.send('resize-window', 800, 445);
+        generateStatsParameterOptions();
         break;
     case 'validate':
         vr_cn.load('components/validate.html');
@@ -75,13 +83,13 @@ function showNotification(type, message, duration) {
 
     // add notification element to page according to type
     if (type === 'error') {
-        container_after_titlebar.append(`<div id="${r}" class="error-msg"><i class="fas fa-times-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
+        container_after_titlebar.append(`<div id="${r}" class="error-msg"><i class="fas fa-times-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Click to close</span></div>`);
     } else if (type === 'info') {
-        container_after_titlebar.append(`<div id="${r}" class="info-msg"><i class="fas fa-info-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
+        container_after_titlebar.append(`<div id="${r}" class="info-msg"><i class="fas fa-info-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Click to close</span></div>`);
     } else if (type === 'success') {
-        container_after_titlebar.append(`<div id="${r}" class="success-msg"><i class="fas fa-check"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
+        container_after_titlebar.append(`<div id="${r}" class="success-msg"><i class="fas fa-check"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Click to close</span></div>`);
     } else {
-        container_after_titlebar.append(`<div id="${r}" class="warning-msg"><i class="fas fa-exclamation-triangle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Close</span></div>`);
+        container_after_titlebar.append(`<div id="${r}" class="warning-msg"><i class="fas fa-exclamation-triangle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Click to close</span></div>`);
     }
 
     let tempNotificationElement = $('#'+r);
@@ -90,11 +98,11 @@ function showNotification(type, message, duration) {
     // animate the error message
     tempNotificationElement.animate({
         right: '+=465', opacity: 1
-    }, 800, function () {
+    }, 800, () => {
         if (duration !== 'indefinitely') {
-            tempNotificationElement.delay(duration).fadeOut(800, function () {
+            tempNotificationElement.delay(duration).fadeOut(800, () => {
                 $(this).remove();
-                $(function () {
+                $( () => {
                     $('.success-msg').animate({
                         top: '-=40'
                     }, { duration: 350, queue: false } );
@@ -148,12 +156,13 @@ bdy.on('click', '.success-msg', (e) => {
 //==================================================================
 function removeNotification(e) {
     let parent = $(e.target).parent();
+    let parentId = '#' + parent.attr('id');
+    // if user clicks the notification div itself
     if ( parent.attr('class') !== 'container-after-titlebar' ) {
-        let properId = '#' + parent.attr('id');
-        $(properId).remove();
+        $(parentId).remove();
+    // if user clicks any other element inside the notification div
     } else {
-        let properId = '#' + e.target.id;
-        $(properId).remove();
+        $(parentId).remove();
     }
 }
 
@@ -162,11 +171,13 @@ function removeNotification(e) {
 //==================================================================
 bdy.on('mouseenter', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) => {
     let id = '#' + e.target.id;
+    // get the width of the notification element and set it as min-width so that the
+    // notification element doesnt become the size of its content
     $(id).css('min-width', (($(id).width() + 20) + 'px'));
     $(id).children( '#toast-message' ).css('opacity', '0.1');
-    $(id).children( '#close-toast' ).show();
+    $(id).children( '#close-toast' ).css('opacity', '1.0');
 }).on('mouseleave', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) => {
     let id = '#' + e.target.id;
     $(id).children( '#toast-message' ).css('opacity', '1.0');
-    $(id).children( '#close-toast' ).hide();
+    $(id).children( '#close-toast' ).css('opacity', '0');
 });

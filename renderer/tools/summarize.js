@@ -17,7 +17,7 @@ window.$ = window.jQuery = require('jquery');
  * Of course also tells the main process to run the summarize
  * command.
  */
-variable_content.on('click', '#run-summarize', function() {
+variable_content.on('click', '#run-summarize', () => {
     variable_content.html('');
     ipcRenderer.send('run-summarize');
 });
@@ -27,7 +27,7 @@ variable_content.on('click', '#run-summarize', function() {
  * message 'set-title-and-preloader-summarize'. The result page skeleton
  * and preloader will be set.
  */
-ipcRenderer.on('set-title-and-preloader-summarize', function () {
+ipcRenderer.on('set-title-and-preloader-summarize', () => {
     $('.linePreloader').show();
     variable_content.html('<div id="summarize-results"></div>');
     // hide summarize results div untill it actually gets some results
@@ -42,7 +42,7 @@ ipcRenderer.on('set-title-and-preloader-summarize', function () {
  *
  * @param {string} JSON_result
  */
-ipcRenderer.on('summarize-result', function displaySummarizeResults(event, JSON_result) {
+ipcRenderer.on('summarize-result', (event, JSON_result) => {
     log.info('[ summarize.js ][ displaySummarizeResults() is being executed ]');
     // parse the JSON string into a JSON object
     let JSON_obj = JSON.parse(JSON_result);
@@ -52,7 +52,7 @@ ipcRenderer.on('summarize-result', function displaySummarizeResults(event, JSON_
 
     // because of JS promises the code between the curly brackets is
     // only executed when the function generateTable() is finished
-    generateTable(JSON_obj).then(function appendTableToHTML(result) {
+    generateTable(JSON_obj).then( (result) => {
         log.info(result);
         let selector = $('#table-' + result[1]);
 
@@ -70,7 +70,7 @@ ipcRenderer.on('summarize-result', function displaySummarizeResults(event, JSON_
  * @returns variables htmlTableContent and fileName via a Promise object
  */
 function generateTable(JSON_obj) {
-    return new Promise(function(resolve) {
+    return new Promise((resolve) => {
 
         let decodedFilePath = decodeURI(JSON_obj['File path']);
         let htmlTableContent = [];

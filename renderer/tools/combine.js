@@ -20,7 +20,7 @@ let variab_cont = $('#variable-content');
  * @param {array} paths - all the selected file-paths in an array
  * @param {string} label - word that is used to checks where the path should be displayed
  */
-ipcRenderer.on('selected-combine', function (event, paths) {
+ipcRenderer.on('selected-combine', (event, paths) => {
     let combine_select_btn = $('#combine-select-btn');
     // use generate file names function from fileSelect.js
     if (paths.length !== 0) {
@@ -88,7 +88,7 @@ variab_cont.on('click', '#run-combine', function() {
 /**
  * Shows the result page skeleton and the preloader will be showed.
  */
-ipcRenderer.on('set-title-and-preloader-combine', function () {
+ipcRenderer.on('set-title-and-preloader-combine', () => {
     let preloader = $('.linePreloader');
 
     preloader.show();
@@ -101,7 +101,7 @@ ipcRenderer.on('set-title-and-preloader-combine', function () {
  * Restores original page when user closes external windows and functionality is done
  * Hides preloader and sends message to resize window.
  */
-ipcRenderer.on('combine-result', function () {
+ipcRenderer.on('combine-result', () => {
     showNotification('success', 'Successfully combined the file with the database parameters', 5000);
     let preloader = $('.linePreloader');
     variab_cont.load('components/combine.html').hide().fadeIn('slow');

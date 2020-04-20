@@ -20,7 +20,7 @@ let vc = $('#variable-content');
  * @param {array} paths - all the selected file-paths in an array
  * @param {string} label - word that is used to checks where the path should be displayed
  */
-ipcRenderer.on('selected-classify', function (event, paths) {
+ipcRenderer.on('selected-classify', (event, paths) => {
     let run_btn = $('#run-classify');
     let selected_filenames = $('#selected-filenames');
     if (paths.length !== 0) {
@@ -71,7 +71,7 @@ vc.on('click', '#run-classify', function() {
 /**
  * Shows the result page skeleton and the preloader will be showed.
  */
-ipcRenderer.on('set-title-and-preloader-classify', function () {
+ipcRenderer.on('set-title-and-preloader-classify', () => {
     let preloader = $('.linePreloader');
 
     preloader.show();
@@ -84,7 +84,7 @@ ipcRenderer.on('set-title-and-preloader-classify', function () {
  * Restores original page when user closes external windows and functionality is done
  * Hides preloader and sends message to resize window.
  */
-ipcRenderer.on('classify-result', function () {
+ipcRenderer.on('classify-result', () => {
     showNotification('success', 'Successfully ran the classifier over the file', 5000);
     let preloader = $('.linePreloader');
     vc.load('components/classify.html').hide().fadeIn('slow');

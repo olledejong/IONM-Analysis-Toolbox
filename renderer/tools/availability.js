@@ -20,7 +20,7 @@ let var_con = $('#variable-content');
  * @param {array} paths - all the selected file-paths in an array
  * @param {string} label - word that is used to checks where the path should be displayed
  */
-ipcRenderer.on('selected-availability', function (event, paths, label) {
+ipcRenderer.on('selected-availability', (event, paths, label) => {
     let trg_select = $('#a-trg-select-btn');
     let eeg_select = $('#a-eeg-select-btn');
     if (label === 'trg') {
@@ -50,7 +50,7 @@ ipcRenderer.on('selected-availability', function (event, paths, label) {
  * Calls on the checkIfFormComplete function every time the -w
  * parameter is altered by the user
  */
-var_con.on('change', '#availability-select-container',  function () {
+var_con.on('change', '#availability-select-container', () => {
     checkIfAvailabilityFormComplete();
 });
 
@@ -100,7 +100,7 @@ var_con.on('click', '#run-availability', function() {
 /**
  * Shows the result page skeleton and the preloader will be showed.
  */
-ipcRenderer.on('set-title-and-preloader-availability', function () {
+ipcRenderer.on('set-title-and-preloader-availability', () => {
     let preloader = $('.linePreloader');
     ipcRenderer.send('resize-window', 1030, 310);
     preloader.show();
@@ -112,7 +112,7 @@ ipcRenderer.on('set-title-and-preloader-availability', function () {
  * Restores original page when user closes external windows and functionality is done
  * Hides preloader and sends message to resize window.
  */
-ipcRenderer.on('availability-result', function () {
+ipcRenderer.on('availability-result', () => {
     ipcRenderer.send('resize-window', 800, 510);
     var_con.load('components/availability.html').hide().fadeIn('slow');
     $('.linePreloader').hide('fast');

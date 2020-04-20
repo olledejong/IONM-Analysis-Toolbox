@@ -20,7 +20,7 @@ let var_content = $('#variable-content');
  * @param {array} paths - all the selected file-paths in an array
  * @param {string} label - word that is used to checks where the path should be displayed
  */
-ipcRenderer.on('selected-extract', function (event, paths, label) {
+ipcRenderer.on('selected-extract', (event, paths, label) => {
     let trg_select = $('#e-trg-select-btn');
     let eeg_select = $('#e-eeg-select-btn');
     if (label === 'trg') {
@@ -49,7 +49,7 @@ ipcRenderer.on('selected-extract', function (event, paths, label) {
  * Calls on the checkIfFormComplete function every time the -w
  * parameter is altered by the user
  */
-var_content.on('change', '#extract-select-container',  function () {
+var_content.on('change', '#extract-select-container', () => {
     checkIfExtractFormComplete();
 });
 
@@ -98,7 +98,7 @@ var_content.on('click', '#run-extract', function() {
 /**
  * Shows the result page skeleton and the preloader will be showed.
  */
-ipcRenderer.on('set-title-and-preloader-extract', function () {
+ipcRenderer.on('set-title-and-preloader-extract', () => {
     let preloader = $('.linePreloader');
 
     preloader.show();
@@ -110,7 +110,7 @@ ipcRenderer.on('set-title-and-preloader-extract', function () {
  * Restores original page when user closes external windows and functionality is done
  * Hides preloader and sends message to resize window.
  */
-ipcRenderer.on('extract-result', function () {
+ipcRenderer.on('extract-result', () => {
     showNotification('success', 'Successfully extracted the information into a separate file', 5000);
     let preloader = $('.linePreloader');
     var_content.load('components/extract.html').hide().fadeIn('slow');

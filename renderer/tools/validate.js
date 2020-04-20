@@ -20,7 +20,7 @@ let varb_cont = $('#variable-content');
  * @param {array} paths - all the selected file-paths in an array
  * @param {string} label - word that is used to checks where the path should be displayed
  */
-ipcRenderer.on('selected-validate', function (event, paths) {
+ipcRenderer.on('selected-validate', (event, paths) => {
     let run_btn = $('#run-validate');
     let selected_filenames = $('#selected-filenames');
     if (paths.length !== 0) {
@@ -72,7 +72,7 @@ varb_cont.on('click', '#run-validate', function() {
 /**
  * Shows the result page skeleton and the preloader will be showed.
  */
-ipcRenderer.on('set-title-and-preloader-validate', function () {
+ipcRenderer.on('set-title-and-preloader-validate', () => {
     let preloader = $('.linePreloader');
 
     preloader.show();
@@ -85,7 +85,7 @@ ipcRenderer.on('set-title-and-preloader-validate', function () {
  * Restores original page when user closes external windows and functionality is done
  * Hides preloader and sends message to resize window.
  */
-ipcRenderer.on('validate-result', function () {
+ipcRenderer.on('validate-result', () => {
     showNotification('success', 'Successfully validated the file', 5000);
     let preloader = $('.linePreloader');
     varb_cont.load('components/validate.html').hide().fadeIn('slow');

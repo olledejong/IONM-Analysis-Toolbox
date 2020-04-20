@@ -9,7 +9,7 @@
     <body>
         <div id="taskbar">
             <div class="taskbar-div active" id="welcome-section">
-                <label>Home</label>
+                <label>Tools</label>
             </div>
             <div class="taskbar-div" id="about-section">
                 <label>About</label>
@@ -17,7 +17,8 @@
             <div class="taskbar-div" id="help-section">
                 <label>Help</label>
             </div>
-            <div id="memory">
+            <div title="Device memory usage, the lower the better.&#10;Could drastically fluctuate while using this application."
+                 id="memory">
                 <span id="memory-usage-perc"></span>
                 <span id="memory-usage"></span>
             </div>
@@ -100,8 +101,8 @@
     </body>
 
     <!-- load the scripts-->
-    <script defer src="renderer/general/titlebar.js"></script>
     <script defer src="renderer/general/navigation.js"></script>
+    <script defer src="renderer/general/titlebar.js"></script>
     <script defer src="renderer/general/fileSelect.js"></script>
     <script defer src="renderer/general/settings.js"></script>
     <script defer src="renderer/general/messageFactory.js"></script>
