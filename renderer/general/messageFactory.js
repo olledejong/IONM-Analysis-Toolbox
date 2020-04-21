@@ -5,9 +5,9 @@
 // informative messages to the user.
 //==================================================================
 
-// selectors
+// selectors / requires
 let bdy = $('body');
-let vr_cn = $('#variable-content');
+window.$ = window.jQuery = require('jquery');
 
 //==================================================================
 //                 IPC-MAIN ERROR MESSAGE HANDLER
@@ -21,40 +21,40 @@ ipcRenderer.on('error', (event, error_message, duration, tool) => {
     showNotification('error', error_message, duration);
     switch (tool) {
     case 'summarize':
-        vr_cn.load('components/summarize.html');
+        variable_content.load('components/summarize.html');
         ipcRenderer.send('resize-window', 750, 460);
         break;
     case 'timing':
-        vr_cn.load('components/timing.html');
+        variable_content.load('components/timing.html');
         ipcRenderer.send('resize-window', 800, 450);
         break;
     case 'availability':
-        vr_cn.load('components/availability.html');
+        variable_content.load('components/availability.html');
         ipcRenderer.send('resize-window', 800, 510);
         break;
     case 'convert':
-        vr_cn.load('components/convert.html');
+        variable_content.load('components/convert.html');
         ipcRenderer.send('resize-window', 800, 690);
         break;
     case 'compute':
-        vr_cn.load('components/compute.html');
+        variable_content.load('components/compute.html');
         ipcRenderer.send('resize-window', 800, 445);
         generateStatsParameterOptions();
         break;
     case 'validate':
-        vr_cn.load('components/validate.html');
+        variable_content.load('components/validate.html');
         ipcRenderer.send('resize-window', 800, 460);
         break;
     case 'extract':
-        vr_cn.load('components/extract.html');
+        variable_content.load('components/extract.html');
         ipcRenderer.send('resize-window', 800, 530);
         break;
     case 'combine':
-        vr_cn.load('components/combine.html');
+        variable_content.load('components/combine.html');
         ipcRenderer.send('resize-window', 750, 460);
         break;
     case 'classify':
-        vr_cn.load('components/classify.html');
+        variable_content.load('components/classify.html');
         ipcRenderer.send('resize-window', 800, 460);
         break;
     }

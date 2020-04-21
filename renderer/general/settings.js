@@ -1,20 +1,19 @@
-/**
- * This renderer file is responsible for all user interaction in the
- * settings section of the application. Also for telling the main process
- * what to do regarding the settings of this applications and the python
- * project. These functionalities are:
- * - Setting the python src directory
- * - Setting the database the user wants to work with
- * - Setting up a new database
- * - Insight into the current configured modalities of the active database
- * - Add a new modality to the active database
- */
+//=======================================================================
+//                      Settings Page Renderer
+//=======================================================================
+// This renderer file is responsible for all user interaction in the
+// settings section of the application. Also for telling the main process
+// what to do regarding the settings of this applications and the python
+// project. These functionalities are:
+// - Setting the python src directory
+// - Setting the database the user wants to work with
+// - Setting up a new database
+// - Insight into the current configured modalities of the active database
+// - Add a new modality to the active database
+//=======================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
-
-// jQuery selectors
-let var_cont = $('#variable-content');
 
 // globals
 let currentDatabase;
@@ -179,7 +178,7 @@ ipcRenderer.on('successfully-set-default-select-dir', () => {
 // Tells the main process to write the by the user selected database path to the
 // config.ini file in the python project. Also disables the 'set database' button.
 //=============================================================================
-var_cont.on('click', '#set-database', () => {
+variable_content.on('click', '#set-database', () => {
     $('.linePreloader').show();
     let database_path = $('#new-database-path').html();
     let set_database = $('#set-database');
@@ -198,7 +197,7 @@ var_cont.on('click', '#set-database', () => {
 // Tells the main process to set the by the user selected python src dir.
 // Also disables the 'set src directory' button.
 //=============================================================================
-var_cont.on('click', '#set-src-dir', () => {
+variable_content.on('click', '#set-src-dir', () => {
     let src_dir = $('#src-dir-path').html();
     let set_src_dir = $('#set-src-dir');
     set_src_dir.css({
@@ -216,7 +215,7 @@ var_cont.on('click', '#set-src-dir', () => {
 // Tells the main process to set the by the user selected default select dir path.
 // Also disables the 'SET DEFAULT SELECT PATH' button.
 //=============================================================================
-var_cont.on('click', '#set-default-select-dir', () => {
+variable_content.on('click', '#set-default-select-dir', () => {
     let default_select_dir = $('#default-select-dir-path').html();
     ipcRenderer.send('set-default-select-dir', default_select_dir);
 
@@ -242,7 +241,7 @@ ipcRenderer.on('database-set-successful', () => {
 //=============================================================================
 // Shows the modality form using an animation on the user's request
 //=============================================================================
-var_cont.on('click', '#add-new-modality', () => {
+variable_content.on('click', '#add-new-modality', () => {
     ipcRenderer.send('resize-window', 1200, 800);
 
     // animate the modality form
@@ -257,7 +256,7 @@ var_cont.on('click', '#add-new-modality', () => {
 //============================================
 // Hides the modality form using an animation
 //============================================
-var_cont.on('click', '#hide-modality-form', () => {
+variable_content.on('click', '#hide-modality-form', () => {
     let add_modality = $('#add-modality');
     // hide add-modality form
     $('#hide-modality-form').hide();
@@ -273,7 +272,7 @@ var_cont.on('click', '#hide-modality-form', () => {
 // Retrieves the filled out form values and tells the main process to execute
 // the 'set modality' command. Then disables the 'submit new modality' button.
 //=============================================================================
-var_cont.on('click', '#submit-new-modality', () => {
+variable_content.on('click', '#submit-new-modality', () => {
     // show preloader
     $('.linePreloader').show();
     // scope vars
@@ -414,7 +413,7 @@ function resetModalityForm() {
 // completed, the submit button get enabled. When it is not complete,
 // the submit button gets disabled
 //====================================================================
-var_cont.on('change', '#add-modality', () => {
+variable_content.on('change', '#add-modality', () => {
     let submit_new_modality = $('#submit-new-modality');
     if ( $('#modality-input').val().length > 0) {
         submit_new_modality.css({
@@ -437,7 +436,7 @@ var_cont.on('change', '#add-modality', () => {
 // he/she is absolutely sure about seting up the database. Based on the
 // feedback of the user, the setup command get run or not.
 //=========================================================================
-var_cont.on('click', '#setup-database', () => {
+variable_content.on('click', '#setup-database', () => {
     let options  = {
         buttons: ['Yes', 'No', 'Cancel'],
         message: 'Are you sure about setting up the following database?\n'+ currentDatabase
@@ -468,7 +467,7 @@ ipcRenderer.on('database-setup-successful', () => {
 // Tells the main process to set the chunk size setting.
 // Also disables the 'SUBMIT SETTINGS' button.
 //===========================================================
-var_cont.on('click', '#set-trace-selection-settings', () => {
+variable_content.on('click', '#set-trace-selection-settings', () => {
     // show preloader
     $('.linePreloader').show();
     // scope vars
@@ -490,7 +489,7 @@ var_cont.on('click', '#set-trace-selection-settings', () => {
 // completed, the submit button get enabled. When it is not complete,
 // the submit button gets disabled
 //====================================================================
-var_cont.on('change', '#trace-selection-settings', () => {
+variable_content.on('change', '#trace-selection-settings', () => {
     let submit_trace_settings = $('#set-trace-selection-settings');
     let chunk_size_field = $('#chunk-size');
     if (chunk_size_field.val().length > 0 &&

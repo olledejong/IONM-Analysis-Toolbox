@@ -1,8 +1,10 @@
-/**
- * This file is accountable for the navigating functionalities.
- * Following a click event the accompanying variable content
- * will be displayed to the user.
- */
+//==================================================================
+//                      Navigation Handler
+//==================================================================
+// This file is accountable for the navigating functionalities.
+// Following a click event the accompanying variable content
+// will be displayed to the user.
+//==================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
