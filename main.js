@@ -274,7 +274,7 @@ ipcMain.on('select-file', (event, options, tool, label) => {
                 break;
             }
         } catch (e) {
-            log.error(e);
+            log.error('Caught an error: \n', e);
         }
     });
 });
@@ -331,7 +331,7 @@ ipcMain.on('run-summarize', (event) => {
                 } catch (e) {
                     log.info('Sending result to the renderer was unsuccessful. ' +
                         'Probably caused because of the window already being closed.');
-                    log.error(e);
+                    log.error('Caught an error in main.js: \n', e);
                 }
             }
         });
@@ -420,9 +420,8 @@ ipcMain.on('run-timing', (event) => {
             } catch (e) {
                 log.info('Sending result to the renderer was unsuccessful. ' +
                     'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
-            
         }
     });
 });
@@ -459,7 +458,7 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
             } catch (e) {
                 log.info('Sending result to the renderer was unsuccessful. ' +
                     'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
             
         }
@@ -499,7 +498,7 @@ ipcMain.on('run-convert', (event) => {
                 } catch (e) {
                     log.info('Sending result to the renderer was unsuccessful. ' +
                         'Probably caused because of the window already being closed.');
-                    log.error(e);
+                    log.error('Caught an error in main.js: \n', e);
                 }
                 
             }
@@ -540,7 +539,7 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
                 } catch (e) {
                     log.info('Sending result to the renderer was unsuccessful. ' +
                         'Probably caused because of the window already being closed.');
-                    log.error(e);
+                    log.error('Caught an error in main.js: \n', e);
                 }
                 
             }
@@ -580,7 +579,7 @@ ipcMain.on('run-compute', (event, stats) => {
             } catch (e) {
                 log.info('Sending result to the renderer was unsuccessful. ' +
                     'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
             
         }
@@ -619,7 +618,7 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
             } catch (e) {
                 log.info('Sending result to the renderer was unsuccessful. ' +
                     'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
             
         }
@@ -657,7 +656,7 @@ ipcMain.on('run-validate', (event, extracted_file) => {
             } catch (e) {
                 log.info('Sending result to the renderer was unsuccessful. ' +
                     'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
             
         }
@@ -696,7 +695,7 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
             } catch (e) {
                 log.info('Sending result to the renderer was unsuccessful. ' +
                     'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
         }
     });
@@ -733,7 +732,7 @@ ipcMain.on('run-classify', (event, converted_file) => {
             } catch (e) {
                 log.info('Sending result to the renderer was unsuccessful. ' +
                         'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
         }
     });
@@ -764,9 +763,7 @@ ipcMain.on('get-version-info', (event) => {
             try {
                 event.sender.send('script-version-info', stdout);
             } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                    'Probably caused because of the window already being closed.');
-                log.error(e);
+                log.error('Caught an error in main.js: \n', e);
             }
         }
     });
