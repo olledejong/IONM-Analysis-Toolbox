@@ -48,7 +48,7 @@ footer span {
 #variable-content {
     min-width: 100%;
     margin-top: 38px;
-    position: absolute;
+    position: fixed;
     padding: 10px 20px 20px 20px;
     overflow-y: visible;
 }
@@ -1147,6 +1147,7 @@ label.radio input:checked + span {
 }
 
 #memory-usage {
+    transition: width 300ms ease-out;
     border-radius: 5px 0 0 5px;
     position: relative;
     background: rgb(232, 126, 4);
@@ -1166,32 +1167,3 @@ label.radio input:checked + span {
     color: #404040;
     transition: all 0.2s ease-out;
 }
-
-#notification {
-    color: #404040;
-    position: fixed;
-    bottom: 12px;
-    left: 12px;
-    width: 200px;
-    padding: 20px;
-    border-radius: 5px;
-    background-color: #f7f7f7;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    display: none;
-}
-
-#close-button, #restart-button {
-    cursor: pointer;
-    outline: 0;
-    color: white;
-    padding: 7px;
-    background: rgb(232, 126, 4);
-    border: none;
-    border-radius: 4px;
-    box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
-}
-
-#restart-button {
-    display: none;
-}
-

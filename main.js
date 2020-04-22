@@ -74,6 +74,7 @@ function createWindow () {
 
         // open the DevTools.
         window.webContents.openDevTools();
+        window.resizable = true;
 
         // enable debug
         const debug = require('electron-debug');
