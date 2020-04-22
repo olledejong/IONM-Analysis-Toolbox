@@ -1,9 +1,11 @@
-/**
- * This renderer file is responsible for all user interaction in the
- * 'show timing' section of the application. It is responsible for telling
- * the main process to execute the tool via a ChildProcess and handling
- * the response of this ChildProcess (error / success)
- */
+//=========================================================================
+//                         Show Timing Renderer
+//=========================================================================
+// This file is responsible for all user interaction in the
+// 'show timing' section of the application. It is responsible for telling
+// the main process to execute the tool via a ChildProcess and handling
+// the response of this ChildProcess (error / success)
+//=========================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
@@ -11,19 +13,18 @@ window.$ = window.jQuery = require('jquery');
 // jQuery selectors
 let variableContent = $('#variable-content');
 
-/**
- * Tells the main process to run the summarize tool / command and
- * empties the page
- */
+//=========================================================================
+// Tells the main process to run the summarize command and empties the page
+//=========================================================================
 variableContent.on('click', '#run-timing', () => {
     variableContent.html('');
     ipcRenderer.send('run-timing');
 });
 
 
-/**
- * Sets result page skeleton and preloader will be shown.
- */
+//==============================================================
+// Sets result page skeleton and preloader will be shown
+//==============================================================
 ipcRenderer.on('set-title-and-preloader-timing', () => {
     $('.linePreloader').show();
     ipcRenderer.send('resize-window', 980, 310);
@@ -33,10 +34,10 @@ ipcRenderer.on('set-title-and-preloader-timing', () => {
 });
 
 
-/**
- * Restores original page when user closes external windows and functionality
- * is done. Also hides preloader.
- */
+//==============================================================
+// Restores original page when user closes external windows and
+// functionality is done. Also hides preloader.
+//==============================================================
 ipcRenderer.on('timing-result', () => {
     ipcRenderer.send('resize-window', 800, 450);
     variableContent.load('components/timing.html').hide().fadeIn('slow');

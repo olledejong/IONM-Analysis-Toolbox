@@ -218,7 +218,7 @@ ipcMain.on('resize-window', (event, newX, newY) => {
             window.setSize(newX, newY, true);
         }
     } catch (e) {
-        event.sender.send('error', 'Something went wrong while trying to resize the browser window', '5000');
+        event.sender.send('error', 'Something went wrong while trying to resize the browser window');
     }
 });
 
@@ -317,10 +317,10 @@ ipcMain.on('run-summarize', (event) => {
             // if errors occur, send an error message to the renderer process
             if (error !== null) {
                 log.error(error);
-                event.sender.send('error', summarize_error_message, 'indefinitely', 'summarize');
+                event.sender.send('error', summarize_error_message, 'summarize');
             } else if (stderr !== '') {
                 log.error(stderr);
-                event.sender.send('error', summarize_error_message, 'indefinitely', 'summarize');
+                event.sender.send('error', summarize_error_message, 'summarize');
             } else {
                 // build json string using the command output
                 let JSONstring = createJsonString(stdout);
@@ -410,10 +410,10 @@ ipcMain.on('run-timing', (event) => {
         let errorMessage = 'An error occurred while trying to generate the timing plot';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely', 'timing');
+            event.sender.send('error', errorMessage, 'timing');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely', 'timing');
+            event.sender.send('error', errorMessage, 'timing');
         } else {
             try {
                 event.sender.send('timing-result');
@@ -448,10 +448,10 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
         let errorMessage = 'An error occurred while trying to generate the EEG availability plot';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely', 'availability');
+            event.sender.send('error', errorMessage, 'availability');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely', 'availability');
+            event.sender.send('error', errorMessage, 'availability');
         } else {
             try {
                 event.sender.send('availability-result');
@@ -488,10 +488,10 @@ ipcMain.on('run-convert', (event) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
-                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
+                event.sender.send('error', errorMessage, 'convert');
             } else if (stderr !== '') {
                 log.error(stderr);
-                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
+                event.sender.send('error', errorMessage, 'convert');
             } else {
                 try {
                     event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
@@ -529,10 +529,10 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
             if (error !== null) {
                 log.error(error);
-                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
+                event.sender.send('error', errorMessage, 'convert');
             } else if (stderr !== '') {
                 log.error(stderr);
-                event.sender.send('error', errorMessage, 'indefinitely', 'convert');
+                event.sender.send('error', errorMessage, 'convert');
             } else {
                 try {
                     event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
@@ -569,10 +569,10 @@ ipcMain.on('run-compute', (event, stats) => {
         let errorMessage = 'An error occurred while trying to run the compute command';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely', 'compute');
+            event.sender.send('error', errorMessage, 'compute');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely', 'compute');
+            event.sender.send('error', errorMessage, 'compute');
         } else {
             try {
                 event.sender.send('compute-result', stdout, selectedFileHolder);
@@ -608,10 +608,10 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
         let errorMessage = 'An error occurred while trying to extract the data from the files';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely', 'extract');
+            event.sender.send('error', errorMessage, 'extract');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely', 'extract');
+            event.sender.send('error', errorMessage, 'extract');
         } else {
             try {
                 event.sender.send('extract-result');
@@ -646,10 +646,10 @@ ipcMain.on('run-validate', (event, extracted_file) => {
         let errorMessage = 'An error occurred while trying to validate the file';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely', 'validate');
+            event.sender.send('error', errorMessage, 'validate');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely', 'validate');
+            event.sender.send('error', errorMessage, 'validate');
         } else {
             try {
                 event.sender.send('validate-result');
@@ -685,10 +685,10 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
         let errorMessage = 'An error occurred while trying to combine the file';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely', 'combine');
+            event.sender.send('error', errorMessage, 'combine');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely', 'combine');
+            event.sender.send('error', errorMessage, 'combine');
         } else {
             try {
                 event.sender.send('combine-result');
@@ -722,10 +722,10 @@ ipcMain.on('run-classify', (event, converted_file) => {
         let errorMessage = 'An error occurred while trying to classify for F-waves';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely', 'classify');
+            event.sender.send('error', errorMessage, 'classify');
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely', 'classify');
+            event.sender.send('error', errorMessage, 'classify');
         } else {
             try {
                 event.sender.send('classify-result');
@@ -755,10 +755,10 @@ ipcMain.on('get-version-info', (event) => {
         let errorMessage = 'An error occurred while retrieving the python version info';
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 'indefinitely');
+            event.sender.send('error', errorMessage);
         } else {
             try {
                 event.sender.send('script-version-info', stdout);
@@ -804,10 +804,10 @@ function getDatabaseSettings(event) {
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the database path';
         if (error !== null) {
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
             event.sender.send('current-database-settings', 'error');
         } else if (stderr !== '') {
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
             event.sender.send('current-database-settings', 'error');
         } else {
             event.sender.send('current-database-settings', stdout);
@@ -831,7 +831,7 @@ function getModalitySettings(event) {
             if (stderr.toString().indexOf('modalities niet vinden') >= 0) {
                 errorMessage = 'The database is not setup yet, please do that first!';
             }
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else {
             event.sender.send('current-modality-settings', stdout);
         }
@@ -844,10 +844,10 @@ function getTraceSelectionSettings(event) {
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the trace selection settings';
         if (error !== null) {
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
             event.sender.send('current-trace-settings', 'error');
         } else if (stderr !== '') {
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
             event.sender.send('current-trace-settings', 'error');
         } else {
             event.sender.send('current-trace-settings', stdout);
@@ -873,10 +873,10 @@ ipcMain.on('set-database', (event, new_database_path) => {
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else {
             event.sender.send('database-set-successful', stdout);
         }
@@ -905,11 +905,11 @@ ipcMain.on('set-new-modality', (event, name, type, strategy) => {
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
             log.error(error);
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else {
             event.sender.send('set-modality-successful', name);
         }
@@ -957,7 +957,7 @@ ipcMain.on('set-default-select-dir', (event, default_select_dir) => {
         // locally set the python renderer dir path for further use in the application
         defaultFileSelectionDir = default_select_dir;
     } catch (e) {
-        event.sender.send('error', 'An error occurred while trying to set the default select directory', 5000);
+        event.sender.send('error', 'An error occurred while trying to set the default select directory');
     } finally {
         event.sender.send('successfully-set-default-select-dir');
     }
@@ -982,10 +982,10 @@ ipcMain.on('set-chunk-size', (event, chunk_size) => {
 
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else {
             event.sender.send('chunk-size-set-successful', stdout);
         }
@@ -1031,10 +1031,10 @@ function setupDatabase(event) {
         // if errors occur, send an error message to the renderer process
         if (error !== null) {
             log.error(error);
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else if (stderr !== '') {
             log.error(stderr);
-            event.sender.send('error', errorMessage, 5000);
+            event.sender.send('error', errorMessage);
         } else {
             event.sender.send('database-setup-successful', stdout);
         }

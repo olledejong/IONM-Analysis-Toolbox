@@ -29,7 +29,7 @@ MyTitleBar.updateIcon('assets/images/app_icon.png');
 let taskbar = document.getElementById('taskbar');
 let sections = taskbar.getElementsByClassName('taskbar-div');
 for (let i = 0; i < sections.length; i++) {
-    sections[i].addEventListener('click', function() {
+    sections[i].addEventListener('click', function () {
         let current = document.getElementsByClassName('active');
         current[0].className = current[0].className.replace(' active', '');
         this.className += ' active';

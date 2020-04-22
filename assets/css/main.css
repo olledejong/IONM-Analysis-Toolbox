@@ -11,6 +11,7 @@
 @font-face {
     font-family: Ubuntu-regular;
 }
+
 body {
     background: #757575;
     padding: 0;
@@ -62,7 +63,6 @@ footer span {
     text-shadow: 1px 2px 0 #404040;
     color: white;
 }
-
 
 .csv-select-btn, #validate-select-btn,
 #classify-select-btn {
@@ -246,6 +246,8 @@ footer span {
 
 .version-first-cell {
     padding: 0 20px 10px 0;
+    font-weight: 500;
+    letter-spacing: 1.5px;
 }
 
 .version-second-cell {
@@ -284,9 +286,7 @@ th {
 
 #about-app h1, #about-scripts h1 {
     font-weight: 600;
-    border-bottom: 2px solid white;
     letter-spacing: 1.5px;
-    margin: 0 0 10px 0;
     color: #f89406;
     text-align: left;
     font-size: 16px;
@@ -939,7 +939,8 @@ label.radio input:checked + span {
     color: #d8222c;
 }
 
-#succeeded-converts h1 i {
+#succeeded-converts h1 i,
+#succeeded-computes h2 i{
     color: #270;
 }
 

@@ -129,7 +129,7 @@ body.on('click', '#compute-section', () => {
 //==================================================================
 body.on('click', '#extract-section', () => {
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 530);
+    ipcRenderer.send('resize-window', 800, 470);
 
     // fade in the html content
     variable_content.load('components/extract.html').hide().fadeIn('slow');
@@ -178,7 +178,7 @@ body.on('click', '#classify-section', () => {
     // variable_content.load('components/classify.html').hide().fadeIn('slow');
     // // load the needed script
     // loadToolScript( path.join(__dirname, '/renderer/tools/classify.js') );
-    showNotification('warn', 'This tool hasn\'t been fully implemented yet', 5000);
+    showNotification('warn', 'This tool hasn\'t been fully implemented yet');
 });
 
 
@@ -296,7 +296,7 @@ function generateStatsParameterOptions() {
     let possibleStatsArguments = ['all', 'auc', 'p_p_amplitude'];
     // for all possible statistical parameters add these to a select list for the user
     for (let i = 0; i < possibleStatsArguments.length; i++) {
-        setTimeout(function() {
+        setTimeout(() => {
             $('#stats-input').append(new Option(possibleStatsArguments[i], possibleStatsArguments[i]));
         }, 100);
     }
@@ -309,7 +309,7 @@ function generateStatsParameterOptions() {
 help_section_button.click( () => {
     let target = path.join(__dirname, '/README.pdf');
     ipcRenderer.send('open-window', target);
-    showNotification('info', 'Support document file should now open in your default PDF viewer', 5000);
+    showNotification('info', 'Support document file should now open in your default PDF viewer');
 });
 
 
@@ -326,5 +326,5 @@ ipcRenderer.on('memory-usage', (event, memoryUsage) => {
 // Displays machine total memory usage (updates every second)
 //==================================================================
 ipcRenderer.on('message', (event, message, level) => {
-    showNotification(level, message, 5000);
+    showNotification(level, message);
 });

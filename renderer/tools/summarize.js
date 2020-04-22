@@ -1,32 +1,33 @@
-/**
- * This renderer handles all the functionality that has to do with the
- * SUMMARIZE functionality. It listens for a click on the file select
- * button, and tells the main process to handle this. It also displays
- * the received filenames inside the button.
- * It als listens for a click on the run button and tells the main
- * process to execute the summarize part of the underlying python scripts.
- */
+//=========================================================================
+//                         Summarize Renderer
+//=========================================================================
+// This file handles all the functionality that has to do with the
+// SUMMARIZE functionality. It listens for a click on the file select
+// button, and tells the main process to handle this. It also displays
+// the received filenames inside the button.
+// It als listens for a click on the run button and tells the main process
+// to execute the summarize part of the underlying python scripts.
+//=========================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
 
-/**
- * On clicking the RUN button on the summarize page, the page
- * will be cleared to be later filled with the skeleton for
- * the eventual results.
- * Of course also tells the main process to run the summarize
- * command.
- */
+//=========================================================================
+// On clicking the RUN button on the summarize page, the page will be
+// cleared to be later filled with the skeleton for the eventual results.
+// Of course also tells the main process to run the summarize command.
+//=========================================================================
 variable_content.on('click', '#run-summarize', () => {
     variable_content.html('');
     ipcRenderer.send('run-summarize');
 });
 
-/**
- * This function is executed when the main process sends the
- * message 'set-title-and-preloader-summarize'. The result page skeleton
- * and preloader will be set.
- */
+
+//=====================================================================
+// This function is executed when the main process sends the message
+// 'set-title-and-preloader-summarize'. The result page skeleton and
+// preloader will be set.
+//=====================================================================
 ipcRenderer.on('set-title-and-preloader-summarize', () => {
     $('.linePreloader').show();
     variable_content.html('<div id="summarize-results"></div>');
@@ -35,13 +36,13 @@ ipcRenderer.on('set-title-and-preloader-summarize', () => {
 });
 
 
-/**
- * Handles the message from the main process that contains the summarize results
- * for the selected Eclipse files. Appends tables to HTML only AFTER the generateTable
- * function is done using JavaScript Promises.
- *
- * @param {string} JSON_result
- */
+//=======================================================================
+// Handles the message from the main process that contains the summarize
+// results for the selected Eclipse files. Appends tables to HTML only
+// AFTER the generateTable function is done using JavaScript Promises.
+//
+// @param {string} JSON_result - unparsed JSON output from summarize cmd
+//=======================================================================
 ipcRenderer.on('summarize-result', (event, JSON_result) => {
     log.info('[ summarize.js ][ displaySummarizeResults() is being executed ]');
     // parse the JSON string into a JSON object
@@ -63,12 +64,13 @@ ipcRenderer.on('summarize-result', (event, JSON_result) => {
     });
 });
 
-/**
- * Returns a HTML table which is created using the parameter JSON_obj.
- *
- * @param {object} JSON_obj
- * @returns variables htmlTableContent and fileName via a Promise object
- */
+
+//=======================================================================
+// Returns a HTML table which is created using the parameter JSON_obj.
+//
+// @param {object} JSON_obj - parsed JSON_string
+// @returns variables htmlTableContent and fileName via a Promise object
+//=======================================================================
 function generateTable(JSON_obj) {
     return new Promise((resolve) => {
 

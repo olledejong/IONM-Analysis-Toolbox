@@ -1,9 +1,11 @@
-/**
- * This renderer file is responsible for all user interaction in the
- * convert section of the application. It is responsible for telling
- * the main process to execute the tool via a ChildProcess and handling
- * the response of this ChildProcess (error / success)
- */
+//====================================================================
+//                        Convert Renderer
+//====================================================================
+// This renderer file is responsible for all user interaction in the
+// convert section of the application. It is responsible for telling
+// the main process to execute the tool via a ChildProcess and handling
+// the response of this ChildProcess (error / success)
+//====================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
@@ -14,20 +16,20 @@ let varContent = $('#variable-content');
 // globals
 let failedConvertFilePaths = [];
 
-/**
- * Tells the main process to run the summarize tool / command.
- * Sends message to resize window.
- */
+//====================================================================
+// Tells the main process to run the summarize tool / command.
+// Sends message to resize window.
+//====================================================================
 varContent.on('click', '#run-convert', () => {
-    ipcRenderer.send('resize-window', 1000, 850);
+    ipcRenderer.send('resize-window', 1000, 700);
     ipcRenderer.send('run-convert');
 });
 
 
-/**
- * Loads result page skeleton and the preloader will be showed.
- * Hides all containers until needed later.
- */
+//====================================================================
+// Loads result page skeleton and the preloader will be showed.
+// Hides all containers until needed later.
+//====================================================================
 ipcRenderer.on('set-title-and-preloader-convert', () => {
     $('.linePreloader').show();
     varContent.html(
@@ -63,10 +65,11 @@ ipcRenderer.on('set-title-and-preloader-convert', () => {
     $('#success-and-run-compute').hide();
 });
 
-/**
- * Show container for the purpose of adding encountered unknown modalities.
- * Shows preloader.
- */
+
+//=========================================================================
+// Show container for the purpose of adding encountered unknown modalities.
+// Shows preloader.
+//=========================================================================
 ipcRenderer.on('set-preloader-rerun-convert', () => {
     $('.linePreloader').show();
     $('#add-modality-form-div').animate({
@@ -77,21 +80,20 @@ ipcRenderer.on('set-preloader-rerun-convert', () => {
 });
 
 
-/**
- * Shows confirmation (and resulting logic) or informative error messages about the convert
- * task the user just ran.
- *
- * @param {string} convert_output - the output of the convert run in JSON string format
- * @param {string} filepath_of_run - the filepath of the specific convert run
- * @param {object} event - for purpose of communication with sender
- */
+//=========================================================================
+// Shows confirmation (and resulting logic) or informative error messages
+// about the convert task the user just ran.
+//
+// @param {string} convert_output - output of convert run in (JSON string)
+// @param {string} filepath_of_run - filepath of specific convert run
+// @param {object} event - for purpose of communication with sender
+//=========================================================================
 ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
     let convert_results_container = $('#convert-results');
     let succeeded_converts_containter = $('#succeeded-converts');
     let success_and_compute_container = $('#success-and-run-compute');
     let failed_converts_container = $('#failed-converts');
     let add_modality_forms_container = $('#add-modality-form-div');
-    let preloader = $('.linePreloader');
 
     // output parts
     let file_name = convert_output['file-name'];
@@ -106,7 +108,7 @@ ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
         succeeded_converts_containter.show();
         success_and_compute_container.show();
 
-        showNotification('success', success_msg, 5000);
+        showNotification('success', success_msg);
         convert_results_container.show();
 
     // if iteration does not contain success message (if convert of file failed)
@@ -116,22 +118,22 @@ ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
         add_modality_forms_container.show();
         failed_converts_container.show();
 
-        showNotification('error', short_error_msg, 5000);
+        showNotification('error', short_error_msg);
         convert_results_container.show();
 
         let existingFormsOnPage = getExistingModalities();
         // generate and insert the modality forms
         generateModalityFormFields( existingFormsOnPage, unknown_modalities );
     }
-    preloader.hide();
+    $('.linePreloader').hide();
 });
 
 
-/**
- * Gets all the modality forms that are already on the page
- *
- * @returns {array} existingFormsOnPage - all modalities that are already on the page
- */
+//===========================================================================
+// Gets all the modality forms that are already on the page
+//
+// @returns {array} existingFormsOnPage - modalities that are already on page
+//===========================================================================
 function getExistingModalities() {
     let modalityInputFields = $('.modality-input');
     let existingFormsOnPage = [];
@@ -143,14 +145,14 @@ function getExistingModalities() {
 }
 
 
-/**
- * Generates and inserts a modality form field for every modality encountered
- * that is not already displayed to the user. This has to be done because the
- * function gets run for every file the user selects.
- *
- * @param existingFormsOnPage
- * @param unknown_modalities
- */
+//===========================================================================
+// Generates and inserts a modality form field for every modality encountered
+// that is not already displayed to the user. This has to be done because the
+// function gets run for every file the user selects.
+//
+// @param existingFormsOnPage - existing modality forms already on created
+// @param unknown_modalities - the encountered unknown modalities
+//===========================================================================
 function generateModalityFormFields(existingFormsOnPage, unknown_modalities) {
     for (let i = 0; i < unknown_modalities.length; i++) {
         let rndmHash = Math.random().toString(36).substring(7);
@@ -185,15 +187,16 @@ function generateModalityFormFields(existingFormsOnPage, unknown_modalities) {
 }
 
 
-/**
- * Retrieves the values selected by the user for each modality (form) and tells
- * the main process to store them one-by-one. Also disables/enables button and
- * hides the preloader.
- */
+//==========================================================================
+// Retrieves the values selected by the user for each modality (form) and
+// tells the main process to store them one-by-one. Also disables/enables
+// button and hides the preloader.
+//==========================================================================
 varContent.on('click', '#submit-all-modalities', () => {
-    showNotification('warn', 'Do not re-run until the modalities have been stored successfully!', 'indefinitely');
+    showNotification('warn', 'Do not re-run until the modalities have been stored successfully!');
     // loop trough all 'add modality' forms
-    $('.add-modality-after-convert').each( () => {
+    // eslint-disable-next-line no-unused-vars
+    $('.add-modality-after-convert').each( function (i , form) {
         let modality_name = $(this).find('.modality-input').val();
         let modality_type;
         let modality_strategy;
@@ -238,25 +241,26 @@ varContent.on('click', '#submit-all-modalities', () => {
 });
 
 
-/**
- * Lets the user know that the modality was set successfully by showing a
- * toast notification for every modality.
- */
+//==========================================================================
+// Lets the user know that the modality was set successfully by showing a
+// toast notification for every modality.
+//==========================================================================
 ipcRenderer.on('set-modality-successful', (event, name) => {
     $('.linePreloader').hide('fast');
-    showNotification('success', ('Successfully stored the modality '+ name), 5000);
+    showNotification('success', ('Successfully stored the modality '+ name));
     // refresh modalities (in case of added via settings)
     ipcRenderer.send('get-current-settings');
 });
 
 
-/**
- * Tells the main process to re-run the convert command for the failed converts.
- * Because the at first unknown modalities now have been stored (nothing can go wrong
- * while doing that, so no error handling) we can let the user repeat the convert command
- * for those files that previously failed.
- */
+//=============================================================================
+// Tells the main process to re-run the convert command for the failed converts.
+// Because the at first unknown modalities now have been stored (nothing can
+// go wrong while doing that, so no error handling) we can let the user repeat
+// the convert command for those files that previously failed.
+//=============================================================================
 varContent.on('click', '#rerun-failed-converts', () => {
+    ipcRenderer.send('resize-window', 1000, 320);
     ipcRenderer.send('rerun-convert', failedConvertFilePaths);
     // empty the list for possible future encounters
     failedConvertFilePaths = [];

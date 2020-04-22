@@ -1,9 +1,11 @@
-/**
- * This renderer file is responsible for all user interaction in the
- * 'combine' section of the application. It is responsible
- * for telling the main process to execute the tool via a ChildProcess
- * and handling the response of this ChildProcess (error / success)
- */
+//======================================================================
+//                          Combine Renderer
+//======================================================================
+// This file is responsible for all user interaction in the
+// 'combine' section of the application. It is responsible
+// for telling the main process to execute the tool via a ChildProcess
+// and handling the response of this ChildProcess (error / success)
+//======================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
@@ -11,15 +13,16 @@ window.$ = window.jQuery = require('jquery');
 // global jQuery selectors
 let variab_cont = $('#variable-content');
 
-/**
- * Responsible for handling the information that the file select dialog
- * returns. Displays the file-path inside the correct select button using
- * the label parameter.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {array} paths - all the selected file-paths in an array
- * @param {string} label - word that is used to checks where the path should be displayed
- */
+//========================================================================
+// Responsible for handling the information that the file select dialog
+// returns. Displays the file-path inside the correct select button using
+// the label parameter.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {array} paths - all the selected file-paths in an array
+// @param {string} label - word that is used to checks where the path
+//                         should be displayed
+//========================================================================
 ipcRenderer.on('selected-combine', (event, paths) => {
     let combine_select_btn = $('#combine-select-btn');
     // use generate file names function from fileSelect.js
@@ -35,19 +38,20 @@ ipcRenderer.on('selected-combine', (event, paths) => {
 });
 
 
-/**
- * Listens to change of the compute select container. If change, then it runs the
- * function that checks if a file and the stats argument are given correctly.
- */
+//===================================================================
+// Listens to change of the compute select container. If change, then
+// it runs the function that checks if a file and the stats argument
+// are given correctly.
+//===================================================================
 variab_cont.on('change', '#combine-select-container',  function checkIfFormComplete() {
     checkIfCombineFormComplete();
 });
 
 
-/**
- * Checks if a file and the stats argument are given correctly.
- * Disables / enables run button
- */
+//==================================================================
+// Checks if a file and the stats argument are given correctly.
+// Disables / enables run button
+//==================================================================
 function checkIfCombineFormComplete() {
     let run_combine = $('#run-combine');
     let combine_select_btn = $('#combine-select-btn');
@@ -69,11 +73,10 @@ function checkIfCombineFormComplete() {
 }
 
 
-/**
- * Tells the main process to run the combine tool / command.
- * Clears the html.
- */
-variab_cont.on('click', '#run-combine', function() {
+//===========================================================================
+// Tells the main process to run the combine tool / command. Clears the html.
+//===========================================================================
+variab_cont.on('click', '#run-combine', () => {
     let selected_filenames_container = $('#combine-select-btn');
     let patient_id = $('#patient-id-input').val();
 
@@ -85,26 +88,23 @@ variab_cont.on('click', '#run-combine', function() {
 });
 
 
-/**
- * Shows the result page skeleton and the preloader will be showed.
- */
+//===========================================================================
+// Shows the result page skeleton and the preloader will be showed.
+//===========================================================================
 ipcRenderer.on('set-title-and-preloader-combine', () => {
-    let preloader = $('.linePreloader');
-
-    preloader.show();
+    $('.linePreloader').show();
     variab_cont.html('<h1 class="external-window-instruction">Combining the data, this could take quite some time..</h1>');
     ipcRenderer.send('resize-window', 1000, 300);
 });
 
 
-/**
- * Restores original page when user closes external windows and functionality is done
- * Hides preloader and sends message to resize window.
- */
+//===========================================================================
+// Restores original page when user closes external windows and functionality
+// is done. Hides preloader and sends message to resize window.
+//===========================================================================
 ipcRenderer.on('combine-result', () => {
-    showNotification('success', 'Successfully combined the file with the database parameters', 5000);
-    let preloader = $('.linePreloader');
+    showNotification('success', 'Successfully combined the file with the database parameters');
     variab_cont.load('components/combine.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);
-    preloader.hide();
+    $('.linePreloader').hide();
 });

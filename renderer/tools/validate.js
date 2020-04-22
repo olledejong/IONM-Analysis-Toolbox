@@ -1,9 +1,11 @@
-/**
- * This renderer file is responsible for all user interaction in the
- * 'validate' section of the application. It is responsible
- * for telling the main process to execute the tool via a ChildProcess
- * and handling the response of this ChildProcess (error / success)
- */
+//=======================================================================
+//                         Show Timing Renderer
+//=======================================================================
+// This renderer file is responsible for all user interaction in the
+// 'validate' section of the application. It is responsible for telling
+// the main process to execute the tool via a ChildProcess and handling
+// the response of this ChildProcess (error / success)
+//=======================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
@@ -11,15 +13,16 @@ window.$ = window.jQuery = require('jquery');
 // global jQuery selectors
 let varb_cont = $('#variable-content');
 
-/**
- * Responsible for handling the information that the file select dialog
- * returns. Displays the file-path inside the correct select button using
- * the label parameter.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {array} paths - all the selected file-paths in an array
- * @param {string} label - word that is used to checks where the path should be displayed
- */
+//=======================================================================
+// Responsible for handling the information that the file select dialog
+// returns. Displays the file-path inside the correct select button using
+// the label parameter.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {array} paths - all the selected file-paths in an array
+// @param {string} label - word that is used to checks where the path
+//                         should be displayed
+//=======================================================================
 ipcRenderer.on('selected-validate', (event, paths) => {
     let run_btn = $('#run-validate');
     let selected_filenames = $('#selected-filenames');
@@ -54,11 +57,10 @@ ipcRenderer.on('selected-validate', (event, paths) => {
 });
 
 
-/**
- * Tells the main process to run the validate tool / command.
- * Clears the html.
- */
-varb_cont.on('click', '#run-validate', function() {
+//=======================================================================
+// Tells the main process to run the validate tool. Clears the html.
+//=======================================================================
+varb_cont.on('click', '#run-validate', () => {
     let selected_filenames = $('#selected-filenames');
 
     // file selected by user
@@ -69,26 +71,23 @@ varb_cont.on('click', '#run-validate', function() {
 });
 
 
-/**
- * Shows the result page skeleton and the preloader will be showed.
- */
+//=======================================================================
+// Shows the result page skeleton and the preloader will be showed.
+//=======================================================================
 ipcRenderer.on('set-title-and-preloader-validate', () => {
-    let preloader = $('.linePreloader');
-
-    preloader.show();
+    $('.linePreloader').show();
     varb_cont.html('<h1 class="external-window-instruction">The validating can be performed in the external pop-up window(s)</h1>');
     ipcRenderer.send('resize-window', 1000, 300);
 });
 
 
-/**
- * Restores original page when user closes external windows and functionality is done
- * Hides preloader and sends message to resize window.
- */
+//===========================================================================
+// Restores original page when user closes external windows and functionality
+// is done. Hides preloader and sends message to resize window.
+//===========================================================================
 ipcRenderer.on('validate-result', () => {
-    showNotification('success', 'Successfully validated the file', 5000);
-    let preloader = $('.linePreloader');
+    showNotification('success', 'Successfully validated the file');
     varb_cont.load('components/validate.html').hide().fadeIn('slow');
     ipcRenderer.send('resize-window', 800, 460);
-    preloader.hide();
+    $('.linePreloader').hide();
 });

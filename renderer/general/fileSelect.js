@@ -14,7 +14,7 @@
 // lets it know the selecting of files is for the purpose of general
 // tools
 //==================================================================
-variable_content.on('click', '.csv-select-btn', function() {
+variable_content.on('click', '.csv-select-btn', () => {
     let tool = 'general';
     // configure which types of files are allowed
     let types = [
@@ -233,7 +233,7 @@ variable_content.on('click', '#e-trg-select-btn', () => {
 // lets it know the selecting of files is for the purpose of the
 // validating an extracted file.
 //==================================================================
-variable_content.on('click', '#validate-select-btn', function() {
+variable_content.on('click', '#validate-select-btn', () => {
     let tool = 'validate';
     // configure which types of files are allowed
     let types = [
@@ -256,7 +256,7 @@ variable_content.on('click', '#validate-select-btn', function() {
 // lets it know the selecting of files is for the purpose of
 // combining database data with an EEG file.
 //==================================================================
-variable_content.on('click', '#combine-select-btn', function() {
+variable_content.on('click', '#combine-select-btn', () => {
     let tool = 'combine';
     // configure which types of files are allowed
     let types = [
@@ -279,7 +279,7 @@ variable_content.on('click', '#combine-select-btn', function() {
 // lets it know the selecting of files is for the purpose of
 // classifying files for F-wave presence
 //==================================================================
-variable_content.on('click', '#classify-select-btn', function() {
+variable_content.on('click', '#classify-select-btn', () => {
     let tool = 'classify';
     // configure which types of files are allowed
     let types = [
@@ -302,7 +302,7 @@ variable_content.on('click', '#classify-select-btn', function() {
 // lets it know the selecting of files is for the purpose of setting
 // the database path via the app settings
 //==================================================================
-variable_content.on('click', '#select-database-btn', function() {
+variable_content.on('click', '#select-database-btn', () => {
     let tool = 'database';
     // configure which types of files are allowed
     let types = [
@@ -325,7 +325,7 @@ variable_content.on('click', '#select-database-btn', function() {
 // lets it know the selecting of files is for the purpose of setting
 // the python project its location (src dir)
 //==================================================================
-variable_content.on('click', '#select-src-dir', function() {
+variable_content.on('click', '#select-src-dir', () => {
 
     let tool = 'src-dir';
     // configure the options (allowed types + properties)
@@ -345,7 +345,7 @@ variable_content.on('click', '#select-src-dir', function() {
 // the default file selection directory when opening selecting files
 // to run tools on
 //==================================================================
-variable_content.on('click', '#select-default-dir', function() {
+variable_content.on('click', '#select-default-dir', () => {
 
     let tool = 'default-select-dir';
     // configure the options (allowed types + properties)

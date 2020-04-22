@@ -17,8 +17,8 @@ window.$ = window.jQuery = require('jquery');
 //
 // @param error_message
 //==================================================================
-ipcRenderer.on('error', (event, error_message, duration, tool) => {
-    showNotification('error', error_message, duration);
+ipcRenderer.on('error', (event, error_message, tool) => {
+    showNotification('error', error_message);
     switch (tool) {
     case 'summarize':
         variable_content.load('components/summarize.html');
@@ -74,7 +74,7 @@ ipcRenderer.on('error', (event, error_message, duration, tool) => {
 // @param duration
 //==================================================================
 // eslint-disable-next-line no-unused-vars
-function showNotification(type, message, duration) {
+function showNotification(type, message) {
     let container_after_titlebar = $('.container-after-titlebar');
     let r = Math.random().toString(36).substring(7);
 
@@ -98,27 +98,7 @@ function showNotification(type, message, duration) {
     // animate the error message
     tempNotificationElement.animate({
         right: '+=465', opacity: 1
-    }, 800, () => {
-        if (duration !== 'indefinitely') {
-            tempNotificationElement.delay(duration).fadeOut(800, () => {
-                $(this).remove();
-                $( () => {
-                    $('.success-msg').animate({
-                        top: '-=40'
-                    }, { duration: 350, queue: false } );
-                    $('.info-msg').animate({
-                        top: '-=40'
-                    }, { duration: 350, queue: false } );
-                    $('.warning-msg').animate({
-                        top: '-=40'
-                    }, { duration: 350, queue: false } );
-                    $('.error-msg').animate({
-                        top: '-=40'
-                    }, { duration: 350, queue: false } );
-                });
-            });
-        }
-    });
+    }, 800);
 }
 
 //==================================================================
@@ -136,7 +116,7 @@ function removeToastMessages() {
 // On click event handlers for all toast notifications
 //==================================================================
 bdy.on('click', '.warning-msg', (e) => {
-    removeNotification(e);
+    removeNotification(e, this);
 });
 
 bdy.on('click', '.error-msg', (e) => {

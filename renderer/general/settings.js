@@ -143,7 +143,7 @@ ipcRenderer.on('current-modality-settings', (event, current_modality_settings) =
     // if result does not contain curly brackets aka modalities, the database isn't set up yet, display empty table
     } else {
         modalities_table.remove();
-        showNotification('warn', 'Database might not be setup yet!', 5000);
+        showNotification('warn', 'Database might not be setup yet!');
         $(`<table id="modalities-table">
             <tr id="modalities-table-hrow">
                 <th>Either the database is not setup yet, or an error occurred while retrieving the modalities</th>
@@ -159,7 +159,7 @@ ipcRenderer.on('current-modality-settings', (event, current_modality_settings) =
 // Also retrieves the currently configured settings.
 //=============================================================================
 ipcRenderer.on('successfully-set-src-dir', () => {
-    showNotification('success', 'Successfully set the python renderer directory', 5000);
+    showNotification('success', 'Successfully set the python renderer directory');
     $('.linePreloader').show();
     ipcRenderer.send('get-current-settings');
 });
@@ -170,7 +170,7 @@ ipcRenderer.on('successfully-set-src-dir', () => {
 // successfully configured.
 //=============================================================================
 ipcRenderer.on('successfully-set-default-select-dir', () => {
-    showNotification('success', 'Successfully set the default select directory path', 5000);
+    showNotification('success', 'Successfully set the default select directory path');
 });
 
 
@@ -234,7 +234,7 @@ variable_content.on('click', '#set-default-select-dir', () => {
 //=============================================================================
 ipcRenderer.on('database-set-successful', () => {
     ipcRenderer.send('get-current-settings');
-    showNotification('success', 'Successfully set the database path, updating the modalities..', 5000);
+    showNotification('success', 'Successfully set the database path, updating the modalities..');
 });
 
 
@@ -459,7 +459,7 @@ ipcRenderer.on('setting-up-database', () => {
 ipcRenderer.on('database-setup-successful', () => {
     // update the modalities
     ipcRenderer.send('get-current-settings');
-    showNotification('success', 'Successfully setup the database, updating the modalities..', 5000);
+    showNotification('success', 'Successfully setup the database, updating the modalities..');
 });
 
 
@@ -515,6 +515,6 @@ variable_content.on('change', '#trace-selection-settings', () => {
 //====================================================================
 ipcRenderer.on('chunk-size-set-successful', () => {
     $('.linePreloader').hide('fast');
-    showNotification('success', 'Successfully updated the trace selection settings', 5000);
+    showNotification('success', 'Successfully updated the trace selection settings');
 });
 

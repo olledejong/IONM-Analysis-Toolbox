@@ -1,22 +1,23 @@
-/**
- * This renderer file is responsible for all user interaction in the
- * compute section of the application. It is responsible for telling
- * the main process to execute the tool via a ChildProcess and handling
- * the response of this ChildProcess (error / success)
- */
+//======================================================================
+// This renderer file is responsible for all user interaction in the
+// compute section of the application. It is responsible for telling
+// the main process to execute the tool via a ChildProcess and handling
+// the response of this ChildProcess (error / success)
+//======================================================================
+
 // requires
 window.$ = window.jQuery = require('jquery');
 
 // global selectors
 let variableCont = $('#variable-content');
 
-/**
- * Responsible for handling the information that the file select dialog
- * returns. Displays the file-path inside the select button.
- *
- * @param {object} event - for purpose of communication with sender
- * @param {array} paths - all the selected file-paths in an array
- */
+//======================================================================
+// Responsible for handling the information that the file select dialog
+// returns. Displays the file-path inside the select button.
+//
+// @param {object} event - for purpose of communication with sender
+// @param {array} paths - all the selected file-paths in an array
+//======================================================================
 ipcRenderer.on('selected-compute', (event, paths) => {
     let compute_select_btn = $('#compute-select-btn');
 
@@ -31,19 +32,20 @@ ipcRenderer.on('selected-compute', (event, paths) => {
 });
 
 
-/**
- * Listens to change of the compute select container. If change, then it runs the
- * function that checks if a file and the stats argument are given correctly.
- */
+//====================================================================
+// Listens to change of the compute select container. If change, then
+// it runs the function that checks if a file and the stats argument
+// are given correctly.
+//====================================================================
 variableCont.on('change', '#compute-select-container',  function checkIfFormComplete() {
     checkIfComputeFormComplete();
 });
 
 
-/**
- * Checks if a file and the stats argument are given correctly.
- * Disables / enables run button
- */
+//===============================================================
+// Checks if a file and the stats argument are given correctly.
+// Disables / enables run button
+//===============================================================
 function checkIfComputeFormComplete() {
     let run_compute = $('#run-compute');
     let compute_select_btn = $('#compute-select-btn');
@@ -62,11 +64,12 @@ function checkIfComputeFormComplete() {
     }
 }
 
-/**
- * Tells the main process to run the compute tool / command.
- * Sends message to resize the window
- */
-variableCont.on('click', '#run-compute', function() {
+
+//=============================================================
+// Tells the main process to run the compute tool / command.
+// Sends message to resize the window
+//=============================================================
+variableCont.on('click', '#run-compute', () => {
     let stats_input_field = $('#stats-input');
     let stats_value = stats_input_field.val();
 
@@ -75,10 +78,10 @@ variableCont.on('click', '#run-compute', function() {
 });
 
 
-/**
- * Loads result page skeleton and the preloader will be showed.
- * Hides containers until needed later.
- */
+//=============================================================
+// Loads result page skeleton and the preloader will be showed.
+// Hides containers until needed later.
+//=============================================================
 ipcRenderer.on('set-title-and-preloader-compute', () => {
     $('.linePreloader').show();
     variableCont.html(`<div id="compute-content">
@@ -95,17 +98,20 @@ ipcRenderer.on('set-title-and-preloader-compute', () => {
     $('#successful-computes').hide();
 });
 
-/**
- * Shows the result skeleton and fills it for every successfully completed
- * compute task. Hides preloader and shows the results.
- */
+
+//===============================================================
+// Shows the result skeleton and fills it for every successfully
+// completed compute task. Hides preloader and shows the results.
+//
+// @param {string} file_path - file path of the computed file
+//===============================================================
 ipcRenderer.on('compute-result', (event, stdout, file_path) => {
     ipcRenderer.send('resize-window', 1200, 500);
 
     for (let i = 0; i < file_path.length; i++) {
         log.info(file_path);
         let file_name = path.parse(file_path[i]).base.trim();
-        showNotification('success', `Successfully computed ${file_name}`, 5000);
+        showNotification('success', `Successfully computed ${file_name}`);
         $(`<tr><td class="name-td">${file_name}</td><td class="msg-td">Successfully computed the statistics of this file. Results can be found in the database</td><td class="filepath-td">${file_path[0]}</td></tr><br>`).insertBefore('#succeeded-computes-p');
     }
     $('.linePreloader').hide('fast');
