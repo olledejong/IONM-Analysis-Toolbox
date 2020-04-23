@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+@font-face {
+    font-family: Ubuntu-regular;
+}
+
+body {
+    background: #757575;
+    padding: 0;
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+footer {
+    z-index: 100;
+    position: fixed;
+    height: 20px;
+    width: 100%;
+    background: rgb(132,132,132);
+    font-size: 12px;
+    bottom: 0;
+    overflow: hidden;
+    color: white;
+    opacity: 0.8;
+}
+
+#help-content {
+    padding: 10px 20px;
+}
+
+h1 {
+    font-size: 26px;
+}
+
+h2 {
+    font-size: 20px;
+}

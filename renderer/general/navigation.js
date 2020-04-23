@@ -316,9 +316,8 @@ function generateStatsParameterOptions() {
 // Tells main process to open the README
 //==================================================================
 help_section_button.click( () => {
-    let target = path.join(__dirname, '/README.pdf');
-    ipcRenderer.send('open-window', target);
-    showNotification('info', 'Support document file should now open in your default PDF viewer');
+    // ipcRenderer.send('open-window', path.join(__dirname, '/README.pdf'));
+    ipcRenderer.send('create-help-window');
 });
 
 
