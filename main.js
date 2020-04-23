@@ -184,7 +184,7 @@ autoUpdater.on('update-available', () => {
 });
 
 autoUpdater.on('update-not-available', () => {
-    log.info('There is no update available.');
+    sendStatusToWindow('Application is up-to-date!', 'info');
 });
 
 autoUpdater.on('error', (err) => {
@@ -193,7 +193,7 @@ autoUpdater.on('error', (err) => {
 
 autoUpdater.on('update-downloaded', () => {
     // Wait 5 seconds, then quit and install
-    sendStatusToWindow('Update downloaded, restarting now!', 'warn');
+    sendStatusToWindow('Update downloaded, restarting in 5 seconds!', 'warn');
 
     setTimeout(() => {
         autoUpdater.quitAndInstall();
