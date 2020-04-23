@@ -145,9 +145,9 @@ function cleanUpProcesses(resolve) {
                 // kill the unwanted background process
                 let command = `taskkill /F /pid ${process.pid}`;
                 exec(command, (error, stdout, stderr) => {
-                    if (error !== null) {
+                    if (error) {
                         log.error(error);
-                    } else if (stderr !== '') {
+                    } else if (stderr) {
                         log.error(stderr);
                     } else {
                         log.info(stdout);
@@ -188,8 +188,8 @@ autoUpdater.on('update-not-available', () => {
 });
 
 autoUpdater.on('error', (err) => {
-    sendStatusToWindow('An error during the auto-update mechanism');
-    log.error('An error during the auto-update mechanism', err);
+    sendStatusToWindow('An error occurred during the auto-update mechanism');
+    log.error('An error occurred during the auto-update mechanism', err);
 });
 
 autoUpdater.on('update-downloaded', () => {
@@ -317,10 +317,10 @@ ipcMain.on('run-summarize', (event) => {
             let summarize_error_message = 'An error occurred while summarizing one or more files';
 
             // if errors occur, send an error message to the renderer process
-            if (error !== null) {
+            if (error) {
                 log.error(error);
                 event.sender.send('error', summarize_error_message, 'summarize');
-            } else if (stderr !== '') {
+            } else if (stderr) {
                 log.error(stderr);
                 event.sender.send('error', summarize_error_message, 'summarize');
             } else {
@@ -410,10 +410,10 @@ ipcMain.on('run-timing', (event) => {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to generate the timing plot';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage, 'timing');
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'timing');
         } else {
@@ -448,10 +448,10 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to generate the EEG availability plot';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage, 'availability');
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'availability');
         } else {
@@ -488,10 +488,10 @@ ipcMain.on('run-convert', (event) => {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
-            if (error !== null) {
+            if (error) {
                 log.error(error);
                 event.sender.send('error', errorMessage, 'convert');
-            } else if (stderr !== '') {
+            } else if (stderr) {
                 log.error(stderr);
                 event.sender.send('error', errorMessage, 'convert');
             } else {
@@ -529,10 +529,10 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
             let errorMessage = 'An error occurred while trying to run the convert command';
-            if (error !== null) {
+            if (error) {
                 log.error(error);
                 event.sender.send('error', errorMessage, 'convert');
-            } else if (stderr !== '') {
+            } else if (stderr) {
                 log.error(stderr);
                 event.sender.send('error', errorMessage, 'convert');
             } else {
@@ -569,10 +569,10 @@ ipcMain.on('run-compute', (event, stats) => {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to run the compute command';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage, 'compute');
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'compute');
         } else {
@@ -608,10 +608,10 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to extract the data from the files';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage, 'extract');
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'extract');
         } else {
@@ -646,10 +646,10 @@ ipcMain.on('run-validate', (event, extracted_file) => {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to validate the file';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage, 'validate');
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'validate');
         } else {
@@ -685,10 +685,10 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to combine the file';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage, 'combine');
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'combine');
         } else {
@@ -722,10 +722,10 @@ ipcMain.on('run-classify', (event, converted_file) => {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to classify for F-waves';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage, 'classify');
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage, 'classify');
         } else {
@@ -755,10 +755,10 @@ ipcMain.on('get-version-info', (event) => {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the python version info';
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage);
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
@@ -782,21 +782,20 @@ ipcMain.on('get-version-info', (event) => {
 // @param {object} event - for purpose of communication with sender
 //===================================================================================
 ipcMain.on('get-current-settings', (event) => {
-    // get python renderer dir from user preferences
+    // get python project dir from user preferences
     if ( store.get('python-src-dir') ) {
-        // get default select directory path
+        // get settings
         event.sender.send('current-default-select-dir', store.get('default-select-path'));
-        // get python src dir
         event.sender.send('current-python-src-dir', store.get('python-src-dir'));
-        // get database path
         getDatabaseSettings(event);
-        // get modalities
         getModalitySettings(event);
-        // get trace selection settings
         getTraceSelectionSettings(event);
     } else {
-        event.sender.send('current-python-src-dir', 'No python src directory configured');
-        event.sender.send('current-database-settings', 'No python src directory configured');
+        try {
+            event.sender.send('current-python-src-dir', 'No python src directory configured');
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
+        }
     }
 });
 
@@ -805,14 +804,26 @@ function getDatabaseSettings(event) {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the database path';
-        if (error !== null) {
-            event.sender.send('error', errorMessage);
-            event.sender.send('current-database-settings', 'error');
-        } else if (stderr !== '') {
-            event.sender.send('error', errorMessage);
-            event.sender.send('current-database-settings', 'error');
+        if (error) {
+            try {
+                event.sender.send('error', errorMessage);
+                event.sender.send('current-database-settings', 'error');
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
+            }
+        } else if (stderr) {
+            try {
+                event.sender.send('error', errorMessage);
+                event.sender.send('current-database-settings', 'error');
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
+            }
         } else {
-            event.sender.send('current-database-settings', stdout);
+            try{
+                event.sender.send('current-database-settings', stdout);
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
+            }
         }
     });
 }
@@ -821,21 +832,32 @@ function getModalitySettings(event) {
     exec('ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while retrieving the existing modalities';
-
         // if errors occur, send an error message to the renderer process
-        if (error !== null) {
-            if (error.toString().indexOf('modalities niet vinden') >= 0) {
-                errorMessage = 'The database is not setup yet, please do that first!';
+        if (error || stderr) {
+            // if error originated because of table not being present
+            if (error.toString().indexOf('Microsoft Access Driver') >= 0 || stderr.toString().indexOf('Microsoft Access Driver') >= 0) {
+                try {
+                    event.sender.send('current-modality-settings', 'The database is not setup yet, please do that first!');
+                } catch (e) {
+                    log.error('Caught an error while trying to send data to the renderer process: \n', e);
+                }
+            // if caused by something else
+            } else {
+                try {
+                    event.sender.send('error', 'An error occurred while retrieving the modalities');
+                    event.sender.send('current-modality-settings', 'An error occurred while retrieving the modalities');
+                } catch (e) {
+                    log.error('Caught an error while trying to send data to the renderer process: \n', e);
+                }
             }
-            event.sender.send('current-modality-settings', errorMessage);
-        } else if (stderr !== '') {
-            if (stderr.toString().indexOf('modalities niet vinden') >= 0) {
-                errorMessage = 'The database is not setup yet, please do that first!';
-            }
-            event.sender.send('error', errorMessage);
+        // if no error
         } else {
-            event.sender.send('current-modality-settings', stdout);
+            // send result data to renderer
+            try {
+                event.sender.send('current-modality-settings', stdout);
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
+            }
         }
     });
 }
@@ -844,15 +866,19 @@ function getTraceSelectionSettings(event) {
     exec('ionm.py gui_get_trace_settings', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while retrieving the trace selection settings';
-        if (error !== null) {
-            event.sender.send('error', errorMessage);
-            event.sender.send('current-trace-settings', 'error');
-        } else if (stderr !== '') {
-            event.sender.send('error', errorMessage);
-            event.sender.send('current-trace-settings', 'error');
+        if (error || stderr) {
+            try {
+                event.sender.send('error', 'An error occurred while retrieving the trace selection settings');
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
+            }
+        // if no error
         } else {
-            event.sender.send('current-trace-settings', stdout);
+            try {
+                event.sender.send('current-trace-settings', stdout);
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
+            }
         }
     });
 }
@@ -874,9 +900,9 @@ ipcMain.on('set-database', (event, new_database_path) => {
         let errorMessage = 'An error occurred while trying to set the database';
 
         // if errors occur, send an error message to the renderer process
-        if (error !== null) {
+        if (error) {
             event.sender.send('error', errorMessage);
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
@@ -906,10 +932,10 @@ ipcMain.on('set-new-modality', (event, name, type, strategy) => {
         let errorMessage = 'An error occurred while trying to set the modality';
 
         // if errors occur, send an error message to the renderer process
-        if (error !== null) {
+        if (error) {
             event.sender.send('error', errorMessage);
             log.error(error);
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
@@ -983,9 +1009,9 @@ ipcMain.on('set-chunk-size', (event, chunk_size) => {
         let errorMessage = 'An error occurred while trying to set the chunk size setting';
 
         // if errors occur, send an error message to the renderer process
-        if (error !== null) {
+        if (error) {
             event.sender.send('error', errorMessage);
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
@@ -1031,10 +1057,10 @@ function setupDatabase(event) {
         let errorMessage = 'An error occurred while trying to setup the database';
 
         // if errors occur, send an error message to the renderer process
-        if (error !== null) {
+        if (error) {
             log.error(error);
             event.sender.send('error', errorMessage);
-        } else if (stderr !== '') {
+        } else if (stderr) {
             log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {

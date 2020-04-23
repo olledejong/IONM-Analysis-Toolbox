@@ -27,11 +27,14 @@ let currentDefaultSelectPath;
 // @param {string} current_src_dir - currently configured src directory path
 //===========================================================================
 ipcRenderer.on('current-python-src-dir', (event, current_src_dir) => {
+    if (current_src_dir === 'No python src directory configured') {
+        showNotification('info', 'Please configure the python src directory to get started');
+    }
     currentSrcDirectory = current_src_dir;
     // shows after 100ms because it doesnt display otherwise
     setTimeout(() => {
         $('#src-dir-path').html(currentSrcDirectory);
-    }, 100);
+    }, 200);
 });
 
 
@@ -43,11 +46,15 @@ ipcRenderer.on('current-python-src-dir', (event, current_src_dir) => {
 //                 directory path
 //==============================================================================
 ipcRenderer.on('current-default-select-dir', (event, current_default_select_path) => {
-    currentDefaultSelectPath = current_default_select_path;
+    if (current_default_select_path) {
+        currentDefaultSelectPath = current_default_select_path;
+    } else {
+        currentDefaultSelectPath = 'Not configured yet';
+    }
     // shows after 100ms because it doesnt display otherwise
     setTimeout(() => {
         $('#default-select-dir-path').html(currentDefaultSelectPath);
-    }, 100);
+    }, 200);
 });
 
 
@@ -81,14 +88,7 @@ ipcRenderer.on('current-database-settings', (event, database_path) => {
 ipcRenderer.on('current-trace-settings', (event, trace_selection_settings) => {
     let chunk_size = parseInt(trace_selection_settings);
     let chunk_size_field = $('#chunk-size');
-    if (chunk_size === 0 || chunk_size === null) {
-        chunk_size_field.val('No path configured');
-    } else if (chunk_size_field === 'error') {
-        // error only occurs when the python src directory is not correct
-        chunk_size_field.val('error occurred');
-    } else {
-        chunk_size_field.val(chunk_size);
-    }
+    chunk_size_field.val(chunk_size);
 });
 
 
@@ -142,11 +142,18 @@ ipcRenderer.on('current-modality-settings', (event, current_modality_settings) =
         }
     // if result does not contain curly brackets aka modalities, the database isn't set up yet, display empty table
     } else {
+        let tableContent;
+        log.info(current_modality_settings);
+        if (current_modality_settings.includes('database')) {
+            showNotification('warn', 'The database has not been setup yet!');
+            tableContent = 'The database has not been setup yet';
+        } else {
+            tableContent = 'An error occurred while retrieving the modalities';
+        }
         modalities_table.remove();
-        showNotification('warn', 'Database might not be setup yet!');
         $(`<table id="modalities-table">
             <tr id="modalities-table-hrow">
-                <th>Either the database is not setup yet, or an error occurred while retrieving the modalities</th>
+                <th>${tableContent}</th>
             </tr>
          </table>`).insertBefore('#add-new-modality').children(':last').hide().fadeIn(1200);
     }

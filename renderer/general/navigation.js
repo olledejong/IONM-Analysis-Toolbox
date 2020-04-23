@@ -241,13 +241,11 @@ about_section_button.click( () => {
 //==================================================================
 ipcRenderer.on('script-version-info', (event, python_version_info) => {
     let tableHtml = [];
-    let i;
-
     let partList = python_version_info.split(/\n/g);
     // remove last redundant element
     partList.pop();
     // loop trough version info list and generate a neat looking table for the front-end
-    for (i = 0; i < partList.length; i += 2) {
+    for (let i = 0; i < partList.length; i += 2) {
         let newVal = partList[i].replace(': ', '');
         // add values to the html table string
         tableHtml.push('<tr><td class="version-first-cell">' + newVal + '</td><td class="version-second-cell">' + partList[i + 1] + '</td></tr>');
@@ -286,12 +284,12 @@ function loadToolScript(location) {
     }).length;
     // if not exists
     if ( len === 0 ) {
-        log.info('loading the following script:', location.substring(location.lastIndexOf('\\')+1));
+        log.info('Loading script:', location.substring(location.lastIndexOf('\\')+1));
         let script = document.createElement('script');
         script.src = location;
         document.body.appendChild(script);
     } else {
-        log.info('the following script is already loaded:', location.substring(location.lastIndexOf('\\')+1));
+        log.info('Already loaded:', location.substring(location.lastIndexOf('\\')+1));
     }
 }
 
@@ -334,7 +332,7 @@ ipcRenderer.on('memory-usage', (event, memoryUsage) => {
 
 
 //==================================================================
-// Displays machine total memory usage (updates every second)
+// Shows autoUpdate related messages to the user via showNotifcation
 //==================================================================
 ipcRenderer.on('message', (event, message, level) => {
     showNotification(level, message);
