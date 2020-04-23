@@ -209,8 +209,7 @@ footer span {
     cursor: pointer;
 }
 
-/* active menu button specific styling */
-.active {
+.taskbar-div:hover {
     color: #f89406;
 }
 
@@ -264,7 +263,7 @@ th {
 }
 
 #about-app, #about-scripts {
-    margin: 10px 5px 0 0;
+    margin: 10px 0 0 0;
     display: inline-block;
     height: auto;
     min-width: 505px;
@@ -399,7 +398,8 @@ h1 i {
 }
 
 #tool-container div h3 {
-    margin: 8px 10px 0 10px;
+    font-size: 18px;
+    margin: 12px 10px 0 10px;
 }
 
 #tool-container div:hover {
@@ -422,21 +422,12 @@ h1 i {
     color: rgb(112,112,112);
 }
 
-.tool-finished {
-    font-weight: 500;
-    font-size: 15px;
-    position: absolute;
-    right: 6px;
-    top: 2px;
-    color: forestgreen;
-}
-
 .tool-in-dev {
     font-weight: 500;
     font-size: 14px;
     position: absolute;
-    right: 6px;
-    top: 2px;
+    right: 3px;
+    top: 0;
     color: #9F6000;
 }
 
@@ -810,6 +801,14 @@ h1 i {
     color: #f89406;
 }
 
+#mandatory-settings {
+    width: max-content;
+    margin-top: 7px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 /* radio buttons */
 label.radio {
     font-weight: 600;
@@ -1145,6 +1144,51 @@ label.radio input:checked + span {
     top: 11.4px;
     box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
 }
+
+.tool-label {
+    text-align: center;
+    line-height: 11px;
+    border-radius: 4px;
+    left: 2px;
+    position: absolute;
+    height: 17px;
+    top: 2px;
+}
+
+#tool-label-summarize,
+#tool-label-timing,
+#tool-label-availability {
+    width: 93px;
+    background: cadetblue;
+}
+
+#tool-label-convert,
+#tool-label-compute {
+    width: 85px;
+    background: mediumslateblue;
+}
+
+#tool-label-classify {
+    width: 106px;
+    background: sandybrown;
+}
+
+#tool-label-validate,
+#tool-label-extract,
+#tool-label-combine {
+    width: 80px;
+    background: indianred;
+}
+
+.tool-label-name {
+    margin: 0 0 0 1px;
+    text-align: center;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
 
 #memory-usage {
     transition: width 300ms ease-out;

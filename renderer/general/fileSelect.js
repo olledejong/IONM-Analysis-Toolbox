@@ -7,6 +7,9 @@
 // specific selection window was meant for.
 //==================================================================
 
+// requires
+window.$ = window.jQuery = require('jquery');
+
 //==================================================================
 //                            GENERAL
 //==================================================================
@@ -326,7 +329,6 @@ variable_content.on('click', '#select-database-btn', () => {
 // the python project its location (src dir)
 //==================================================================
 variable_content.on('click', '#select-src-dir', () => {
-
     let tool = 'src-dir';
     // configure the options (allowed types + properties)
     const options = {
@@ -346,7 +348,6 @@ variable_content.on('click', '#select-src-dir', () => {
 // to run tools on
 //==================================================================
 variable_content.on('click', '#select-default-dir', () => {
-
     let tool = 'default-select-dir';
     // configure the options (allowed types + properties)
     const options = {

@@ -29,56 +29,75 @@
             <h1 id="welcome-text"></h1>
             <div id="tool-container">
                 <div id="summarize-section">
-                    <h3>Summarize File(s)</h3>
-                    <p class="tool-description-p">Gain insight into Eclipse files</p>
+                    <span class="tool-label" id="tool-label-summarize">
+                        <span class="tool-label-name">DATA INSIGHT</span>
+                    </span>
+                    <h3>Summarize</h3>
+                    <p class="tool-description-p">Gain insight into exported Eclipse files by creating a table describing its contents.</p>
                     <p class="python-command-p">python command: ionm.py summarize</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="timing-section">
+                    <span class="tool-label" id="tool-label-timing">
+                        <span class="tool-label-name">DATA INSIGHT</span>
+                    </span>
                     <h3>Show Timing</h3>
-                    <p class="tool-description-p">Plot timestamps of measurements as a function of position in file</p>
+                    <p class="tool-description-p">Create a plot which displays all labeled measurements the Eclipse file contains in chronological order.</p>
                     <p class="python-command-p">python command: ionm.py show_timing</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="availability-section">
-                    <h3>Show EEG Availability</h3>
-                    <p class="tool-description-p">Generate a plot showing concurrent availability of a continuous modality and a triggered modality</p>
+                    <span class="tool-label" id="tool-label-availability">
+                        <span class="tool-label-name">DATA INSIGHT</span>
+                    </span>
+                    <h3>Show Availability</h3>
+                    <p class="tool-description-p">Generate a plot showing concurrent availability of a continuous modality and a triggered modality.</p>
                     <p class="python-command-p">python command: ionm.py show_availability</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="convert-section">
-                    <h3>Convert File(s)</h3>
-                    <p class="tool-description-p">Convert an Eclipse CSV into multiple custom files: one per modality</p>
+                    <span class="tool-label" id="tool-label-convert">
+                        <span class="tool-label-name">STATISTICAL</span>
+                    </span>
+                    <h3>Convert</h3>
+                    <p class="tool-description-p">Convert an exported Eclipse file into multiple custom files. One file per modality.</p>
                     <p class="python-command-p">python command: ionm.py convert</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="compute-section">
-                    <h3>Compute Statistics</h3>
-                    <p class="tool-description-p">Calculate statistics for given converted file (triggered modalities) and store these in the database</p>
+                    <span class="tool-label" id="tool-label-compute">
+                        <span class="tool-label-name">STATISTICAL</span>
+                    </span>
+                    <h3>Compute</h3>
+                    <p class="tool-description-p">Calculate the needed statistics for a given file. These statistics will be stored in configured database.</p>
                     <p class="python-command-p">python command: ionm.py compute</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="extract-section">
-                    <h3>Extract EEG</h3>
-                    <p class="tool-description-p">Create separate file containing evoked potentials with the available EEG context</p>
+                    <span class="tool-label" id="tool-label-extract">
+                        <span class="tool-label-name">UNDEFINED</span>
+                    </span>
+                    <h3>Extract</h3>
+                    <p class="tool-description-p">Create a separate file containing the evoked potentials accompanying its available EEG context.</p>
                     <p class="python-command-p">python command: ionm.py extract_eeg</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="validate-section">
-                    <h3>Validate EEG/TES-MEP</h3>
-                    <p class="tool-description-p">Validate the signals which are located in an extracted file</p>
+                    <span class="tool-label" id="tool-label-validate">
+                        <span class="tool-label-name">UNDEFINED</span>
+                    </span>
+                    <h3>Validate</h3>
+                    <p class="tool-description-p">Validate the signals of an extracted file by manually deselecting unwanted signals.</p>
                     <p class="python-command-p">python command: ionm.py validate</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="combine-section">
+                    <span class="tool-label" id="tool-label-combine">
+                        <span class="tool-label-name">UNDEFINED</span>
+                    </span>
                     <h3>Combine</h3>
-                    <p class="tool-description-p">Combines the data from the database with the output of the graphical analysis data</p>
+                    <p class="tool-description-p">Combine statistical data from the database with the output of the graphical analysis data</p>
                     <p class="python-command-p">python command: ionm.py combine</p>
-                    <span class="tool-finished"><i class="fas fa-check"></i></span>
                 </div>
                 <div id="classify-section">
+                    <span class="tool-label" id="tool-label-classify">
+                        <span class="tool-label-name">CLASSIFICATION</span>
+                    </span>
                     <h3>Classify</h3>
-                    <p class="tool-description-p">Classify signals of file(s) on the presence of F-waves</p>
+                    <p class="tool-description-p">Classify signals of a file on the presence of F-waves using a prebuild classifier.</p>
                     <p class="python-command-p">python command: ionm.py classify</p>
                     <span class="tool-in-dev"><i class="fas fa-exclamation-triangle"></i></span>
                 </div>
@@ -93,7 +112,7 @@
                 <div id="settings-section">
                     <span id="settings-icon"><i class="fas fa-cog"></i></span>
                     <h3>Settings</h3>
-                    <p>Navigate here to set some needed and some useful settings</p>
+                    <p>Configure this application its settings, as well as some settings that related to the python project.</p>
                 </div>
             </div>
         </div>

@@ -150,14 +150,14 @@ function removeNotification(e) {
 // Shows the user it can close a notification by clicking on it
 //==================================================================
 bdy.on('mouseenter', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) => {
-    let id = '#' + e.target.id;
+    let noti = $('#' + e.target.id);
     // get the width of the notification element and set it as min-width so that the
     // notification element doesnt become the size of its content
-    $(id).css('min-width', (($(id).width() + 20) + 'px'));
-    $(id).children( '#toast-message' ).css('opacity', '0.1');
-    $(id).children( '#close-toast' ).css('opacity', '1.0');
+    noti.css('min-width', ((noti.width() + 20) + 'px'));
+    noti.children( '#toast-message' ).css('opacity', '0.1');
+    noti.children( '#close-toast' ).css('opacity', '1.0');
 }).on('mouseleave', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) => {
-    let id = '#' + e.target.id;
-    $(id).children( '#toast-message' ).css('opacity', '1.0');
-    $(id).children( '#close-toast' ).css('opacity', '0');
+    let noti = $('#' + e.target.id);
+    noti.children( '#toast-message' ).css('opacity', '1.0');
+    noti.children( '#close-toast' ).css('opacity', '0');
 });
