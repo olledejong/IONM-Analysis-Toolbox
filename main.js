@@ -188,7 +188,8 @@ autoUpdater.on('update-not-available', () => {
 });
 
 autoUpdater.on('error', (err) => {
-    sendStatusToWindow('Error in auto-updater. ' + err);
+    sendStatusToWindow('An error during the auto-update mechanism');
+    log.error('An error during the auto-update mechanism', err);
 });
 
 autoUpdater.on('update-downloaded', () => {
