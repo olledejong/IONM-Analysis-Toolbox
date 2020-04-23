@@ -1176,7 +1176,7 @@ label.radio input:checked + span {
 #tool-label-validate,
 #tool-label-extract,
 #tool-label-combine {
-    width: 80px;
+    width: 118px;
     background: indianred;
 }
 
