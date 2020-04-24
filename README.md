@@ -51,14 +51,14 @@ To install the packages, type:
 `pip install scipy matplotlib pyodbc sqlparse pandas sklearn joblib`.  
 Hit enter. This will install all required packages and their dependencies.
 
-Now, to test if all dependencies have been successfully installed, type ionm.py and hit enter. If all dependencies are there this should produce a help message which describes how to use the command line interface. You can now safely close the command prompt.
+Now, to test if all dependencies have been successfully installed, head into the python project folder using something like: `cd path\to\python\project`.  
+Once in there, type `ionm.py` and hit enter. If all dependencies are there this should produce a help message which describes how to use the command line interface. You can now safely close the command prompt.
 
 #### Installing Microsoft Access / Database Drivers #### 
 [Microsoft Access](https://products.office.com/nl-nl/access?rtc=1) is the database program that is used by ionm.py to store signal-derived statistics.
 It comes with most versions of the Microsoft Office software. ionm.py was tested with Microsoft Access version 1901.
 
-ionm.py uses the [Microsoft Access Database Engine 2010 Redistributable driver](https://www.microsoft.com/en-US/download/details.aspx?id=13255)
-to communicate with the database. Make sure that it is installed.
+The Python project communicates with databases using the  [Microsoft Access Database Engine 2010 Redistributable driver](https://www.microsoft.com/en-US/download/details.aspx?id=13255). Please install those drivers, but **be sure to download the 32bit version**, since the application will be published in 32bit only.
 
 #### Setting up the database ####
 Can now be done via IONM Analysis Toolbox application later in the process.
