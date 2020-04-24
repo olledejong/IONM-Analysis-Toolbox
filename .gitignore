@@ -4,3 +4,4 @@
 /dist/
 dev-app-update.yml
 app-update.yml
+.DS_Store
