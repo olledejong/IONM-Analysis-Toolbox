@@ -8,7 +8,7 @@ The Intraoperative Neurophysiological Monitoring (IONM) Analyis Toolbox is a gra
 * [Install](#install)
   + [Python](#python)
   + [Pip and the required dependencies](#pip-and-the-required-dependencies)
-  + [Microsoft Access / Microsoft Access Database Engine drivers](#microsoft-access---microsoft-access-database-engine-drivers)
+  + [Microsoft Access / Microsoft Access Database Engine drivers](#microsoft-access-and-the-microsoft-access-database-engine-drivers)
 * [Version Information](#version-information)
 * [Usage](#usage)
   + [Command line](#command-line)
@@ -65,7 +65,7 @@ Now, to test if all dependencies have been successfully installed, head into the
 `cd path\to\python\project`.  
 Once in there, type `ionm.py` and hit enter. If all dependencies are there this should produce a help message which describes how to use the command line interface. You can now safely close the command prompt.
 
-### Microsoft Access / Microsoft Access Database Engine drivers ###
+### Microsoft Access and the Microsoft Access Database Engine drivers ###
 [Microsoft Access](https://products.office.com/nl-nl/access?rtc=1) is the database program that is used by ionm.py to store signal-derived statistics.
 It comes with most versions of the Microsoft Office software. ionm.py was tested with Microsoft Access version 1901.
 
