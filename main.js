@@ -189,7 +189,7 @@ autoUpdater.on('update-not-available', () => {
 });
 
 autoUpdater.on('error', (err) => {
-    sendStatusToWindow('An error occurred during the auto-update mechanism');
+    sendStatusToWindow('An error occurred while checking for updates', 'error');
     log.error('An error occurred during the auto-update mechanism', err);
 });
 
@@ -352,7 +352,8 @@ ipcMain.on('run-summarize', (event) => {
 
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < selectedFileHolder.length; i++) {
-        let command = `ionm.py summarize "${selectedFileHolder[i]}"`;
+        let command = `python ionm.py summarize "${selectedFileHolder[i]}"`;
+        log.info(command);
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
@@ -445,7 +446,7 @@ ipcMain.on('run-timing', (event) => {
     event.sender.send('set-title-and-preloader-timing');
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
-    let command = `ionm.py show_timing ${pathsString}`;
+    let command = `python ionm.py show_timing ${pathsString}`;
     log.info('Creating child-process and running the timing command');
     log.info(command);
     exec(command, {
@@ -484,7 +485,7 @@ ipcMain.on('run-timing', (event) => {
 ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size) => {
     event.sender.send('set-title-and-preloader-availability');
 
-    let command = `ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
+    let command = `python ionm.py show_availability -c "${eeg_file_path}" -t "${trg_file_path}" -w ${window_size}`;
     log.info('Creating child-process and running the \'show availability\' command');
     exec(command, {
         cwd: pythonSrcDirectory
@@ -525,7 +526,7 @@ ipcMain.on('run-convert', (event) => {
 
     log.info('Creating child-process and running the convert command');
     for(let i = 0; i < selectedFileHolder.length; i++) {
-        let command = `ionm.py gui_convert "${selectedFileHolder[i]}"`;
+        let command = `python ionm.py gui_convert "${selectedFileHolder[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
@@ -566,7 +567,7 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
     event.sender.send('set-preloader-rerun-convert');
 
     for(let i = 0; i < failedConvertFilePaths.length; i++) {
-        let command = `ionm.py gui_convert "${failedConvertFilePaths[i]}"`;
+        let command = `python ionm.py gui_convert "${failedConvertFilePaths[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
@@ -606,7 +607,7 @@ ipcMain.on('run-compute', (event, stats) => {
     event.sender.send('set-title-and-preloader-compute');
 
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
-    let command = `ionm.py compute -f ${pathsString} -s ${stats}`;
+    let command = `python ionm.py compute -f ${pathsString} -s ${stats}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -645,7 +646,7 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
     log.info('Executing the extract command');
     event.sender.send('set-title-and-preloader-extract');
 
-    let command = `ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}"`;
+    let command = `python ionm.py extract_eeg -c "${eeg_file_path}" -t "${trg_file_path}"`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -683,7 +684,7 @@ ipcMain.on('run-validate', (event, extracted_file) => {
     log.info('Executing the validate command');
     event.sender.send('set-title-and-preloader-validate');
 
-    let command = `ionm.py validate -f ${extracted_file}`;
+    let command = `python ionm.py validate -f ${extracted_file}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -722,7 +723,7 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
     log.info('Executing the combine command');
     event.sender.send('set-title-and-preloader-combine');
 
-    let command = `ionm.py combine -f ${extracted_file} -p ${patient_id}`;
+    let command = `python ionm.py combine -f ${extracted_file} -p ${patient_id}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -759,7 +760,7 @@ ipcMain.on('run-classify', (event, converted_file) => {
     log.info('Executing the classify command');
     event.sender.send('set-title-and-preloader-classify');
 
-    let command = `ionm.py classify -f ${converted_file}`;
+    let command = `python ionm.py classify -f ${converted_file}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -793,7 +794,7 @@ ipcMain.on('run-classify', (event, converted_file) => {
 //=============================================================================
 ipcMain.on('get-version-info', (event) => {
     log.info('Executing the version command');
-    exec('ionm.py version', {
+    exec('python ionm.py version', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the python version info';
@@ -842,7 +843,7 @@ ipcMain.on('get-current-settings', (event) => {
 });
 
 function getDatabaseSettings(event) {
-    exec('ionm.py gui_get_database', {
+    exec('python ionm.py gui_get_database', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while retrieving the database path';
@@ -871,7 +872,7 @@ function getDatabaseSettings(event) {
 }
 
 function getModalitySettings(event) {
-    exec('ionm.py gui_get_modalities', {
+    exec('python ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         // if errors occur, send an error message to the renderer process
@@ -905,7 +906,7 @@ function getModalitySettings(event) {
 }
 
 function getTraceSelectionSettings(event) {
-    exec('ionm.py gui_get_trace_settings', {
+    exec('python ionm.py gui_get_trace_settings', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         if (error || stderr) {
@@ -935,7 +936,7 @@ function getTraceSelectionSettings(event) {
 // @param {object} event - for purpose of communication with sender
 //==========================================================================
 ipcMain.on('set-database', (event, new_database_path) => {
-    let command = 'ionm.py gui_set_database "' + new_database_path + '"';
+    let command = 'python ionm.py gui_set_database "' + new_database_path + '"';
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -967,7 +968,7 @@ ipcMain.on('set-database', (event, new_database_path) => {
 // @param {string} strategy - strategy of the to be stored modality (DIRECT or AVERAGE)
 //=====================================================================================
 ipcMain.on('set-new-modality', (event, name, type, strategy) => {
-    let command = `ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
+    let command = `python ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -1044,7 +1045,7 @@ ipcMain.on('set-default-select-dir', (event, default_select_dir) => {
 // @param {string} chunk_size - the amount of signals that the user sees at once
 //===============================================================================
 ipcMain.on('set-chunk-size', (event, chunk_size) => {
-    let command = `ionm.py gui_set_chunk_size ${chunk_size}`;
+    let command = `python ionm.py gui_set_chunk_size ${chunk_size}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -1093,7 +1094,7 @@ ipcMain.on('show-confirmation-box', (event, options) => {
 //===============================================================================
 function setupDatabase(event) {
     event.sender.send('setting-up-database');
-    exec('ionm.py gui_setup', {
+    exec('python ionm.py gui_setup', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to setup the database';
