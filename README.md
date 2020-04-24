@@ -1,17 +1,19 @@
 # IONM Analysis Toolbox #
-*Internship project at the Department of Neurosurgery in the University Medical Center Groningen.*
+#### Internship project for the Department of Neurosurgery, UMCG ####
+*DISCAIMER: This application was created for the UMCG during an internship. Without the python project (for obvious reasons not shared publicly) containing the required analyis tools this application simply has no purpose.*
 
-The Intraoperative Neurophysiological Monitoring (IONM) Analyis Toolbox is a graphical user interface (GUI) designed to make the usage of IONM Analysis tools more user friendly. Realized during an internship at the department of neurosurgery in the university medical center in Groningen. This application has been written in JavaScript using the popular open-source framework named Electron. Electron allows for the development of desktop GUI applications using web technologies.
-**Expand this**
+The Intraoperative Neurophysiological Monitoring (IONM) Analyis Toolbox is a graphical user interface (GUI) designed to make the usage of IONM Analysis tools more user friendly. This application has been developed during an internship at the Department of Neurosurgery in the University Medical Center Groningen. It has been written in JavaScript using the popular open-source framework named Electron. Electron allows for the development of desktop GUI applications using web technologies.
+**To be expanded..**
 
 ## Table of Contents ##
 * [Install](#install)
   + [Python](#python)
   + [Pip and the required dependencies](#pip-and-the-required-dependencies)
   + [Microsoft Access / Microsoft Access Database Engine drivers](#microsoft-access-and-the-microsoft-access-database-engine-drivers)
+  + [IONM Analysis Toolbox](#ionm-analysis-toolbox)
 * [Usage](#usage)
   + [Via the command line](#command-line)
-  + [Using the IONM Analysis Toolbox](#ionm-analysis-toolbox-1)
+  + [Using the IONM Analysis Toolbox](#using-the-ionm-analysis-toolbox)
 * [Version Information](#version-information)
 * [Recommended system requirements](#recommended-system-requirements)
 * [Contacts](#contacts)
@@ -71,6 +73,10 @@ Once in there, type `ionm.py` and hit enter. If all dependencies are there this 
 It comes with most versions of the Microsoft Office software. ionm.py was tested with Microsoft Access version 1901.
 
 The Python project communicates with databases using the  [Microsoft Access Database Engine 2010 Redistributable driver](https://www.microsoft.com/en-US/download/details.aspx?id=13255). Please install those drivers, but **be sure to download the 32bit version**, since the application will be published in 32bit only.
+
+### IONM Analysis Toolbox ###
+
+The latest version of the IONM Analysis Toolbox can be downloaded [here](https://github.com/olledejong/IONM-Analysis-Toolbox/latest). Execute it once its successfully downloaded and install it within a few clicks. Is it really that easy? Yes it is.
 
 ## Usage ##
 
