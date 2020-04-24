@@ -10,10 +10,10 @@ The Intraoperative Neurophysiological Monitoring (IONM) Analyis Toolbox is a gra
 
 *Instructions below outline installation and set up for windows only.*
 
-#### Installing python ####
-First, install python(version 3.7.1 or newer) through their [website](https://www.python.org). Make sure to click the 
-'add python to PATH' button on the installation wizard. To confirm that python was added to the `PATH` system variable,
-open the command prompt(type 'cmd' in the windows search bar) and type `python` or `python3`. If python was installed 
+#### Installing Python ####
+First, install python (version 3.7.1 or newer) through their [website](https://www.python.org). **Make sure to click the 
+'add python to PATH' button on the installation wizard**. To confirm that python was added to the `PATH` system variable,
+open the command prompt(type 'cmd' in the windows search bar) and type `python`. If python was installed 
 correctly, the python interpreter should start and output something like below:
 
 ```
@@ -25,29 +25,35 @@ Type "help", "copyright", "credits" or "license" for more information.
 To quit python and return to the command prompt, type `quit()`.
 If python does not start upon typing `python`, you may have to [add python to the PATH variable](https://geek-university.com/python/add-python-to-the-windows-path/).
 
-Similarly, `pip` should also work as a command from the command prompt.
-#### Installing dependencies ####
-ionm.py(the main script) depends on the following packages:
-- Scipy(depends on numpy)
-- Matplotlib(depends on pyparsing, six, python-dateutil, cycler and kiwisolver)
+#### Installing the required dependencies ####
+The main Python script which runs all tools (ionm.py) depends on the following packages:
+- Scipy (depends on and auto-installs numpy)
+- Matplotlib (depends on and auto-installs pyparsing, six, python-dateutil, cycler and kiwisolver)
 - Pyodbc
 - Sqlparse
 - Pandas
 - Scikit-learn
 - Joblib
 
-To install pip, the file [Get-pip.py](https://bootstrap.pypa.io/get-pip.py) needs to be downloaded and executed with python.
+Dependencies can easily be installed using [pip](https://pypi.org/project/pip/). Pip is the package installer for Python. To install pip, the file [get-pip.py](https://bootstrap.pypa.io/get-pip.py) needs to be downloaded and executed using Python. To do this, open a command prompt (cmd) and type `python` and a single space. Then drag the get-pip.py file into the command prompt. If you did it correctly, you should have something like this: 
+`python "C:\Users\(Your logged in User)\Downloads\get-pip.py"`. 
+If you do, hit enter and let it do its thing.
 
-If `pip` is installed on a UMCG non open source computer there will be an extra step before installing the packages.
-`pip` will be installed in the folder "C:\Users\(Your logged in User)\AppData\Local\Programs\Python\(Your python version)\Scripts".
-Via the commandline you can access this folder by typing `cd` + the path above. If the user is in this folder the `pip install` command can be used.
+**NOTE: Skip this part if you're not using an UMCG machine!** 
 
-To install the packages, open the command prompt and type `python -m pip install scipy matplotlib pyodbc sqlparse pandas sklearn joblib`. 
-This will install all required packages and their dependencies.
+If pip is installed on a UMCG non open source computer there will be an extra step before installing the required packages. You will have to navigate to the python its source folder. Open a command prompt and type (replace the parentheses parts):  
+`cd C:\Users\(Your logged in User)\AppData\Local\Programs\Python\(Your python version)\Scripts`
+Now the `pip install` command can be used.
 
-After installing these dependencies, running `ionm.py` with no arguments should run with no errors and produce a help message. 
+**NOTE: Continue here if you're not using an UMCG machine!** 
 
-#### Installing Microsoft Access and database drivers #### 
+To install the packages, type:  
+`pip install scipy matplotlib pyodbc sqlparse pandas sklearn joblib`.  
+Hit enter. This will install all required packages and their dependencies.
+
+Now, to test if all dependencies have been successfully installed, type ionm.py and hit enter. If all dependencies are there this should produce a help message which describes how to use the command line interface. You can now safely close the command prompt.
+
+#### Installing Microsoft Access / Database Drivers #### 
 [Microsoft Access](https://products.office.com/nl-nl/access?rtc=1) is the database program that is used by ionm.py to store signal-derived statistics.
 It comes with most versions of the Microsoft Office software. ionm.py was tested with Microsoft Access version 1901.
 
