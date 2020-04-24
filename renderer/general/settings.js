@@ -29,6 +29,7 @@ let currentDefaultSelectPath;
 ipcRenderer.on('current-python-src-dir', (event, current_src_dir) => {
     if (current_src_dir === 'No python src directory configured') {
         showNotification('info', 'Please configure the python src directory to get started');
+        $('.linePreloader').hide();
     }
     currentSrcDirectory = current_src_dir;
     // shows after 100ms because it doesnt display otherwise
@@ -178,6 +179,18 @@ ipcRenderer.on('successfully-set-src-dir', () => {
 //=============================================================================
 ipcRenderer.on('successfully-set-default-select-dir', () => {
     showNotification('success', 'Successfully set the default select directory path');
+});
+
+
+//==========================================================================
+// Lets the user know that the modality was set successfully by showing a
+// toast notification for every modality.
+//==========================================================================
+ipcRenderer.on('set-modality-successful', (event, name) => {
+    $('.linePreloader').hide('fast');
+    showNotification('success', ('Successfully stored the modality '+ name));
+    // refresh modalities (in case of added via settings)
+    ipcRenderer.send('get-current-settings');
 });
 
 
