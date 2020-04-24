@@ -3,7 +3,9 @@
 *DISCAIMER: This application was created for the UMCG during an internship. Without the python project (for obvious reasons not shared publicly) containing the required analyis tools this application simply has no purpose.*
 
 The Intraoperative Neurophysiological Monitoring (IONM) Analyis Toolbox is a graphical user interface (GUI) designed to make the usage of IONM Analysis tools more user friendly. This application has been developed during an internship at the Department of Neurosurgery in the University Medical Center Groningen. It has been written in JavaScript using the popular open-source framework named Electron. Electron allows for the development of desktop GUI applications using web technologies.
-**To be expanded..**
+**To be expanded..**  
+
+![front-of-app](assets/screenshots/ss-front.PNG)
 
 ## Table of Contents ##
 * [Install](#install)
