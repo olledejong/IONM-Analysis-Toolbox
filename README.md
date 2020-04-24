@@ -76,7 +76,7 @@ The Python project communicates with databases using the  [Microsoft Access Data
 
 ### IONM Analysis Toolbox ###
 
-The latest version of the IONM Analysis Toolbox can be downloaded [here](https://github.com/olledejong/IONM-Analysis-Toolbox/latest). Execute it once its successfully downloaded and install it within a few clicks. Is it really that easy? Yes it is.
+The latest version of the IONM Analysis Toolbox can be downloaded [here](https://github.com/olledejong/IONM-Analysis-Toolbox/releases/latest). Execute it once its successfully downloaded and install it within a few clicks. Is it really that easy? Yes it is.
 
 ## Usage ##
 
