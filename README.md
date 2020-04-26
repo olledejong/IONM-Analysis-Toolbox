@@ -1,5 +1,5 @@
 # IONM Analysis Toolbox #
-#### Internship project for the Department of Neurosurgery, UMCG ####
+#### Internship project realized at the Department of Neurosurgery within the University Medical Center Groningen ####
 *DISCAIMER: This application was created for the UMCG during an internship. Without the python project (for obvious reasons not shared publicly) containing the required analyis tools this application simply has no purpose.*
 
 The Intraoperative Neurophysiological Monitoring (IONM) Analyis Toolbox is a graphical user interface (GUI) designed to make the usage of IONM Analysis tools more user friendly. This application has been developed during an internship at the Department of Neurosurgery in the University Medical Center Groningen. It has been written in JavaScript using the popular open-source framework named Electron. Electron allows for the development of desktop GUI applications using web technologies.
@@ -143,7 +143,7 @@ Below is an example of one such plot:
 
 `ionm.py show_availability -c ..\data\scoliose\scoliose_eeg.csv -t ..\data\scoliose\scoliose_trg.csv -w 5`
 
-![availability plot](images/availability_plot.png)
+![availability plot](assets/screenshots/availability_plot.png)
 
 The black dots represent the timing of the EEG, as in the `show_timing` subcommand. Every horizontal line represents 
 measurement of a triggered modality. For these lines, only their height(position on the y-axis) is relevant. They are
@@ -233,7 +233,6 @@ required tables set up. To do so:
 
 After running `ionm.py setup`, opening the database file should start Access and show a database with empty tables.
 
-
 ### IONM Analysis Toolbox ###
 
 **Describe usage of all tools via IONM Analysis Toolbox application**
@@ -245,16 +244,21 @@ On every start-up the application checks whether there is an update available. I
 
 ## Recommended system requirements ##
 
-|               | Windows only  |
-| ------------- |:-------------:|
-| CPU           | Intel Core i3 (second generation) or higher|
-| MEMORY        | 4GB or more   |
-| FEE SPACE     | About 200MB   |
-
+|               | Windows only           |
+| ------------- |:----------------------:|
+| CPU           | Intel Core i3 or higher|
+| MEMORY        | 4GB or more            |
+| FEE SPACE     | About 200MB            |
 
 ## Contacts ##
 
-- IONM Analysis Toolbox, developed by Olle de Jong (olledejong@gmail.com; ol.de.jong@st.hanze.nl)  
-- Python IONM analysis project, expanded and optimized by Menno Gerbens (m.j.gerbens@st.hanze.nl; mennogerbens@gmail.com)
-- Python IONM analysis project, initiated by Johan Schneiders (j.schneiders@st.hanze.nl; johan.schneiders@live.com)
+- Python IONM analysis project, initiated by Johan Schneiders.
+  * [Personal email](johan.schneiders@live.com)
+- Python IONM analysis project, expanded and optimized by Menno Gerbens.
+  * [Student email](m.j.gerbens@st.hanze.nl)
+  * [Personal email](mennogerbens@gmail.com)
+- IONM Analysis Toolbox, developed by Olle de Jong.
+  * [Student email](ol.de.jong@st.hanze.nl)
+  * [Personal email](olledejong@gmail.com)
+  * [LinkedIn](https://www.linkedin.com/in/olledejong/)
 
