@@ -8,11 +8,11 @@ The Intraoperative Neurophysiological Monitoring (IONM) Analyis Toolbox is a gra
 ![front-of-app](assets/screenshots/ss-front.PNG)
 
 ## Table of Contents ##
-* [Install](#install)
-  + [Python](#python)
-  + [Pip and the required dependencies](#pip-and-the-required-dependencies)
-  + [Microsoft Access / Microsoft Access Database Engine drivers](#microsoft-access-and-the-microsoft-access-database-engine-drivers)
-  + [IONM Analysis Toolbox](#ionm-analysis-toolbox-1)
+* [Installation](#install)
+  1. [Python](#python)
+  2. [Pip and the required dependencies](#pip-and-the-required-dependencies)
+  3. [Microsoft Access / Microsoft Access Database Engine drivers](#microsoft-access-and-the-microsoft-access-database-engine-drivers)
+  4. [IONM Analysis Toolbox](#ionm-analysis-toolbox-1)
 * [Usage](#usage)
   + [Via the command line](#command-line)
   + [Using the IONM Analysis Toolbox](#ionm-analysis-toolbox-2)
