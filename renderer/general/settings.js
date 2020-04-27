@@ -1,7 +1,7 @@
 //=======================================================================
 //                      Settings Page Renderer
 //=======================================================================
-// This renderer file is responsible for all user interaction in the
+// This file is responsible for all user interaction in the
 // settings section of the application. Also for telling the main process
 // what to do regarding the settings of this applications and the python
 // project. These functionalities are:
@@ -167,7 +167,7 @@ ipcRenderer.on('current-modality-settings', (event, current_modality_settings) =
 // Also retrieves the currently configured settings.
 //=============================================================================
 ipcRenderer.on('successfully-set-src-dir', () => {
-    showNotification('success', 'Successfully set the python renderer directory');
+    showNotification('success', 'Successfully set the python src directory');
     $('.linePreloader').show();
     ipcRenderer.send('get-current-settings');
 });
@@ -191,6 +191,7 @@ ipcRenderer.on('set-modality-successful', (event, name) => {
     showNotification('success', ('Successfully stored the modality '+ name));
     // refresh modalities (in case of added via settings)
     ipcRenderer.send('get-current-settings');
+    $('.linePreloader').show();
 });
 
 
