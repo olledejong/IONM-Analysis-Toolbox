@@ -708,7 +708,7 @@ h1 i {
     height: fit-content;
 }
 
-.linePreloader{
+.linePreloader {
     display: none;
     z-index: 1000;
     width: 100%;
@@ -737,7 +737,7 @@ h1 i {
     text-align: center;
     position: fixed;
     right: -455px;
-    top: 26px;
+    top: 29px;
     z-index: 1001;
     opacity: 0;
     font-size: 16px;
@@ -754,11 +754,12 @@ h1 i {
 }
 
 #remove-notifications {
-    position: absolute;
+    position: fixed;
     z-index: 2100;
-    right: -455px;
-    bottom: 8px;
+    right: 10px;
+    bottom: 10px;
     letter-spacing: 1px;
+    display: none;
     opacity: 0;
     font-size: 13px;
     border-radius: 3px;

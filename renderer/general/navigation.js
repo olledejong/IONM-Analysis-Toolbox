@@ -47,7 +47,7 @@ $('#welcome-section').on('click', () => {
     if (variable_content.find('#tool-container').length !== 1) {
         $('.linePreloader').hide('fast');
         removeToastMessages();
-        ipcRenderer.send('resize-window', 1065, 756);
+        ipcRenderer.send('resize-window', 1065, 758);
         variable_content.load('components/index.html');
     }
 });
@@ -104,7 +104,7 @@ body.on('click', '#availability-section', () => {
 body.on('click', '#convert-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 690);
+    ipcRenderer.send('resize-window', 800, 663);
 
     // fade in the html content
     variable_content.load('components/convert.html').hide().fadeIn('slow');

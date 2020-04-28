@@ -94,11 +94,12 @@ function showNotification(type, message) {
     }, 800);
 
     // if there are two or more notifications, show close all notifications button
-    let opacity = parseInt(removeNotiBtn.css('opacity'));
-    if ( (numbOfNotifications >= 1) && opacity !== 1) {
-        removeNotiBtn.animate({
-            right: '+=465', opacity: 1
-        }, 800);
+    if ( numbOfNotifications >= 1) {
+        removeNotiBtn.show( () => {
+            removeNotiBtn.animate({
+                opacity: 1
+            }, 250)
+        });
     }
 }
 
@@ -107,10 +108,10 @@ function showNotification(type, message) {
 //==================================================================
 // eslint-disable-next-line no-unused-vars
 function removeToastMessages() {
-    $('.success-msg').remove();
-    $('.info-msg').remove() ;
-    $('.error-msg').remove();
-    $('.warning-msg').remove();
+    fadeOutAndRemove($('.success-msg'))
+    fadeOutAndRemove($('.info-msg'))
+    fadeOutAndRemove($('.error-msg'))
+    fadeOutAndRemove($('.warning-msg'))
 }
 
 //==================================================================
@@ -118,10 +119,11 @@ function removeToastMessages() {
 //==================================================================
 bdy.on('click', '#remove-notifications', (e) => {
     removeToastMessages();
-    $('#remove-notifications').css({
-        'right': '-455px',
-        'opacity': 0
-    });
+    $('#remove-notifications').animate({
+        opacity: 0
+    }, 250, () => {
+        $('#remove-notifications').hide();
+    })
 });
 
 bdy.on('click', '.warning-msg', (e) => {
@@ -148,18 +150,31 @@ function removeNotification(e) {
     let parentId = '#' + parent.attr('id');
     // if user clicks the notification div itself
     if ( parent.attr('class') !== 'container-after-titlebar' ) {
-        $(parentId).remove();
+        fadeOutAndRemove($(parentId));
     // if user clicks any other element inside the notification div
     } else {
-        $(parentId).remove();
+        let notificationId = '#' + $(e.target).attr('id')
+        fadeOutAndRemove($(notificationId));
     }
     // if not more than 1 notifications displayed, hide close all notifications button
     if ( ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) < 2) {
-        $('#remove-notifications').css({
-            'right': '-455px',
-            'opacity': 0
-        });
+        $('#remove-notifications').animate({
+            opacity: 0
+        }, 250, () => {
+            $('#remove-notifications').hide();
+        })
     }
+}
+
+//==================================================================
+// Fades out and removes the given item via its selector
+//==================================================================
+function fadeOutAndRemove(selector) {
+    selector.animate({
+        opacity: 0
+    }, 250, () => {
+        selector.remove();
+    })
 }
 
 //==================================================================

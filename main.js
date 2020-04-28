@@ -45,7 +45,7 @@ function createWindow () {
     window = new BrowserWindow({
         show: false,
         width: 1065,
-        height: 756,
+        height: 758,
         title: 'IONM Analysis Toolbox',
         icon: __dirname + './assets/images/app_icon.ico',
         resizable: false,
