@@ -1,10 +1,12 @@
-/**
- * main.js is responsible for creating the single browser window and
- * communicating with the python project.
- * It runs the commands when asked to by one of the renderer processes
- * and returns the data (if needed) back to the renderer process the
- * task came from.
- */
+//==================================================================
+// Create browser window / the app its logic
+//==================================================================
+// This file is responsible for creating the single browser window
+// and communicating with the python project. It runs the commands
+// when asked to by one of the renderer processes and returns the
+// data (if needed) back to the renderer process the task came from
+//==================================================================
+
 // requires (electron)
 const { app, BrowserWindow, dialog, shell, screen } = require('electron');
 const ipcMain = require('electron').ipcMain;
@@ -42,8 +44,8 @@ function createWindow () {
     // Create the browser window
     window = new BrowserWindow({
         show: false,
-        width: 1142,
-        height: 798,
+        width: 1065,
+        height: 756,
         title: 'IONM Analysis Toolbox',
         icon: __dirname + './assets/images/app_icon.ico',
         resizable: false,
@@ -530,7 +532,8 @@ ipcMain.on('run-convert', (event) => {
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
-            let errorMessage = 'An error occurred while trying to run the convert command';
+            let filename = selectedFileHolder[i].substr(selectedFileHolder[i].lastIndexOf('\\') + 1,)
+            let errorMessage = `Could not execute convert command for the file ${filename}`;
             if (error) {
                 log.error(error);
                 event.sender.send('error', errorMessage, 'convert');
@@ -571,7 +574,7 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
-            let errorMessage = 'An error occurred while trying to run the convert command';
+            let errorMessage =  `Could not execute convert command for the file ${selectedFileHolder[i]}`;
             if (error) {
                 log.error(error);
                 event.sender.send('error', errorMessage, 'convert');

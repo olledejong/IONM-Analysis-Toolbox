@@ -32,15 +32,6 @@ ipcRenderer.on('error', (event, error_message, tool) => {
         variable_content.load('components/availability.html');
         ipcRenderer.send('resize-window', 800, 510);
         break;
-    case 'convert':
-        variable_content.load('components/convert.html');
-        ipcRenderer.send('resize-window', 800, 690);
-        break;
-    case 'compute':
-        variable_content.load('components/compute.html');
-        ipcRenderer.send('resize-window', 800, 445);
-        generateStatsParameterOptions();
-        break;
     case 'validate':
         variable_content.load('components/validate.html');
         ipcRenderer.send('resize-window', 800, 460);
@@ -75,11 +66,13 @@ ipcRenderer.on('error', (event, error_message, tool) => {
 //==================================================================
 // eslint-disable-next-line no-unused-vars
 function showNotification(type, message) {
+    let removeNotiBtn = $('#remove-notifications');
     let container_after_titlebar = $('.container-after-titlebar');
     let r = Math.random().toString(36).substring(7);
+    let numbOfNotifications = ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length)
 
     // check for existing notification messages, add extra top offset if one or more already exist
-    let extraTopOffset = ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) * 40;
+    let extraTopOffset = numbOfNotifications * 40;
 
     // add notification element to page according to type
     if (type === 'error') {
@@ -99,6 +92,14 @@ function showNotification(type, message) {
     tempNotificationElement.animate({
         right: '+=465', opacity: 1
     }, 800);
+
+    // if there are two or more notifications, show close all notifications button
+    let opacity = parseInt(removeNotiBtn.css('opacity'));
+    if ( (numbOfNotifications >= 1) && opacity !== 1) {
+        removeNotiBtn.animate({
+            right: '+=465', opacity: 1
+        }, 800);
+    }
 }
 
 //==================================================================
@@ -115,6 +116,14 @@ function removeToastMessages() {
 //==================================================================
 // On click event handlers for all toast notifications
 //==================================================================
+bdy.on('click', '#remove-notifications', (e) => {
+    removeToastMessages();
+    $('#remove-notifications').css({
+        'right': '-455px',
+        'opacity': 0
+    });
+});
+
 bdy.on('click', '.warning-msg', (e) => {
     removeNotification(e, this);
 });
@@ -143,6 +152,13 @@ function removeNotification(e) {
     // if user clicks any other element inside the notification div
     } else {
         $(parentId).remove();
+    }
+    // if not more than 1 notifications displayed, hide close all notifications button
+    if ( ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) < 2) {
+        $('#remove-notifications').css({
+            'right': '-455px',
+            'opacity': 0
+        });
     }
 }
 

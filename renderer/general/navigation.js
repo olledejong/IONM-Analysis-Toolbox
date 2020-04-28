@@ -47,7 +47,7 @@ $('#welcome-section').on('click', () => {
     if (variable_content.find('#tool-container').length !== 1) {
         $('.linePreloader').hide('fast');
         removeToastMessages();
-        ipcRenderer.send('resize-window', 1142, 798);
+        ipcRenderer.send('resize-window', 1065, 756);
         variable_content.load('components/index.html');
     }
 });
