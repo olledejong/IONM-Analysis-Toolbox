@@ -88,7 +88,7 @@ ipcRenderer.on('set-preloader-rerun-convert', () => {
 // @param {string} filepath_of_run - filepath of specific convert run
 // @param {object} event - for purpose of communication with sender
 //=========================================================================
-ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
+ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run, lastIteration) => {
     let convert_results_container = $('#convert-results');
     let succeeded_converts_containter = $('#succeeded-converts');
     let success_and_compute_container = $('#success-and-run-compute');
@@ -125,7 +125,11 @@ ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
         // generate and insert the modality forms
         generateModalityFormFields( existingFormsOnPage, unknown_modalities );
     }
-    $('.linePreloader').hide();
+
+    // if last file (last iteration) hide preloader
+    if (lastIteration) {
+        $('.linePreloader').hide();
+    }
 });
 
 
@@ -218,7 +222,7 @@ varContent.on('click', '#submit-all-modalities', () => {
         }
 
         // store the modality using the values of their unique form
-        ipcRenderer.send('set-new-modality', modality_name, modality_type, modality_strategy);
+        ipcRenderer.send('set-new-modality', modality_name, modality_type, modality_strategy, 'convert');
 
         // animate forms out
         $('.add-modality-after-convert').animate({
@@ -245,11 +249,10 @@ varContent.on('click', '#submit-all-modalities', () => {
 // Lets the user know that the modality was set successfully by showing a
 // toast notification for every modality.
 //==========================================================================
-ipcRenderer.on('set-modality-successful', (event, name) => {
-    $('.linePreloader').hide('fast');
+ipcRenderer.on('set-modality-successful-convert', (event, name) => {
     showNotification('success', ('Successfully stored the modality '+ name));
     // refresh modalities (in case of added via settings)
-    ipcRenderer.send('get-current-settings');
+    $('.linePreloader').hide('fast');
 });
 
 

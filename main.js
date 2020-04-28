@@ -525,9 +525,13 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
 ipcMain.on('run-convert', (event) => {
     log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
+    let lastIteration = false;
 
     log.info('Creating child-process and running the convert command');
     for(let i = 0; i < selectedFileHolder.length; i++) {
+        if (i + 1 === selectedFileHolder.length) {
+            lastIteration = true;
+        }
         let command = `python ionm.py gui_convert "${selectedFileHolder[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
@@ -542,7 +546,7 @@ ipcMain.on('run-convert', (event) => {
                 event.sender.send('error', errorMessage, 'convert');
             } else {
                 try {
-                    event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
+                    event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i], lastIteration);
                 } catch (e) {
                     log.info('Sending result to the renderer was unsuccessful. ' +
                         'Probably caused because of the window already being closed.');
@@ -970,22 +974,25 @@ ipcMain.on('set-database', (event, new_database_path) => {
 // @param {string} type - type of the to be stored modality (TRIGGERED or FREE_RUNNING)
 // @param {string} strategy - strategy of the to be stored modality (DIRECT or AVERAGE)
 //=====================================================================================
-ipcMain.on('set-new-modality', (event, name, type, strategy) => {
+ipcMain.on('set-new-modality', (event, name, type, strategy, tool) => {
     let command = `python ionm.py gui_set_modality -n "${name}" -t "${type}" -s "${strategy}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to set the modality';
+        let errorMessage = `An error occurred while trying to set the modality ${name}`;
 
         // if errors occur, send an error message to the renderer process
         if (error) {
             event.sender.send('error', errorMessage);
-            log.error(error);
         } else if (stderr) {
-            log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
-            event.sender.send('set-modality-successful', name);
+            if (tool === 'convert') {
+                event.sender.send('set-modality-successful-convert', name);
+            } else {
+                event.sender.send('set-modality-successful-settings', name);
+            }
+
         }
     });
 });

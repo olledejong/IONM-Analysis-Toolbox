@@ -186,12 +186,11 @@ ipcRenderer.on('successfully-set-default-select-dir', () => {
 // Lets the user know that the modality was set successfully by showing a
 // toast notification for every modality.
 //==========================================================================
-ipcRenderer.on('set-modality-successful', (event, name) => {
-    $('.linePreloader').hide('fast');
+ipcRenderer.on('set-modality-successful-settings', (event, name) => {
     showNotification('success', ('Successfully stored the modality '+ name));
     // refresh modalities (in case of added via settings)
     ipcRenderer.send('get-current-settings');
-    $('.linePreloader').show();
+    showNotification('info', 'Retrieving the modalities from its table in the database')
 });
 
 
@@ -320,7 +319,7 @@ variable_content.on('click', '#submit-new-modality', () => {
     resetModalityForm();
 
     // tell main.js to set the new modality
-    ipcRenderer.send('set-new-modality', modality, type, strategy, description);
+    ipcRenderer.send('set-new-modality', modality, type, strategy, description, 'settings');
 });
 
 
