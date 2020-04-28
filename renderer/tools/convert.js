@@ -88,7 +88,7 @@ ipcRenderer.on('set-preloader-rerun-convert', () => {
 // @param {string} filepath_of_run - filepath of specific convert run
 // @param {object} event - for purpose of communication with sender
 //=========================================================================
-ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run, lastIteration) => {
+ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
     let convert_results_container = $('#convert-results');
     let succeeded_converts_containter = $('#succeeded-converts');
     let success_and_compute_container = $('#success-and-run-compute');
@@ -125,11 +125,7 @@ ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run, lastIt
         // generate and insert the modality forms
         generateModalityFormFields( existingFormsOnPage, unknown_modalities );
     }
-
-    // if last file (last iteration) hide preloader
-    if (lastIteration) {
-        $('.linePreloader').hide();
-    }
+    $('.linePreloader').hide();
 });
 
 

@@ -525,13 +525,9 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
 ipcMain.on('run-convert', (event) => {
     log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
-    let lastIteration = false;
 
     log.info('Creating child-process and running the convert command');
     for(let i = 0; i < selectedFileHolder.length; i++) {
-        if (i + 1 === selectedFileHolder.length) {
-            lastIteration = true;
-        }
         let command = `python ionm.py gui_convert "${selectedFileHolder[i]}"`;
         exec(command, {
             cwd: pythonSrcDirectory
@@ -546,7 +542,7 @@ ipcMain.on('run-convert', (event) => {
                 event.sender.send('error', errorMessage, 'convert');
             } else {
                 try {
-                    event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i], lastIteration);
+                    event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
                 } catch (e) {
                     log.info('Sending result to the renderer was unsuccessful. ' +
                         'Probably caused because of the window already being closed.');
