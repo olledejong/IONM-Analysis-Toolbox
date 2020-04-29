@@ -1,11 +1,11 @@
 <div id="availability-content">
     <div id="availability-content-description" class="content-description-container">
-        <h3 class="content-h">Generate a plot showing when an EEG context is available for given evoked potentials</h3>
+        <h3 class="content-h">Generate a plot which visualizes where EEG context is available for the given TRG measurements</h3>
         <p class="content-p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+            Using this tool you're able to get an idea of how much EEG data is available around evoked potentials. The 'Window Size'
+            argument exists to let you select in what range the EEG data should be available around the evoked potentials. Setting a
+            Window Size of 1 tells the script to label every evoked potential which has 1 second of EEG available before and after as
+            'EEG available'. All evoked potentials which do not have the 1 second of EEG available will be labeled 'EEG not available'.
             <br><br>Please select an EEG file and a TRG file.
         </p>
     </div>
@@ -14,7 +14,7 @@
         <button id="a-trg-select-btn" class="eeg-trg-btn">Click to select a TRG file</button>
         <div class="secondary-input-container">
             <label class="secondary-input-label" id="window-input-label">Window Size</label>
-            <input type="number" class="secondary-input-field" id="window-size-availability" name="window-size-availability" min="1" max="10" placeholder="6">
+            <input type="number" class="secondary-input-field" id="window-size-availability" name="window-size-availability" min="1" max="10" placeholder="1">
             <label class="secondary-input-sublabel">-w argument while using commandline</label>
         </div>
         <button id="run-availability" class="eeg-trg-run-btn" disabled>RUN</button>
