@@ -59,7 +59,7 @@ $('#welcome-section').on('click', () => {
 body.on('click', '#summarize-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 750, 460);
+    ipcRenderer.send('resize-window', 750, 470);
 
     // fade in the html content
     variable_content.load('components/summarize.html').hide().fadeIn('slow');
@@ -74,7 +74,7 @@ body.on('click', '#summarize-section', () => {
 body.on('click', '#timing-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 450);
+    ipcRenderer.send('resize-window', 750, 470);
 
     // fade in the html content
     variable_content.load('components/timing.html').hide().fadeIn('slow');
@@ -89,7 +89,7 @@ body.on('click', '#timing-section', () => {
 body.on('click', '#availability-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 510);
+    ipcRenderer.send('resize-window', 800, 505);
 
     // fade in the html content
     variable_content.load('components/availability.html').hide().fadeIn('slow');

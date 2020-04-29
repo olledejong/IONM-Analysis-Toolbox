@@ -66,7 +66,9 @@ function checkIfAvailabilityFormComplete() {
     let trg_select_a = $('#a-trg-select-btn');
     let eeg_select_a = $('#a-eeg-select-btn');
     let window_size_availability = $('#window-size-availability');
-    if ( trg_select_a.html().includes('\\') && eeg_select_a.html().includes('\\') &&
+    // if a TRG file, EEG file and windows size is between 1 and 10, enable run button
+    if ( trg_select_a.html().includes('TRG') && eeg_select_a.html().includes('EEG') &&
+        trg_select_a.html().includes('\\') && eeg_select_a.html().includes('\\') &&
         (window_size_availability.val() > 0 && window_size_availability.val() <= 10) ) {
         run_availability.css({
             'background':'#e87e04',

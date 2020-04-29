@@ -112,6 +112,12 @@ function removeToastMessages() {
     fadeOutAndRemove($('.info-msg'))
     fadeOutAndRemove($('.error-msg'))
     fadeOutAndRemove($('.warning-msg'))
+    // hide remove notifications button
+    $('#remove-notifications').animate({
+        opacity: 0
+    }, 250, () => {
+        $('#remove-notifications').hide();
+    })
 }
 
 //==================================================================
@@ -119,11 +125,6 @@ function removeToastMessages() {
 //==================================================================
 bdy.on('click', '#remove-notifications', (e) => {
     removeToastMessages();
-    $('#remove-notifications').animate({
-        opacity: 0
-    }, 250, () => {
-        $('#remove-notifications').hide();
-    })
 });
 
 bdy.on('click', '.warning-msg', (e) => {
@@ -157,7 +158,7 @@ function removeNotification(e) {
         fadeOutAndRemove($(notificationId));
     }
     // if not more than 1 notifications displayed, hide close all notifications button
-    if ( ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) < 2) {
+    if ( ($('.success-msg').length + $('.info-msg').length + $('.error-msg').length + $('.warning-msg').length) <= 2) {
         $('#remove-notifications').animate({
             opacity: 0
         }, 250, () => {

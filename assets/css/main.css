@@ -1034,7 +1034,7 @@ label.radio input:checked + span {
     border-radius: 4px;
     width: 19%;
     height: 100%;
-    transition: all 0.2s ease-out;
+    transition: all 0.3s ease-out;
     outline: 0;
     border: 0;
     display: inline-block;
@@ -1229,4 +1229,8 @@ label.radio input:checked + span {
     line-height: 15px;
     color: #404040;
     transition: all 0.2s ease-out;
+}
+
+#direct-tool-instruction {
+    text-align: center;
 }

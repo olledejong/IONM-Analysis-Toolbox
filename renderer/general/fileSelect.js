@@ -61,10 +61,10 @@ ipcRenderer.on('selected-general', (event, paths) => {
 
         // show run button and enable it
         if ( run_button.prop('disabled') === true ) {
-            run_button.css({
+            run_button.animate({
                 'right': '0',
                 'opacity' : '1'
-            });
+            }, 200);
         }
         run_button.prop('disabled', false);
 
@@ -78,10 +78,10 @@ ipcRenderer.on('selected-general', (event, paths) => {
             'transform': 'translate(-50%, -50%)',
         });
         selected_filenames_p.html('No files selected');
-        run_button.css({
+        run_button.animate({
             'right': '-100px',
             'opacity' : '0'
-        });
+        }, 200);
         run_button.prop('disabled', true);
     }
 });
