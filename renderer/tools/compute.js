@@ -1,4 +1,4 @@
-suc//======================================================================
+//======================================================================
 // This renderer file is responsible for all user interaction in the
 // compute section of the application. It is responsible for telling
 // the main process to execute the tool via a ChildProcess and handling
