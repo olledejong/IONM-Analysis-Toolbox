@@ -47,15 +47,15 @@ footer span {
 
 #variable-content {
     min-width: 100%;
-    margin-top: 36px;
+    margin-top: 43px;
     position: fixed;
-    padding: 10px 16px 20px 16px;
+    padding: 0 16px 20px 16px;
     overflow-y: visible;
 }
 
 #welcome-text {
     letter-spacing: 1.5px;
-    margin: -2px 0 12px 1px;
+    margin: 3px 0 12px 1px;
     width: auto;
     height: auto;
     font-weight: 500;
@@ -414,6 +414,15 @@ h1 i {
     cursor: auto;
 }
 
+#placeholder1-title,
+#placeholder2-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+}
+
 #settings-icon {
     font-size: 18px;
     font-weight: 500;
@@ -716,7 +725,7 @@ h1 i {
     background: linear-gradient(to right,#e87e04,#e87e04);
     background-color: #ccc;
     position: fixed;
-    top: 67px;
+    top: 65px;
     right: 0;
     background-size: 20%;
     background-repeat: repeat-y;
@@ -737,7 +746,7 @@ h1 i {
     text-align: center;
     position: fixed;
     right: -455px;
-    top: 29px;
+    top: 27px;
     z-index: 1001;
     opacity: 0;
     font-size: 16px;
@@ -1015,7 +1024,7 @@ label.radio input:checked + span {
 }
 
 #e-trg-select-btn, #e-eeg-select-btn {
-    width: calc(79% - 10px);
+    width: calc(80% - 5px);
 }
 
 #a-trg-select-btn, #a-eeg-select-btn {
@@ -1147,7 +1156,8 @@ label.radio input:checked + span {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24);
 }
 
-.compute-file-select:hover {
+.compute-file-select:hover,
+.combine-file-select:hover {
     transform: translateY(-2px);
 }
 
@@ -1160,7 +1170,7 @@ label.radio input:checked + span {
     background: white;
     position: absolute;
     right: 13px;
-    top: 12.4px;
+    top: 8.4px;
     box-shadow: 0 0 4px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.23);
 }
 

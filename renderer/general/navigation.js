@@ -59,7 +59,7 @@ $('#welcome-section').on('click', () => {
 body.on('click', '#summarize-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 750, 470);
+    ipcRenderer.send('resize-window', 750, 467);
 
     // fade in the html content
     variable_content.load('components/summarize.html').hide().fadeIn('slow');
@@ -74,7 +74,7 @@ body.on('click', '#summarize-section', () => {
 body.on('click', '#timing-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 750, 470);
+    ipcRenderer.send('resize-window', 750, 467);
 
     // fade in the html content
     variable_content.load('components/timing.html').hide().fadeIn('slow');
@@ -89,7 +89,7 @@ body.on('click', '#timing-section', () => {
 body.on('click', '#availability-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 505);
+    ipcRenderer.send('resize-window', 800, 501);
 
     // fade in the html content
     variable_content.load('components/availability.html').hide().fadeIn('slow');
@@ -104,7 +104,7 @@ body.on('click', '#availability-section', () => {
 body.on('click', '#convert-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 663);
+    ipcRenderer.send('resize-window', 800, 616);
 
     // fade in the html content
     variable_content.load('components/convert.html').hide().fadeIn('slow');
@@ -119,7 +119,7 @@ body.on('click', '#convert-section', () => {
 body.on('click', '#compute-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 445);
+    ipcRenderer.send('resize-window', 800, 517);
 
     // load the needed script
     loadToolScript( path.join(__dirname, '/renderer/tools/compute.js') );
@@ -136,7 +136,7 @@ body.on('click', '#compute-section', () => {
 body.on('click', '#extract-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 470);
+    ipcRenderer.send('resize-window', 800, 476);
 
     // fade in the html content
     variable_content.load('components/extract.html').hide().fadeIn('slow');
@@ -151,7 +151,7 @@ body.on('click', '#extract-section', () => {
 body.on('click', '#validate-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 460);
+    ipcRenderer.send('resize-window', 800, 467);
 
     // fade in the html content
     variable_content.load('components/validate.html').hide().fadeIn('slow');
@@ -166,7 +166,7 @@ body.on('click', '#validate-section', () => {
 body.on('click', '#combine-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 440);
+    ipcRenderer.send('resize-window', 800, 445);
 
     // fade in the html content
     variable_content.load('components/combine.html').hide().fadeIn('slow');

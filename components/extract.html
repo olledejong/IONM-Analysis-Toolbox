@@ -1,11 +1,12 @@
 <div id="extract-content">
     <div id="extract-content-description" class="content-description-container">
-        <h3 class="content-h">Create file(s) with the combination of evoked potentials with its available EEG context</h3>
+        <h3 class="content-h">Create a file with evoked potentials along with its available EEG context</h3>
         <p class="content-p">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            <br><br>Please select an EEG file and a TRG file.
+            Using this tool, you will be able to extract all evoked potentials along with its EEG data for which enough EEG data
+            is available. Since the window size parameter isn't fully dynamic as it is for the 'show availability' tool, it has
+            for now been hard-coded in the backend python script. So, currently it is set to a window size of 6 seconds around an
+            evoked potential. The output file will have the same name as the input file, but with the addition "_EXTR_EEG"
+            <br><br>Please select an EEG file as well as a TRG file.
         </p>
     </div>
     <div id="extract-select-container">
