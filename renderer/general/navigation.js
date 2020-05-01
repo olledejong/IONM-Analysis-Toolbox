@@ -89,7 +89,7 @@ body.on('click', '#timing-section', () => {
 body.on('click', '#availability-section', () => {
     variable_content.css('position', 'absolute');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 521);
+    ipcRenderer.send('resize-window', 800, 522);
 
     // fade in the html content
     variable_content.load('components/availability.html').hide().fadeIn('slow');

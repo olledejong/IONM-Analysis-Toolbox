@@ -1107,10 +1107,8 @@ function setupDatabase(event) {
 
         // if errors occur, send an error message to the renderer process
         if (error) {
-            log.error(error);
             event.sender.send('error', errorMessage);
         } else if (stderr) {
-            log.error(stderr);
             event.sender.send('error', errorMessage);
         } else {
             event.sender.send('database-setup-successful', stdout);
