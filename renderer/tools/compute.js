@@ -26,7 +26,7 @@ ipcRenderer.on('selected-compute', (event, paths) => {
         compute_select_btn.html(generateFilenames(paths));
         checkIfComputeFormComplete();
     } else {
-        compute_select_btn.html('Click to select a file');
+        compute_select_btn.html('Click to select');
         checkIfComputeFormComplete();
     }
 });

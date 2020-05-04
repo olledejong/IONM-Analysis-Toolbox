@@ -26,7 +26,7 @@ let varb_cont = $('#variable-content');
 ipcRenderer.on('selected-validate', (event, paths) => {
     let run_btn = $('#run-validate');
     let selected_filenames = $('#selected-filenames');
-    if (paths.length !== 0) {
+    if (paths.length !== 0 && paths[0].includes('EXTR')) {
         selected_filenames.css({
             'word-break': 'break-all',
             'position' : 'relative',

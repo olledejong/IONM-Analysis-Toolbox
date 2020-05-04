@@ -31,7 +31,7 @@ ipcRenderer.on('selected-combine', (event, paths) => {
         combine_select_btn.css('font-size', '13px');
         checkIfCombineFormComplete();
     } else {
-        combine_select_btn.html('Click to select a file');
+        combine_select_btn.html('Click to select');
         combine_select_btn.css('font-size', '16px');
         checkIfCombineFormComplete();
     }
