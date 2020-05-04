@@ -1,9 +1,9 @@
 <div id="compute-content">
     <div id="compute-content-description" class="content-description-container">
         <div id="tool-summary">
-            <div><div>Screen output</div><div class="times"><i class="fas fa-times"></i></div></div>
-            <div><div>Output file</div><div class="times"><i class="fas fa-times"></i></div></div>
-            <div><div>Database output</div><div class="check"><i class="fas fa-check"></i></div></div>
+            <div><div>Screen output</div><div>No</div></div>
+            <div><div>Output file</div><div>No</div></div>
+            <div><div>Database output</div><div>Yes</div></div>
             <div><div>Running time</div><div id="duration-average">Average</div></div>
         </div>
         <h3 class="content-h">Compute the statistics of Eclipse files</h3>
@@ -12,13 +12,12 @@
             Determining what statistics will be calculated can be done by selecting a possibility from the statistical options. For now these are:
             'all', 'p_p_amplitude' and 'auc'. In the future there might be additional statistics that can be computed. <br>After clicking the run button
             you will have to fill out an experiment form. Once its filled out correctly, windows containing signals will appear. In these you can deselect
-            signals or change up the ranges of which the statistics will get computed.
-            box.<br><br>
+            signals or change up the ranges of which the statistics will get computed.<br><br>
             Please select one or more files you wish to compute the statistics of.
         </p>
     </div>
     <div id="compute-select-container">
-        <button id="compute-select-btn" class="compute-file-select">Click to select a file</button>
+        <button id="compute-select-btn" class="compute-file-select">Click to select</button>
         <div class="secondary-input-container">
             <label class="secondary-input-label" id="stats-input-label">Statistics</label>
             <select class="secondary-input-field" id="stats-input" name="stats-input">
