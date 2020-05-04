@@ -232,21 +232,21 @@ After running `ionm.py setup`, opening the database file should start Access and
 ### IONM Analysis Toolbox ###
 Since the IONM Analysis Toolbox is a Graphical User Interface for the purpose of making it easier to work with IONM Analysis tools, most of the application should speak for itself when you get a little familliar with it. But if it does not, don't worry, here are some usefull descriptive usage paragraphs for every section of the application.
 
-#### Summarize the information of a file ####
+#### Summarize the information of a file (Summarize) ####
 Using this tool you will be able to retrieve some basic information about exported Eclipse files. Select one or more files and hit the run button to generate table for all selected files. This table contains information such as: path to the file, file size, file name, date of measuring, duration of measurement and which types of modalities are present in the file.  
 To use this tool, click the orange part which contains the text "Click to select". After doing this, a file selection window should open. From there, select the file (or files) you would like to execute the tool on. When you've selected at least one file, a "RUN" button will appear. Click this to generate a table containing some information about the selected Eclipse files.
 
-#### Show all measurements that a file contains ####
+#### Show all measurements that a file contains (Show Timing) ####
 Using this tool you will be able to plot all timestamps present in an Eclipse file. In the plot the timestamps of measurements are plotted as a function of the position in file. Because of that, this tool is useful to get insight into which measurements (including the modality type of the measurement) were made at which time.  
 To use this tool, click the orange part which contains the text "Click to select". After doing this, a file selection window should open. From there, select the file (or files) you would like to execute the tool on. When you've selected at least one file, a "RUN" button will appear. Click this to generate a plot where the timestamps of measurements are plotted as a function of their position in file.
 
-#### Show EEG availability ####
+#### Show EEG availability (Show Availability) ####
 Using this tool you will be able to get an idea of how much EEG data is available around evoked potentials. The 'Window Size' argument exists to let you select in what range the EEG data should be available around the evoked potentials. Setting a Window Size of 1 tells the script to label every evoked potential which has 1 second of EEG available before and after as 'EEG available'. All evoked potentials which do not have the 1 second of EEG available will be labeled 'EEG not available'.
 To use this tool, you will have to select an EEG as well as a TRG file. To select an EEG file click the orange part which contains the text "Click to select an EEG file". After doing this, a file selection window should open. From there, select the EEG file you would like to execute the tool on. Do the same thing for the TRG file. Be sure not to switch them up, though.  
 After selecting the files, you will have to choose the "Window Size". Select this number by clicking the little arrows that appear once you hover over the white field. Alternatively, you can also type a number into the field. The "Window Size" argument can be 1 up to 10 (seconds).  
 When you've selected both files and you've set the "Window Size", the "RUN" button will be enabled. Click this to generate a plot which shows you exactly when there is EEG data available around evoked potentials.
 
-#### Convert TRG files ####
+#### Convert TRG files (Convert) ####
 This tool is a preprocess tool to eventually compute the statistics of the Eclipse files. It will convert Eclipse CSV files into multiple custom files: one separate file per modality.
 All the modalities that the file, or files, contain should be already in the known modalities table. If not, the converting of the file that contains unknown modalities will fail (how to handle this will be described later). 
 To use this tool, click the orange part which contains the text "Click to select". After doing this, a file selection window should open. From there, select the file (or files) you would like to execute the tool on. When you've selected at least one file, a "RUN" button will appear. Click this to convert the selected files into seperate files (one per modality).
@@ -255,35 +255,62 @@ To use this tool, click the orange part which contains the text "Click to select
 
 The output file(s) will have the same name as the input file, but with the addition "_converted".
 
-#### Compute statistics ####
+#### Compute statistics (Compute) ####
 This tool will compute the statistics the user wishes to compute and store these in the configured database (can be changed in the settings). Determining what statistics will be calculated can be done by selecting a possibility from the statistical options list. For now these are: 'all', 'p_p_amplitude' and 'auc'. In the future there might be additional statistics that can be computed.
 To use this tool, click the orange part which contains the text "Click to select". After doing this, a file selection window should open. From there, select the file (or files) you would like to execute the tool on. After this, select what statistics you would like to compute by selecting an option from the drop-down list in the "Statistics" box.
 Once you've selected at least one file and the statistics you wish to compute, the "RUN" button will be enabled. Click this to start the process.
 After clicking the run button you will have to fill out an experiment form. Do this accurately, since it contains critical information. Once its filled out correctly and you have clicked the "ok" button, windows containing signals will appear. In these you can deselect signals or change the ranges of which the statistics will get computed.  
 Once you are trough all the signal windows, a success message should appear.
 
-#### Extract available EEG ####
+#### Extract available EEG (Extract) ####
 Using this tool, you will be able to extract all evoked potentials along with its EEG data for which enough EEG data is available. Since the window size parameter isn't fully dynamic as it is for the 'show availability' tool, it has for now been hard-coded in the backend python script. So, currently it is set to a window size of 6 seconds around an evoked potential.  
 To use this tool, you will have to select an EEG as well as a TRG file. To select an EEG file click the orange part which contains the text "Click to select an EEG file". After doing this, a file selection window should open. From there, select the EEG file you would like to execute the tool on. Do the same thing for the TRG file. Be sure not to switch them up, though. When you've selected both files, the "RUN" button will be enabled.
 
 The output file will have the same name as the input file, but with the addition "_EXTR_EEG".
 
-#### Validate the extracted file ####
+#### Validate the extracted file (Validate) ####
 Extracted files may contain signals which have artifacts. By using this tool you will be able to omit signals which contain artifacts. Validation screens will be created, which can be used by the user to exclude artifact data in the combined EEG, TES MEP data. This results in a new file which does not contain the omitted signals. 
 To use this tool, you will have to select an extracted file. To select an extracted file click the orange part which contains the text "Click to select an extracted file". After doing this, a file selection window should open. From there, select the extracted file you would like to execute the tool on. 
 When you've selected a file, and the selected file is in fact an extracted file, the "RUN" button will be enabled.
 
 The output file will have the same name as the input file, but with the addition "_VALIDATED"
 
-#### Combine database statistics with Graphical Analysis Data ####
+#### Combine database statistics with Graphical Analysis Data (Combine) ####
 Using this tool you will be able to combine the data from the configured database with the output of the graphical analysis data program created by Jan-Willem. The 'Patient ID' argument gets used for adding the patient identifier to the output file which contains the database data as well as the output of the graphical analysis data program. 
 To use this tool, you will have to select a file which has to be in the format of the output of Jan-Willem his graphical analysis programm. To select such a file click the orange part which contains the text "Click to select". After doing this, a file selection window should open. From there, select the file you would like to execute the tool on. 
 When you've selected a file, you also have to give a patient ID within the "Patient ID" box. Select this number by clicking the little arrows that appear once you hover over the white field. Alternatively, you can also type a number into the field. If you've done these two things, the "RUN" button will be enabled.
 
 The output files will have the same name as the input file, but with the addition "_COMBINED"
 
-#### Classify ####
+#### Classify for F-waves (Classify) ####
 **_Not fully functional at the moment and thus disabled_**
+
+#### Application Settings ####
+Within the settings of the IONM Analysis Toolbox you will find six distinct sections with each its own function. Below will follow an elaboration on each of those sections.
+
+**Set Python src directory**
+Within this section you are able to let the IONM Analysis Toolbox know where the python project, created by Johan Schneijders and Menno Gerbens, is located. The IONM Analysis Toolbox is entirely dependent upon the python project, and therefor this is the first setting you would want to configure.  
+To configure this setting, select the python src directory by clicking the "Select" button within the "Set python src directory" section. Once you have selected and 'opened' the right directory, its path will be displayed within the white text field. Double check if it is the right directory, and then click "Set src directory".
+
+**Set default select directory**
+This section is solely for the use of user convenience. Using this section, you can select and set the default path the file / directory selection window opens in. If you for example have a data folder which you are working with all the time, consider configuring that directory as the default select directory.  
+To configure this setting, select the wanted default select directory by clicking the "Select" button within the "Set default select directory" section. Once you have selected and 'opened' the right directory, its path will be displayed within the white text field. Double check if it is the right directory, and then click "Set default select path".
+
+**Set database**
+Once the python src directory has been correctly configured, you can use this section to set the database which will be used to write data to. When using the command line, you would have to set the database by going into the python project and copying the absolute path to a config file. That is not needed anymore if you use the IONM Analysis Toolbox.
+To configure this setting, select the database (.accdb extention only) by clicking the "Select" button within the "Set database" section. Once you have selected and 'opened' the right database, its path will be displayed within the white text field. Double check if it is the right database, and then click "Set database".
+
+**Setup a new database**
+Whenever you create a new Microsoft Access Database, you will have to setup and create empty tables which can be filled later. This process is meant **only for new and empty databases!** Be very thoughtful when using this tool. If you (mistakenly) setup a database which is already in use and potentially full of data, you **will** delete all of its content or corrupt the database.  
+The currently set database its path is displayed within the white textfield. The only think you have to do to setup the database is click the "setup database" button.
+
+**Configure the modalities**
+Every database that has been setup contains a modalities table. In this table all encountered modalities will be stored. In this section of the settings, you can see which modalities already exist in the (configured / active) database. You can also manually add a modality to the modalities table.  
+You can add a modality to the modalities table by first clicking the "add modality" button. When you click this, a form will appear. In this form, fill out the modality its name, the type and the strategy. After this, hit the "submit" button to add the modality to the database.
+
+**Trace selection settings**
+Within this section there is for now only one setting. More could be implemented in the future, but untill now that was not needed. The one setting regarding the trace selection system (used in the compute and validate tools) is the "Chunk Size". This setting determines how many signals will be displayed at once in a window. 
+You can set this value by clicking the little arrows that appear once you hover over the white field. Alternatively, you can also type a number into the field. Once you set a value of choice, click the "submit settings" button to save the settings.
 
 ## Version Information ##
 
