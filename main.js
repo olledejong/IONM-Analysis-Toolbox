@@ -204,47 +204,6 @@ autoUpdater.on('update-downloaded', () => {
     }, 5000);
 });
 
-//==================================================================
-// Create help widow
-//==================================================================
-ipcMain.on('create-help-window', (e) => {
-    // Create the browser window
-    helpWin = new BrowserWindow({
-        width: 800,
-        height: 1000,
-        title: 'Help',
-        icon: __dirname + './assets/images/app_icon.ico',
-        resizable: false,
-        frame: true,
-        webPreferences: {
-            webSecurity: true,
-            nodeIntegration: true,
-            disableBlinkFeatures : 'Auxclick'
-        }
-    });
-
-    // remove unnecessary menu
-    helpWin.removeMenu();
-
-    helpWin.on('unresponsive', () => {
-        dialog.showErrorBox('Oh no, the application has become unresponsive!',
-            'Please quit the application and try to restart it. Force quit it via Task Manager if you have to.');
-    });
-
-    // and load the index.html of the app.
-    helpWin.loadFile('help.html');
-
-    // once everything is loaded, show window
-    helpWin.webContents.on('did-finish-load', () => {
-        window.show();
-    });
-
-    // renderer crash results in restart
-    helpWin.webContents.on('crashed', () => {
-        app.relaunch();
-        app.quit();
-    });
-});
 
 //==================================================================
 //                    RESIZE BROWSER WINDOW

@@ -10,6 +10,7 @@
 window.$ = window.jQuery = require('jquery');
 const path = require('path');
 const ipcRenderer = require('electron').ipcRenderer;
+const open = require('open');
 // eslint-disable-next-line no-unused-vars
 const log = require('electron-log');
 console.log = log.log;
@@ -315,9 +316,10 @@ function generateStatsParameterOptions() {
 //==================================================================
 // Tells main process to open the README
 //==================================================================
-help_section_button.click( () => {
+help_section_button.click( async () => {
     // ipcRenderer.send('open-window', path.join(__dirname, '/README.pdf'));
-    ipcRenderer.send('create-help-window');
+    await open('https://github.com/olledejong/IONM-Analysis-Toolbox/#ionm-analysis-toolbox');
+    // ipcRenderer.send('create-help-window');
 });
 
 
