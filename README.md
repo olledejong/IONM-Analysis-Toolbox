@@ -288,27 +288,27 @@ The output files will have the same name as the input file, but with the additio
 #### Application Settings ####
 Within the settings of the IONM Analysis Toolbox you will find six distinct sections with each its own function. Below will follow an elaboration on each of those sections.
 
-**Set Python src directory**
+**Set Python src directory**  
 Within this section you are able to let the IONM Analysis Toolbox know where the python project, created by Johan Schneijders and Menno Gerbens, is located. The IONM Analysis Toolbox is entirely dependent upon the python project, and therefor this is the first setting you would want to configure.  
 To configure this setting, select the python src directory by clicking the "Select" button within the "Set python src directory" section. Once you have selected and 'opened' the right directory, its path will be displayed within the white text field. Double check if it is the right directory, and then click "Set src directory".
 
-**Set default select directory**
+**Set default select directory**  
 This section is solely for the use of user convenience. Using this section, you can select and set the default path the file / directory selection window opens in. If you for example have a data folder which you are working with all the time, consider configuring that directory as the default select directory.  
 To configure this setting, select the wanted default select directory by clicking the "Select" button within the "Set default select directory" section. Once you have selected and 'opened' the right directory, its path will be displayed within the white text field. Double check if it is the right directory, and then click "Set default select path".
 
-**Set database**
+**Set database**  
 Once the python src directory has been correctly configured, you can use this section to set the database which will be used to write data to. When using the command line, you would have to set the database by going into the python project and copying the absolute path to a config file. That is not needed anymore if you use the IONM Analysis Toolbox.
 To configure this setting, select the database (.accdb extention only) by clicking the "Select" button within the "Set database" section. Once you have selected and 'opened' the right database, its path will be displayed within the white text field. Double check if it is the right database, and then click "Set database".
 
-**Setup a new database**
+**Setup a new database**  
 Whenever you create a new Microsoft Access Database, you will have to setup and create empty tables which can be filled later. This process is meant **only for new and empty databases!** Be very thoughtful when using this tool. If you (mistakenly) setup a database which is already in use and potentially full of data, you **will** delete all of its content or corrupt the database.  
 The currently set database its path is displayed within the white textfield. The only think you have to do to setup the database is click the "setup database" button.
 
-**Configure the modalities**
+**Configure the modalities**  
 Every database that has been setup contains a modalities table. In this table all encountered modalities will be stored. In this section of the settings, you can see which modalities already exist in the (configured / active) database. You can also manually add a modality to the modalities table.  
 You can add a modality to the modalities table by first clicking the "add modality" button. When you click this, a form will appear. In this form, fill out the modality its name, the type and the strategy. After this, hit the "submit" button to add the modality to the database.
 
-**Trace selection settings**
+**Trace selection settings**  
 Within this section there is for now only one setting. More could be implemented in the future, but untill now that was not needed. The one setting regarding the trace selection system (used in the compute and validate tools) is the "Chunk Size". This setting determines how many signals will be displayed at once in a window. 
 You can set this value by clicking the little arrows that appear once you hover over the white field. Alternatively, you can also type a number into the field. Once you set a value of choice, click the "submit settings" button to save the settings.
 
