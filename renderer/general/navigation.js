@@ -318,7 +318,7 @@ function generateStatsParameterOptions() {
 //==================================================================
 help_section_button.click( async () => {
     // ipcRenderer.send('open-window', path.join(__dirname, '/README.pdf'));
-    await open('https://github.com/olledejong/IONM-Analysis-Toolbox/#ionm-analysis-toolbox');
+    await open('https://github.com/olledejong/IONM-Analysis-Toolbox/#ionm-analysis-toolbox-2');
     // ipcRenderer.send('create-help-window');
 });
 
