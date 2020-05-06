@@ -25,7 +25,6 @@ log.info('User preferences stored at: ', app.getPath('userData'));
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let window;
-let helpWin;
 
 // global list which holds the paths of the via a dialog window selected csv files.
 let selectedFileHolder;
@@ -223,7 +222,11 @@ ipcMain.on('resize-window', (event, newX, newY) => {
             window.setSize(newX, newY, true);
         }
     } catch (e) {
-        event.sender.send('error', 'Something went wrong while trying to resize the browser window');
+        try {
+            event.sender.send('error', 'Something went wrong while trying to resize the browser window');
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
+        }
     }
 });
 
@@ -279,7 +282,7 @@ ipcMain.on('select-file', (event, options, tool, label) => {
                 break;
             }
         } catch (e) {
-            log.error('Caught an error: \n', e);
+            log.error('Caught an error while opening a dialog: \n', e);
         }
     });
 });
@@ -318,27 +321,18 @@ ipcMain.on('run-summarize', (event) => {
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
-            let summarize_error_message = 'An error occurred while summarizing one or more files';
-
-            // if errors occur, send an error message to the renderer process
-            if (error) {
-                log.error(error);
-                event.sender.send('error', summarize_error_message, 'summarize');
-            } else if (stderr) {
-                log.error(stderr);
-                event.sender.send('error', summarize_error_message, 'summarize');
-            } else {
-                // build json string using the command output
-                let JSONstring = createJsonString(stdout);
-                
-                // send the json string back to the renderer to be displayed
-                try {
+            try {
+                // if errors occur, send an error message to the renderer process
+                if (error || stderr) {
+                    event.sender.send('error', 'An error occurred while summarizing one or more files', 'summarize');
+                } else {
+                    // build json string using the command output
+                    let JSONstring = createJsonString(stdout);
+                    // send the json string back to the renderer to be displayed
                     event.sender.send('summarize-result', JSONstring);
-                } catch (e) {
-                    log.info('Sending result to the renderer was unsuccessful. ' +
-                        'Probably caused because of the window already being closed.');
-                    log.error('Caught an error in main.js: \n', e);
                 }
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
             }
         });
     }
@@ -413,21 +407,14 @@ ipcMain.on('run-timing', (event) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to generate the timing plot';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage, 'timing');
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage, 'timing');
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to generate the timing plot', 'timing');
+            } else {
                 event.sender.send('timing-result');
-            } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                    'Probably caused because of the window already being closed.');
-                log.error('Caught an error in main.js: \n', e);
             }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -451,22 +438,14 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to generate the EEG availability plot';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage, 'availability');
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage, 'availability');
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to generate the EEG availability plot', 'availability');
+            } else {
                 event.sender.send('availability-result');
-            } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                    'Probably caused because of the window already being closed.');
-                log.error('Caught an error in main.js: \n', e);
             }
-            
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -492,22 +471,14 @@ ipcMain.on('run-convert', (event) => {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
             let filename = selectedFileHolder[i].substr(selectedFileHolder[i].lastIndexOf('\\') + 1,)
-            let errorMessage = `Could not execute convert command for the file ${filename}`;
-            if (error) {
-                log.error(error);
-                event.sender.send('error', errorMessage, 'convert');
-            } else if (stderr) {
-                log.error(stderr);
-                event.sender.send('error', errorMessage, 'convert');
-            } else {
-                try {
+            try {
+                if (error || stderr) {
+                    event.sender.send('error', `Could not execute convert command for the file ${filename}`, 'convert');
+                } else {
                     event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
-                } catch (e) {
-                    log.info('Sending result to the renderer was unsuccessful. ' +
-                        'Probably caused because of the window already being closed.');
-                    log.error('Caught an error in main.js: \n', e);
                 }
-                
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
             }
         });
     }
@@ -533,22 +504,14 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
         exec(command, {
             cwd: pythonSrcDirectory
         }, (error, stdout, stderr) => {
-            let errorMessage =  `Could not execute convert command for the file ${selectedFileHolder[i]}`;
-            if (error) {
-                log.error(error);
-                event.sender.send('error', errorMessage, 'convert');
-            } else if (stderr) {
-                log.error(stderr);
-                event.sender.send('error', errorMessage, 'convert');
-            } else {
-                try {
+            try {
+                if (error || stderr) {
+                    event.sender.send('error', `Could not execute convert command for the file ${selectedFileHolder[i]}`, 'convert');
+                } else {
                     event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
-                } catch (e) {
-                    log.info('Sending result to the renderer was unsuccessful. ' +
-                        'Probably caused because of the window already being closed.');
-                    log.error('Caught an error in main.js: \n', e);
                 }
-                
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
             }
         });
     }
@@ -573,22 +536,14 @@ ipcMain.on('run-compute', (event, stats) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to run the compute command';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage, 'compute');
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage, 'compute');
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to run the compute command', 'compute');
+            } else {
                 event.sender.send('compute-result', stdout, selectedFileHolder);
-            } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                    'Probably caused because of the window already being closed.');
-                log.error('Caught an error in main.js: \n', e);
             }
-            
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -612,22 +567,14 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to extract the data from the files';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage, 'extract');
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage, 'extract');
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to extract the data from the files', 'extract');
+            } else {
                 event.sender.send('extract-result');
-            } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                    'Probably caused because of the window already being closed.');
-                log.error('Caught an error in main.js: \n', e);
             }
-            
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -650,22 +597,14 @@ ipcMain.on('run-validate', (event, extracted_file) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to validate the file';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage, 'validate');
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage, 'validate');
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to validate the file', 'validate');
+            } else {
                 event.sender.send('validate-result');
-            } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                    'Probably caused because of the window already being closed.');
-                log.error('Caught an error in main.js: \n', e);
             }
-            
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -689,21 +628,14 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to combine the file';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage, 'combine');
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage, 'combine');
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to combine the file', 'combine');
+            } else {
                 event.sender.send('combine-result');
-            } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                    'Probably caused because of the window already being closed.');
-                log.error('Caught an error in main.js: \n', e);
             }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -726,21 +658,14 @@ ipcMain.on('run-classify', (event, converted_file) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to classify for F-waves';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage, 'classify');
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage, 'classify');
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to classify for F-waves', 'classify');
+            } else {
                 event.sender.send('classify-result');
-            } catch (e) {
-                log.info('Sending result to the renderer was unsuccessful. ' +
-                        'Probably caused because of the window already being closed.');
-                log.error('Caught an error in main.js: \n', e);
             }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -759,19 +684,14 @@ ipcMain.on('get-version-info', (event) => {
     exec('python ionm.py version', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while retrieving the python version info';
-        if (error) {
-            log.error(error);
-            event.sender.send('error', errorMessage);
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage);
-        } else {
-            try {
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while retrieving the python version info');
+            } else {
                 event.sender.send('script-version-info', stdout);
-            } catch (e) {
-                log.error('Caught an error in main.js: \n', e);
             }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -788,19 +708,19 @@ ipcMain.on('get-version-info', (event) => {
 //===================================================================================
 ipcMain.on('get-current-settings', (event) => {
     // get python project dir from user preferences
-    if ( store.get('python-src-dir') ) {
-        // get settings
-        event.sender.send('current-default-select-dir', store.get('default-select-path'));
-        event.sender.send('current-python-src-dir', store.get('python-src-dir'));
-        getDatabaseSettings(event);
-        getModalitySettings(event);
-        getTraceSelectionSettings(event);
-    } else {
-        try {
+    try {
+        if (store.get('python-src-dir')) {
+            // get settings
+            event.sender.send('current-default-select-dir', store.get('default-select-path'));
+            event.sender.send('current-python-src-dir', store.get('python-src-dir'));
+            getDatabaseSettings(event);
+            getModalitySettings(event);
+            getTraceSelectionSettings(event);
+        } else {
             event.sender.send('current-python-src-dir', 'No python src directory configured');
-        } catch (e) {
-            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
+    } catch (e) {
+        log.error('Caught an error while trying to send data to the renderer process: \n', e);
     }
 });
 
@@ -808,27 +728,15 @@ function getDatabaseSettings(event) {
     exec('python ionm.py gui_get_database', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while retrieving the database path';
-        if (error) {
-            try {
-                event.sender.send('error', errorMessage);
+        try {
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while retrieving the database path');
                 event.sender.send('current-database-settings', 'error');
-            } catch (e) {
-                log.error('Caught an error while trying to send data to the renderer process: \n', e);
-            }
-        } else if (stderr) {
-            try {
-                event.sender.send('error', errorMessage);
-                event.sender.send('current-database-settings', 'error');
-            } catch (e) {
-                log.error('Caught an error while trying to send data to the renderer process: \n', e);
-            }
-        } else {
-            try{
+            } else {
                 event.sender.send('current-database-settings', stdout);
-            } catch (e) {
-                log.error('Caught an error while trying to send data to the renderer process: \n', e);
             }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 }
@@ -837,32 +745,24 @@ function getModalitySettings(event) {
     exec('python ionm.py gui_get_modalities', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        // if errors occur, send an error message to the renderer process
-        if (error || stderr) {
-            // if error originated because of table not being present
-            if (error.toString().indexOf('Microsoft Access Driver') >= 0 || stderr.toString().indexOf('Microsoft Access Driver') >= 0) {
-                try {
+        try {
+            // if errors occur, send an error message to the renderer process
+            if (error || stderr) {
+                // if error originated because of table not being present
+                if (error.toString().indexOf('Microsoft Access Driver') >= 0 || stderr.toString().indexOf('Microsoft Access Driver') >= 0) {
                     event.sender.send('current-modality-settings', 'The database is not setup yet, please do that first!');
-                } catch (e) {
-                    log.error('Caught an error while trying to send data to the renderer process: \n', e);
-                }
-            // if caused by something else
-            } else {
-                try {
+                    // if caused by something else
+                } else {
                     event.sender.send('error', 'An error occurred while retrieving the modalities');
                     event.sender.send('current-modality-settings', 'An error occurred while retrieving the modalities');
-                } catch (e) {
-                    log.error('Caught an error while trying to send data to the renderer process: \n', e);
                 }
-            }
-        // if no error
-        } else {
-            // send result data to renderer
-            try {
+                // if no error
+            } else {
+                // send result data to renderer
                 event.sender.send('current-modality-settings', stdout);
-            } catch (e) {
-                log.error('Caught an error while trying to send data to the renderer process: \n', e);
             }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 }
@@ -871,19 +771,14 @@ function getTraceSelectionSettings(event) {
     exec('python ionm.py gui_get_trace_settings', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        if (error || stderr) {
-            try {
+        try {
+            if (error || stderr) {
                 event.sender.send('error', 'An error occurred while retrieving the trace selection settings');
-            } catch (e) {
-                log.error('Caught an error while trying to send data to the renderer process: \n', e);
-            }
-        // if no error
-        } else {
-            try {
+            } else {
                 event.sender.send('current-trace-settings', stdout);
-            } catch (e) {
-                log.error('Caught an error while trying to send data to the renderer process: \n', e);
             }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 }
@@ -902,16 +797,15 @@ ipcMain.on('set-database', (event, new_database_path) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to set the database';
-
-        // if errors occur, send an error message to the renderer process
-        if (error) {
-            event.sender.send('error', errorMessage);
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage);
-        } else {
-            event.sender.send('database-set-successful', stdout);
+        try {
+            // if errors occur, send an error message to the renderer process
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to set the database');
+            } else {
+                event.sender.send('database-set-successful', stdout);
+            }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -934,20 +828,19 @@ ipcMain.on('set-new-modality', (event, name, type, strategy, tool) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = `An error occurred while trying to set the modality ${name}`;
-
-        // if errors occur, send an error message to the renderer process
-        if (error) {
-            event.sender.send('error', errorMessage);
-        } else if (stderr) {
-            event.sender.send('error', errorMessage);
-        } else {
-            if (tool === 'convert') {
-                event.sender.send('set-modality-successful-convert', name);
+        try {
+            // if errors occur, send an error message to the renderer process
+            if (error || stderr) {
+                event.sender.send('error', `An error occurred while trying to set the modality ${name}`);
             } else {
-                event.sender.send('set-modality-successful-settings', name);
+                if (tool === 'convert') {
+                    event.sender.send('set-modality-successful-convert', name);
+                } else {
+                    event.sender.send('set-modality-successful-settings', name);
+                }
             }
-
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -969,9 +862,17 @@ ipcMain.on('set-python-src-dir', (event, src_dir) => {
         // locally set the python renderer dir path for further use in the application
         pythonSrcDirectory = src_dir;
     } catch (e) {
-        event.sender.send('error', 'An error occurred while trying to set the python renderer directory');
+        try {
+            event.sender.send('error', 'An error occurred while trying to set the python renderer directory');
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
+        }
     } finally {
-        event.sender.send('successfully-set-src-dir');
+        try {
+            event.sender.send('successfully-set-src-dir');
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
+        }
     }
 });
 
@@ -987,15 +888,22 @@ ipcMain.on('set-python-src-dir', (event, src_dir) => {
 //====================================================================================
 ipcMain.on('set-default-select-dir', (event, default_select_dir) => {
     try {
-        log.info('to be set default select dir: ', default_select_dir);
         // store the given path in user-preferences (if already exists it will be updated)
         store.set('default-select-path', default_select_dir);
         // locally set the python renderer dir path for further use in the application
         defaultFileSelectionDir = default_select_dir;
     } catch (e) {
-        event.sender.send('error', 'An error occurred while trying to set the default select directory');
+        try {
+            event.sender.send('error', 'An error occurred while trying to set the default select directory');
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
+        }
     } finally {
-        event.sender.send('successfully-set-default-select-dir');
+        try {
+            event.sender.send('successfully-set-default-select-dir');
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
+        }
     }
 });
 
@@ -1014,16 +922,15 @@ ipcMain.on('set-chunk-size', (event, chunk_size) => {
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to set the chunk size setting';
-
-        // if errors occur, send an error message to the renderer process
-        if (error) {
-            event.sender.send('error', errorMessage);
-        } else if (stderr) {
-            log.error(stderr);
-            event.sender.send('error', errorMessage);
-        } else {
-            event.sender.send('chunk-size-set-successful', stdout);
+        try {
+            // if errors occur, send an error message to the renderer process
+            if (error || stderr) {
+                event.sender.send('error', 'An error occurred while trying to set the chunk size setting');
+            } else {
+                event.sender.send('chunk-size-set-successful', stdout);
+            }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 });
@@ -1041,9 +948,17 @@ ipcMain.on('set-chunk-size', (event, chunk_size) => {
 ipcMain.on('show-confirmation-box', (event, options) => {
     dialog.showMessageBox(window, options).then(r => {
         if (r.response !== 0) {
-            event.sender.send('cancelled');
+            try {
+                event.sender.send('cancelled');
+            } catch (e) {
+                log.error('Caught an error while trying to send data to the renderer process: \n', e);
+            }
         } else {
-            setupDatabase(event);
+            try {
+                setupDatabase(event);
+            } catch (e) {
+                log.error('Caught an error while trying to setup the database: \n', e);
+            }
         }
     });
 });
@@ -1063,24 +978,19 @@ function setupDatabase(event) {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
         let errorMessage = 'An error occurred while trying to setup the database';
-
-        // if errors occur, send an error message to the renderer process
-        if (error) {
-            event.sender.send('error', errorMessage);
-        } else if (stderr) {
-            event.sender.send('error', errorMessage);
-        } else {
-            event.sender.send('database-setup-successful', stdout);
+        try {
+            // if errors occur, send an error message to the renderer process
+            if (error || stderr) {
+                event.sender.send('error', errorMessage);
+            } else {
+                event.sender.send('database-setup-successful', stdout);
+            }
+        } catch (e) {
+            log.error('Caught an error while trying to send data to the renderer process: \n', e);
         }
     });
 }
 
-//==================================================================
-// Opens an external file using shell
-// ==================================================================
-ipcMain.on('open-window', (event, target) => {
-    shell.openExternal(target);
-});
 
 //==================================================================
 // Machine memory usage
