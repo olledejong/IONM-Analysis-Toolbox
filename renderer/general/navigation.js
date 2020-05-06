@@ -217,7 +217,7 @@ about_section_button.click( () => {
     if(variable_content.find('#about-app').length !== 1) {
         preloader.hide('fast');
         removeToastMessages();
-        ipcRenderer.send('resize-window', 1070, 625);
+        ipcRenderer.send('resize-window', 1070, 610);
         // tell main process to get the python script its version info
         ipcRenderer.send('get-version-info');
 

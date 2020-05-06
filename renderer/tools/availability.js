@@ -116,7 +116,7 @@ ipcRenderer.on('set-title-and-preloader-availability', () => {
 // is done. Hides preloader and sends message to resize window.
 //===========================================================================
 ipcRenderer.on('availability-result', () => {
-    ipcRenderer.send('resize-window', 800, 510);
+    ipcRenderer.send('resize-window', 800, 522);
     var_con.load('components/availability.html').hide().fadeIn('slow');
     $('.linePreloader').hide('fast');
 });

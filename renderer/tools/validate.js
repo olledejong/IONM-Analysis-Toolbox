@@ -88,6 +88,6 @@ ipcRenderer.on('set-title-and-preloader-validate', () => {
 ipcRenderer.on('validate-result', () => {
     showNotification('success', 'Successfully validated the file');
     varb_cont.load('components/validate.html').hide().fadeIn('slow');
-    ipcRenderer.send('resize-window', 800, 460);
+    ipcRenderer.send('resize-window', 800, 508);
     $('.linePreloader').hide();
 });

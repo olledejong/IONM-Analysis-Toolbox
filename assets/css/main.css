@@ -1191,10 +1191,14 @@ label.radio input:checked + span {
     background: cadetblue;
 }
 
-#tool-label-convert,
-#tool-label-compute {
-    width: 85px;
+#tool-label-convert {
+    width: 128px;
     background: mediumslateblue;
+}
+
+#tool-label-compute {
+    width: 135px;
+    background: yellowgreen;
 }
 
 #tool-label-classify {

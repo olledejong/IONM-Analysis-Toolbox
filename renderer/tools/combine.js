@@ -105,6 +105,6 @@ ipcRenderer.on('set-title-and-preloader-combine', () => {
 ipcRenderer.on('combine-result', () => {
     showNotification('success', 'Successfully combined the file with the database statistics');
     variab_cont.load('components/combine.html').hide().fadeIn('slow');
-    ipcRenderer.send('resize-window', 800, 460);
+    ipcRenderer.send('resize-window', 800, 521);
     $('.linePreloader').hide();
 });

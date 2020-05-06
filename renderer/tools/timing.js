@@ -39,7 +39,7 @@ ipcRenderer.on('set-title-and-preloader-timing', () => {
 // functionality is done. Also hides preloader.
 //==============================================================
 ipcRenderer.on('timing-result', () => {
-    ipcRenderer.send('resize-window', 800, 450);
+    ipcRenderer.send('resize-window', 750, 512);
     variableContent.load('components/timing.html').hide().fadeIn('slow');
     $('.linePreloader').hide('fast');
 });
