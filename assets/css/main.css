@@ -40,28 +40,12 @@ footer span {
     padding: 1px 0 1px 8px;
 }
 
-.window-title {
-    letter-spacing: 2.5px;
-    font-weight: 600;
-}
-
 #variable-content {
     min-width: 100%;
-    margin-top: 43px;
+    margin-top: 53px;
     position: fixed;
     padding: 0 16px 20px 16px;
     overflow-y: visible;
-}
-
-#welcome-text {
-    letter-spacing: 1.5px;
-    margin: 3px 0 12px 1px;
-    width: auto;
-    height: auto;
-    font-weight: 500;
-    font-size: 19px;
-    text-shadow: 1px 2px 0 #404040;
-    color: white;
 }
 
 .csv-select-btn, #validate-select-btn,

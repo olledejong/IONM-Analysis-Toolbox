@@ -37,8 +37,6 @@ let help_section_button = $('#help-section');
 let variable_content = $('#variable-content');
 let body = $('body');
 
-// set welcome message using the username from the OS
-$('#welcome-text').html(`Welcome ${username}, please select a tool to get started`);
 
 //==================================================================
 // Home page
@@ -48,7 +46,7 @@ $('#welcome-section').on('click', () => {
     if (variable_content.find('#tool-container').length !== 1) {
         $('.linePreloader').hide('fast');
         removeToastMessages();
-        ipcRenderer.send('resize-window', 1065, 758);
+        ipcRenderer.send('resize-window', 1065, 728);
         variable_content.load('components/index.html');
     }
 });
@@ -58,7 +56,7 @@ $('#welcome-section').on('click', () => {
 // Summarize section
 //==================================================================
 body.on('click', '#summarize-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 750, 488);
 
@@ -73,7 +71,7 @@ body.on('click', '#summarize-section', () => {
 // Show-timing section
 //==================================================================
 body.on('click', '#timing-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 750, 512);
 
@@ -88,7 +86,7 @@ body.on('click', '#timing-section', () => {
 // Show availability section
 //==================================================================
 body.on('click', '#availability-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 522);
 
@@ -103,7 +101,7 @@ body.on('click', '#availability-section', () => {
 // Convert section
 //==================================================================
 body.on('click', '#convert-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 634);
 
@@ -118,7 +116,7 @@ body.on('click', '#convert-section', () => {
 // Compute section
 //==================================================================
 body.on('click', '#compute-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 538);
 
@@ -135,7 +133,7 @@ body.on('click', '#compute-section', () => {
 // Extract section
 //==================================================================
 body.on('click', '#extract-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 521);
 
@@ -150,7 +148,7 @@ body.on('click', '#extract-section', () => {
 // Validate section
 //==================================================================
 body.on('click', '#validate-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 508);
 
@@ -165,7 +163,7 @@ body.on('click', '#validate-section', () => {
 // Combine section
 //==================================================================
 body.on('click', '#combine-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     ipcRenderer.send('resize-window', 800, 521);
 
@@ -181,7 +179,7 @@ body.on('click', '#combine-section', () => {
 // Classify section
 //==================================================================
 body.on('click', '#classify-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     // removeToastMessages();
     // ipcRenderer.send('resize-window', 800, 460);
     //
@@ -197,7 +195,7 @@ body.on('click', '#classify-section', () => {
 // Application settings section
 //==================================================================
 body.on('click', '#settings-section', () => {
-    variable_content.css('position', 'absolute');
+    variable_content.css('position', 'relative');
     removeToastMessages();
     // tell main process to resize the window, and to retrieve the current settings
     ipcRenderer.send('resize-window', 1200, 850);
