@@ -7,7 +7,7 @@ The motivation for this project comes from the thought that the more user-friend
 
 Intraoperative Neurofysiological Monitoring consists of continuously monitoring the nervous system during the surgery at which the nervous system is at risk. During this process, the function an integrity of the nervous system can be monitored in order to detect and prevent surgical induced neurological trauma. Those techniques were initially created to detect damage and suppression of the nervous system as early as possible. By detecting this as early as possible, potential further damage can be prevented.
 The data collected during a surgery is influenced by quite some parameters, and because of this it is hard to tell exactly when a surgery is getting too risky to proceed.
-Whenever high-risk spinal surgery is performed, neurophysiological data is collected. This data can be pre-processed by the program, and afterwards statistical analysis can be performed on this data. This all for the purpose of researching if there is more information hidden in the data.
+Whenever high-risk spinal surgery is performed, neurophysiological data is collected. This data can be pre-processed by the program, and afterwards statistical analysis can be performed on this data. This all for the purpose of researching if the data could tell us more.
 
 ![front-of-app](assets/screenshots/ss-front.PNG)
 
@@ -298,7 +298,7 @@ When you've selected a file, you also have to give a patient ID within the "Pati
 The output files will have the same name as the input file, but with the addition "_COMBINED"
 
 #### Classify for F-waves (Classify) ####
-**_Not fully functional at the moment and thus disabled_**
+_Not fully functional at the moment and thus disabled_
 
 #### Application Settings ####
 Within the settings of the IONM Analysis Toolbox you will find six distinct sections with each its own function. Below will follow an elaboration on each of those sections.
