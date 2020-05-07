@@ -40,6 +40,12 @@ footer span {
     padding: 1px 0 1px 8px;
 }
 
+/* custom electron title-bar title */
+.window-title {
+    letter-spacing: 2.5px;
+    font-weight: 600;
+}
+
 #variable-content {
     min-width: 100%;
     margin-top: 53px;
