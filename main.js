@@ -8,7 +8,7 @@
 //==================================================================
 
 // requires (electron)
-const { app, BrowserWindow, dialog, shell, screen } = require('electron');
+const { app, BrowserWindow, dialog, screen } = require('electron');
 const ipcMain = require('electron').ipcMain;
 const exec = require('child_process').exec;
 const log = require('electron-log');
@@ -463,6 +463,7 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
 ipcMain.on('run-convert', (event) => {
     log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
+    let lastIteration = false;
 
     log.info('Creating child-process and running the convert command');
     for(let i = 0; i < selectedFileHolder.length; i++) {
@@ -475,7 +476,7 @@ ipcMain.on('run-convert', (event) => {
                 if (error || stderr) {
                     event.sender.send('error', `Could not execute convert command for the file ${filename}`, 'convert');
                 } else {
-                    event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i]);
+                    event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i], selectedFileHolder.length);
                 }
             } catch (e) {
                 log.error('Caught an error while trying to send data to the renderer process: \n', e);

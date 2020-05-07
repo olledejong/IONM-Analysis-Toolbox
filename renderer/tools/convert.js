@@ -88,7 +88,7 @@ ipcRenderer.on('set-preloader-rerun-convert', () => {
 // @param {string} filepath_of_run - filepath of specific convert run
 // @param {object} event - for purpose of communication with sender
 //=========================================================================
-ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
+ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run, num_of_iterations) => {
     let convert_results_container = $('#convert-results');
     let succeeded_converts_containter = $('#succeeded-converts');
     let success_and_compute_container = $('#success-and-run-compute');
@@ -125,7 +125,15 @@ ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run) => {
         // generate and insert the modality forms
         generateModalityFormFields( existingFormsOnPage, unknown_modalities );
     }
-    $('.linePreloader').hide();
+    // if there is a succeeded converts container shown
+    if (succeeded_converts_containter.css('display') !== 'none') {
+        failed_converts_container.css('margin', '16px 0 0 0')
+    }
+
+    // if the amount of table rows are equal to the total number of iterations, hide the preloader
+    if ( ($('#failed-converts tr').length + $('#succeeded-converts tr').length) === num_of_iterations ) {
+        $('.linePreloader').hide();
+    }
 });
 
 
@@ -193,7 +201,6 @@ function generateModalityFormFields(existingFormsOnPage, unknown_modalities) {
 // button and hides the preloader.
 //==========================================================================
 varContent.on('click', '#submit-all-modalities', () => {
-    showNotification('warn', 'Do not re-run until the modalities have been stored successfully!');
     // loop trough all 'add modality' forms
     // eslint-disable-next-line no-unused-vars
     $('.add-modality-after-convert').each( function (i , form) {
@@ -221,21 +228,12 @@ varContent.on('click', '#submit-all-modalities', () => {
         ipcRenderer.send('set-new-modality', modality_name, modality_type, modality_strategy, 'convert');
 
         // animate forms out
-        $('.add-modality-after-convert').animate({
-            opacity: 0
-        }, 800, () => {
-            $(this).remove();
-            $('#submit-all-modalities').css({
-                'background': '#ccc',
-                'color': '#404040',
-                'cursor': 'auto'
-            }).prop('disabled', true);
-            $('#rerun-failed-converts').css({
-                'background': '#e87e04',
-                'color': 'white',
-                'cursor': 'pointer'
-            }).prop('disabled', false);
-        });
+        $('.add-modality-after-convert').fadeOut();
+        $('#submit-all-modalities').css({
+            'background': '#ccc',
+            'color': '#404040',
+            'cursor': 'auto'
+        }).prop('disabled', true);
     });
     $('.linePreloader').show();
 });
@@ -247,6 +245,11 @@ varContent.on('click', '#submit-all-modalities', () => {
 //==========================================================================
 ipcRenderer.on('set-modality-successful-convert', (event, name) => {
     showNotification('success', ('Successfully stored the modality '+ name));
+    $('#rerun-failed-converts').css({
+        'background': '#e87e04',
+        'color': 'white',
+        'cursor': 'pointer'
+    }).prop('disabled', false);
     // refresh modalities (in case of added via settings)
     $('.linePreloader').hide('fast');
 });
