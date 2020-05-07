@@ -2,20 +2,13 @@
 
 ## Supported Versions
 
-See the table below to see which versions are currently being supported
-with security updates.  
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.2.x   | :white_check_mark: |
-| 1.1.x   | :x:                |
-| 1.x.x   | :x:                |
-| 0.1.x   | :x:                |
-
+This application is constantly updated using an electron-builder. Whenever  
+a new version is deployed, old versions will force users to install the new  
+version. This will be done by overwriting the previous version.
 
 ## Reporting a Vulnerability
 
-If you encounter or suspect any vulnerability, please contact me and I will
+If you encounter or suspect any vulnerability, please contact me and I will  
 try to deploy a patch as soon as possible.
 
 olledejong@gmail.com  
