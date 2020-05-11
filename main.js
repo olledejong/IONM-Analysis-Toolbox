@@ -463,7 +463,6 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
 ipcMain.on('run-convert', (event) => {
     log.info('Executing the convert command');
     event.sender.send('set-title-and-preloader-convert');
-    let lastIteration = false;
 
     log.info('Creating child-process and running the convert command');
     for(let i = 0; i < selectedFileHolder.length; i++) {

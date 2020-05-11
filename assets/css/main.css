@@ -8,10 +8,6 @@
     display: none;
 }
 
-@font-face {
-    font-family: Ubuntu-regular;
-}
-
 body {
     background: #757575;
     padding: 0;
@@ -506,9 +502,12 @@ h1 i {
 
 #configure-database,
 #small-tools,
-#trace-selection-settings,
 #set-modalities {
     margin: 20px 0 0 0;
+}
+
+#trace-selection-settings {
+    margin: 20px 0 15px 0;
 }
 
 #set-python-src-dir {
@@ -523,6 +522,7 @@ h1 i {
 #small-tools {
     display: block;
     float: left;
+    padding: 0 0 15px 0;
     position: relative;
     width: calc(42% - 10px);
     clear: both;
@@ -664,10 +664,6 @@ h1 i {
     margin: 0 0 16px 0;
 }
 
-#failed-converts {
-    margin: 16px 0 0 0;
-}
-
 .add-modality-after-convert h1, .failed-convert-form h1 {
     font-weight: 600;
     letter-spacing: 1.5px;
@@ -702,7 +698,6 @@ h1 i {
 
 #add-modality-form-div {
     width: 100%;
-    display: inline-block;
     position: relative;
     height: fit-content;
 }
@@ -833,6 +828,7 @@ label.radio {
     cursor: pointer;
     letter-spacing: 1px;
 }
+
 label.radio input {
     position: absolute;
     top: 0;
@@ -840,6 +836,7 @@ label.radio input {
     visibility: hidden;
     pointer-events: none;
 }
+
 label.radio span {
     margin: 0 0 6px 0;
     padding: 10px 14px;
@@ -850,8 +847,9 @@ label.radio span {
     text-transform: uppercase;
     text-align: center;
 }
+
 label.radio input:checked + span {
-    background: #56565663;
+    background: rgba(80, 80, 80, 0.39);
     border-color: #e87e04;
     color: #e87e04;
 }
@@ -940,7 +938,7 @@ label.radio input:checked + span {
 
 #failed-converts h1 i , #succeeded-converts h1 i, #succeeded-computes h2 i {
     margin: 2px -4px 0 0;
-    float: right
+    float: right;
 }
 
 #succeeded-computes {
@@ -978,7 +976,7 @@ label.radio input:checked + span {
 }
 
 #strategy-radios {
-    float: right
+    float: right;
 }
 
 /* availability */
@@ -1039,7 +1037,7 @@ label.radio input:checked + span {
     display: inline-block;
     position: relative;
     color: #404040;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24)
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.24);
 }
 
 .filename-td {
@@ -1047,7 +1045,7 @@ label.radio input:checked + span {
 }
 
 .msg-td {
-    width: 45%;
+    width: 35%;
 }
 
 .file-path-td {
@@ -1249,7 +1247,7 @@ label.radio input:checked + span {
     color: #404040;
     margin: -2px -10px 5px 5px;
     border-radius: 4px;
-    font-size: 14px
+    font-size: 14px;
 }
 
 #tool-summary div {
@@ -1263,16 +1261,4 @@ label.radio input:checked + span {
 
 #tool-summary div div:last-of-type {
     text-align: right;
-}
-
-.check {
-    color: #270;
-}
-
-.check i {
-    margin: 0 -3px 0 0;
-}
-
-.times {
-    color: #d8222c;
 }

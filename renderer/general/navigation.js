@@ -1,10 +1,10 @@
-//==================================================================
+//===================================================================
 //                      Navigation Handler
-//==================================================================
-// This file is accountable for the navigating functionalities.
+//===================================================================
+// This file is accountable for all navigation inside the application
 // Following a click event the accompanying variable content
 // will be displayed to the user.
-//==================================================================
+//===================================================================
 
 // requires
 window.$ = window.jQuery = require('jquery');
@@ -14,9 +14,6 @@ const open = require('open');
 // eslint-disable-next-line no-unused-vars
 const log = require('electron-log');
 console.log = log.log;
-
-// os username
-const username = require('os').userInfo().username;
 
 // log options configuration for all renderer processes
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
