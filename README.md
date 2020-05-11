@@ -52,20 +52,22 @@ The main Python script which runs all tools (ionm.py) depends on the following p
 - Joblib
 
 Dependencies can easily be installed using [pip](https://pypi.org/project/pip/). Pip is the package installer for Python. Pip should already been installed along with Python, so hopefully that's one less thing we have to worry about.  
-If executing `pip` from anywhere in a commandprompt generates a pip help message, pip is installed successfully. In that case, you can skip the following part. If it doesn't create a pip help message, try the following solution:
+If executing `pip` from anywhere in a command prompt generates a pip help message, pip is installed successfully. In that case, you can skip the following paragraph. If it doesn't create a pip help message, try the following solution:
 
-You will have to navigate to the python its source folder to install dependencies using pip. Open a command prompt and type (replace the parentheses parts): `cd C:\Users\(Your logged in User)\AppData\Local\Programs\Python\(Your python version)\Scripts`
+You will have to navigate to the python its source folder to install dependencies using pip.  
+Open a command prompt and type (replace the parentheses parts): 
+`cd C:\Users\(Your logged in User)\AppData\Local\Programs\Python\(Your python version)\Scripts`  
 Now try using the `pip` command again. If it generates a pip help message, skip the following paragraph. If it doesn't create a pip help message, try the following solution:
 
-Pip might not be installed at all. Open a command prompt and type `python` following a single space and then drag the get-pip.py file into the command prompt. If you did it correctly, you should have something like this: 
+Pip might not be installed at all. Open a command prompt and type `python` following a single space and then drag the get-pip.py file into the command prompt. If you did it correctly, you should have something like this:  
 `python "C:\Users\(Your logged in User)\Downloads\get-pip.py"`. 
-If you do, hit enter and let it do its thing. If its done and you're able to type again. Try using the `pip` command once again. It should now produce the pip help message for sure. You may now proceed to installing the packages.
+If you do, hit enter and let it do its thing. If its done and you're able to type again. Try using the `pip` command once again. It should now produce the pip help message. You can now proceed to installing the packages.
 
 To install the packages, type:  
 `pip install scipy matplotlib pyodbc sqlparse pandas sklearn joblib`.  
 Hit enter. This will install all required packages and their dependencies.
 
-Now, to test if all dependencies have been successfully installed, head into the python project folder using something like: 
+Now, to test if all dependencies have been successfully installed, head into the python project folder using something like:  
 `cd path\to\python\project`.  
 Once in there, type `ionm.py` and hit enter. If all dependencies are there this should produce a help message which describes how to use the command line interface. You can now safely close the command prompt.
 
