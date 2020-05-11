@@ -28,7 +28,7 @@
                 The currently configured database is displayed within the white box. Select and
                 set the the database you wish to work with.
             </p>
-            <p id="new-database-path" class="database-path"></p>
+            <p id="new-database-path" class="database-path">Retrieving ...</p>
             <button class="settings-button" id="select-database-btn">SELECT</button>
             <button class="settings-button" id="set-database" disabled>SET DATABASE</button>
         </div>
@@ -42,7 +42,7 @@
                 full of data, you <span class="important-span">will</span> delete all of its content
                 or corrupt the database.
             </p>
-            <p class="database-path"></p>
+            <p class="database-path">Retrieving ...</p>
             <button class="settings-button" id="setup-database">SETUP DATABASE</button>
         </div>
     </div>
@@ -54,6 +54,11 @@
             <span class="important-span">NOTE:</span>&nbsp;Be very accurate when you fill out the
             new modalities, do not make any spelling mistakes!
         </p>
+        <table id="modalities-table">
+            <tr id="modalities-table-hrow">
+                <th>Retrieving ...</th>
+            </tr>
+        </table>
         <button class="settings-button" id="add-new-modality">ADD MODALITY</button>
         <button class="settings-button" id="hide-modality-form">HIDE FORM</button>
     </div>
