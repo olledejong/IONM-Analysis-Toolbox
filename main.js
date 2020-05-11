@@ -403,7 +403,6 @@ ipcMain.on('run-timing', (event) => {
     let pathsString = '"' + selectedFileHolder.join('" "') + '"';
     let command = `python ionm.py show_timing ${pathsString}`;
     log.info('Creating child-process and running the timing command');
-    log.info(command);
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -508,7 +507,7 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
                 if (error || stderr) {
                     event.sender.send('error', `Could not execute convert command for the file ${selectedFileHolder[i]}`, 'convert');
                 } else {
-                    event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i]);
+                    event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i], failedConvertFilePaths.length, selectedFileHolder.length);
                 }
             } catch (e) {
                 log.error('Caught an error while trying to send data to the renderer process: \n', e);

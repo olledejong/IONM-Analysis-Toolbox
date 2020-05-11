@@ -37,11 +37,7 @@ ipcRenderer.on('set-title-and-preloader-convert', () => {
             <div id="success-and-run-compute">
                 <div id="succeeded-converts">
                     <h1>Succeeded converts<i class="fas fa-check"></i></h1>
-                    <p id="succeeded-converts-p">
-                        In the future, below might appear a form per succeeded convert for the purpose of immediately computing
-                        the convert files their statistics.<br>
-                        This is currently in development..
-                    </p>
+                    <p id="succeeded-converts-p"></p>
                 </div>
             </div>
             <div id="add-modality-form-div">
@@ -72,11 +68,7 @@ ipcRenderer.on('set-title-and-preloader-convert', () => {
 //=========================================================================
 ipcRenderer.on('set-preloader-rerun-convert', () => {
     $('.linePreloader').show();
-    $('#add-modality-form-div').animate({
-        opacity: 0
-    }, 800, () => {
-        $(this).remove();
-    });
+    $('#add-modality-form-div').fadeOut().remove()
 });
 
 
@@ -88,7 +80,7 @@ ipcRenderer.on('set-preloader-rerun-convert', () => {
 // @param {string} filepath_of_run - filepath of specific convert run
 // @param {object} event - for purpose of communication with sender
 //=========================================================================
-ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run, num_of_iterations) => {
+ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run, num_of_iterations, len_of_original_run) => {
     let convert_results_container = $('#convert-results');
     let succeeded_converts_containter = $('#succeeded-converts');
     let success_and_compute_container = $('#success-and-run-compute');
@@ -132,6 +124,14 @@ ipcRenderer.on('convert-result', (event, convert_output, filepath_of_run, num_of
 
     // if the amount of table rows are equal to the total number of iterations, hide the preloader
     if ( ($('#failed-converts tr').length + $('#succeeded-converts tr').length) === num_of_iterations ) {
+        $('.linePreloader').hide();
+        // enable submit all button
+        $('#submit-all-modalities').css({
+            'background': '#e87e04',
+            'color': 'white',
+            'cursor': 'pointer'
+        }).prop('disabled', false);
+    } else if ( ($('#failed-converts tr').length + $('#succeeded-converts tr').length) === len_of_original_run) {
         $('.linePreloader').hide();
     }
 });

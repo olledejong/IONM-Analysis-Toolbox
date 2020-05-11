@@ -250,7 +250,6 @@ th {
 }
 
 #about-app, #about-scripts {
-    margin: 10px 0 0 0;
     display: inline-block;
     height: auto;
     min-width: 505px;
@@ -896,9 +895,9 @@ label.radio input:checked + span {
     float: left;
     padding: 16px;
     margin: 16px 0;
-    background: #e87e04;
-    color: white;
-    cursor: pointer;
+    background: #ccc;
+    color: #404040;
+    cursor: auto;
     display: block;
 }
 
