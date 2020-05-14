@@ -16,7 +16,7 @@ let MyTitleBar = new customTitlebar.Titlebar({
     unfocusEffect: false,
     titleHorizontalAlignment: 'left',
     minimizable: true,
-    maximizable: false,
+    maximizable: true,
     drag: true,
     shadow: false,
     icon: 'assets/images/app_icon.png'
