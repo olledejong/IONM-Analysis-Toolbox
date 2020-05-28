@@ -375,7 +375,7 @@ h1 i {
     border-radius: 2px;
     padding: 10px;
     width: calc(33% - 8px);
-    height: 145px;
+    height: 20vh;
     display: inline-table;
     border: 4px solid #dedede;
     margin: 0 0 16px 0;

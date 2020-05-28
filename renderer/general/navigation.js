@@ -70,7 +70,7 @@ body.on('click', '#summarize-section', () => {
 body.on('click', '#timing-section', () => {
     variable_content.css('position', 'relative');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 750, 512);
+    ipcRenderer.send('resize-window', 750, 556);
 
     // fade in the html content
     variable_content.load('components/timing.html').hide().fadeIn('slow');
@@ -132,7 +132,7 @@ body.on('click', '#compute-section', () => {
 body.on('click', '#extract-section', () => {
     variable_content.css('position', 'relative');
     removeToastMessages();
-    ipcRenderer.send('resize-window', 800, 521);
+    ipcRenderer.send('resize-window', 800, 542);
 
     // fade in the html content
     variable_content.load('components/extract.html').hide().fadeIn('slow');

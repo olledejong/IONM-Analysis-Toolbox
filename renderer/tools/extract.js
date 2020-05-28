@@ -103,6 +103,6 @@ ipcRenderer.on('set-title-and-preloader-extract', () => {
 ipcRenderer.on('extract-result', () => {
     showNotification('success', 'Successfully extracted the information into a separate file');
     var_content.load('components/extract.html').hide().fadeIn('slow');
-    ipcRenderer.send('resize-window', 800, 521);
+    ipcRenderer.send('resize-window', 800, 542);
     $('.linePreloader').hide();
 });
