@@ -13,6 +13,8 @@ const ipcMain = require('electron').ipcMain;
 const exec = require('child_process').exec;
 const log = require('electron-log');
 console.log = log.log;
+const fs = require('fs');
+const path = require('path');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const ps = require('ps-node');
@@ -20,7 +22,36 @@ const { autoUpdater } = require('electron-updater');
 
 // create store object for user preferences
 const store = new Store();
-log.info('User preferences stored at: ', app.getPath('userData'));
+
+// python renderer directory, retrieved from user-preferences on startup, can be changed via settings
+let pythonSrcDirectory = store.get('python-src-dir');
+let defaultFileSelectionDir = store.get('default-select-path');
+
+//==================================================================
+// Configure logging options
+//==================================================================
+log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
+try {
+    // if logging file does not exist
+    if (!fs.existsSync(pythonSrcDirectory + '\\electron-log.log')) {
+        fs.writeFile(pythonSrcDirectory + '\\electron-log.log', '', (err) => {
+            if(err){
+                log.error("An error occurred creating the file "+ err.message)
+            }
+            log.info("The logging file has been successfully created");
+        });
+    }
+    log.transports.file.resolvePath = (variables) => {
+        return path.join(pythonSrcDirectory, '\\electron-log.log')
+    }
+    log.info('All logging will be transported to the following file:');
+    log.info(pythonSrcDirectory + '\\electron-log.log')
+} catch (e) {
+    log.error('An error occurred while trying to create the logging file: \n ', e)
+}
+
+log.info(`============= Application successfully started =============`);
+log.info(`User preferences stored in: `, app.getPath('userData') + '\\config.json');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -28,13 +59,6 @@ let window;
 
 // global list which holds the paths of the via a dialog window selected csv files.
 let selectedFileHolder;
-
-// python renderer directory, retrieved from user-preferences on startup, can be changed via settings
-let pythonSrcDirectory = store.get('python-src-dir');
-let defaultFileSelectionDir = store.get('default-select-path');
-
-// log options configuration
-log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 
 //==================================================================
 // Create browser window / the app its logic
@@ -224,6 +248,7 @@ ipcMain.on('resize-window', (event, newX, newY) => {
         }
     } catch (e) {
         try {
+            log.error('Something went wrong while trying to resize the browser window, stack: \n', e);
             event.sender.send('error', 'Something went wrong while trying to resize the browser window');
         } catch (e) {
             log.error('Caught an error while trying to send data to the renderer process: \n', e);
@@ -325,6 +350,7 @@ ipcMain.on('run-summarize', (event) => {
             try {
                 // if errors occur, send an error message to the renderer process
                 if (error || stderr) {
+                    log.error('An error occurred while summarizing one or more files, stack: \n', error);
                     event.sender.send('error', 'An error occurred while summarizing one or more files', 'summarize');
                 } else {
                     // build json string using the command output
@@ -409,6 +435,7 @@ ipcMain.on('run-timing', (event) => {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error('An error occurred while trying to generate the timing plot, stack: \n', error);
                 event.sender.send('error', 'An error occurred while trying to generate the timing plot', 'timing');
             } else {
                 event.sender.send('timing-result');
@@ -440,6 +467,7 @@ ipcMain.on('run-availability', (event, eeg_file_path, trg_file_path, window_size
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error('An error occurred while trying to generate the EEG availability plot, stack: \n', error);
                 event.sender.send('error', 'An error occurred while trying to generate the EEG availability plot', 'availability');
             } else {
                 event.sender.send('availability-result');
@@ -473,6 +501,7 @@ ipcMain.on('run-convert', (event) => {
             let filename = selectedFileHolder[i].substr(selectedFileHolder[i].lastIndexOf('\\') + 1,)
             try {
                 if (error || stderr) {
+                    log.error(`Error while executing the convert command for the file ${filename}, stack: \n`, error);
                     event.sender.send('error', `Could not execute convert command for the file ${filename}`, 'convert');
                 } else {
                     event.sender.send('convert-result', JSON.parse(stdout), selectedFileHolder[i], selectedFileHolder.length);
@@ -506,6 +535,7 @@ ipcMain.on('rerun-convert', (event, failedConvertFilePaths) => {
         }, (error, stdout, stderr) => {
             try {
                 if (error || stderr) {
+                    log.error(`Error while executing the convert command for the file ${selectedFileHolder[i]}, stack: \n`, error);
                     event.sender.send('error', `Could not execute convert command for the file ${selectedFileHolder[i]}`, 'convert');
                 } else {
                     event.sender.send('convert-result', JSON.parse(stdout), failedConvertFilePaths[i], failedConvertFilePaths.length, selectedFileHolder.length);
@@ -538,6 +568,7 @@ ipcMain.on('run-compute', (event, stats) => {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while trying to run the compute command, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while trying to run the compute command', 'compute');
             } else {
                 event.sender.send('compute-result', stdout, selectedFileHolder);
@@ -569,6 +600,7 @@ ipcMain.on('run-extract', (event, eeg_file_path, trg_file_path) => {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while trying to extract the data from the files, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while trying to extract the data from the files', 'extract');
             } else {
                 event.sender.send('extract-result');
@@ -599,6 +631,7 @@ ipcMain.on('run-validate', (event, extracted_file) => {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while trying to validate the file, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while trying to validate the file', 'validate');
             } else {
                 event.sender.send('validate-result');
@@ -630,6 +663,7 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while trying to combine the file, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while trying to combine the file', 'combine');
             } else {
                 event.sender.send('combine-result');
@@ -660,6 +694,7 @@ ipcMain.on('run-classify', (event, converted_file) => {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while trying to classify for F-waves, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while trying to classify for F-waves', 'classify');
             } else {
                 event.sender.send('classify-result');
@@ -686,6 +721,7 @@ ipcMain.on('get-version-info', (event) => {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while retrieving the python version info, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while retrieving the python version info');
             } else {
                 event.sender.send('script-version-info', stdout);
@@ -730,6 +766,7 @@ function getDatabaseSettings(event) {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while retrieving the database path, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while retrieving the database path');
                 event.sender.send('current-database-settings', 'error');
             } else {
@@ -753,6 +790,7 @@ function getModalitySettings(event) {
                     event.sender.send('current-modality-settings', 'The database is not setup yet, please do that first!');
                     // if caused by something else
                 } else {
+                    log.error(`An error occurred while retrieving the modalities, stack: \n`, error);
                     event.sender.send('error', 'An error occurred while retrieving the modalities');
                     event.sender.send('current-modality-settings', 'An error occurred while retrieving the modalities');
                 }
@@ -773,6 +811,7 @@ function getTraceSelectionSettings(event) {
     }, (error, stdout, stderr) => {
         try {
             if (error || stderr) {
+                log.error(`An error occurred while retrieving the trace selection settings, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while retrieving the trace selection settings');
             } else {
                 event.sender.send('current-trace-settings', stdout);
@@ -800,6 +839,7 @@ ipcMain.on('set-database', (event, new_database_path) => {
         try {
             // if errors occur, send an error message to the renderer process
             if (error || stderr) {
+                log.error(`An error occurred while trying to set the database, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while trying to set the database');
             } else {
                 event.sender.send('database-set-successful', stdout);
@@ -831,6 +871,7 @@ ipcMain.on('set-new-modality', (event, name, type, strategy, tool) => {
         try {
             // if errors occur, send an error message to the renderer process
             if (error || stderr) {
+                log.error(`An error occurred while trying to set the modality, stack: \n`, error);
                 event.sender.send('error', `An error occurred while trying to set the modality ${name}`);
             } else {
                 if (tool === 'convert') {
@@ -863,6 +904,7 @@ ipcMain.on('set-python-src-dir', (event, src_dir) => {
         pythonSrcDirectory = src_dir;
     } catch (e) {
         try {
+            log.error(`An error occurred while trying to set the python renderer directory, stack: \n`, e);
             event.sender.send('error', 'An error occurred while trying to set the python renderer directory');
         } catch (e) {
             log.error('Caught an error while trying to send data to the renderer process: \n', e);
@@ -894,6 +936,7 @@ ipcMain.on('set-default-select-dir', (event, default_select_dir) => {
         defaultFileSelectionDir = default_select_dir;
     } catch (e) {
         try {
+            log.error(`An error occurred while trying to set the default select directory, stack: \n`, e);
             event.sender.send('error', 'An error occurred while trying to set the default select directory');
         } catch (e) {
             log.error('Caught an error while trying to send data to the renderer process: \n', e);
@@ -925,6 +968,7 @@ ipcMain.on('set-chunk-size', (event, chunk_size) => {
         try {
             // if errors occur, send an error message to the renderer process
             if (error || stderr) {
+                log.error(`An error occurred while trying to set the chunk size setting, stack: \n`, error);
                 event.sender.send('error', 'An error occurred while trying to set the chunk size setting');
             } else {
                 event.sender.send('chunk-size-set-successful', stdout);
@@ -977,11 +1021,11 @@ function setupDatabase(event) {
     exec('python ionm.py gui_setup', {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
-        let errorMessage = 'An error occurred while trying to setup the database';
         try {
             // if errors occur, send an error message to the renderer process
             if (error || stderr) {
-                event.sender.send('error', errorMessage);
+                log.error(`An error occurred while trying to setup the database, stack: \n`, error);
+                event.sender.send('error', 'An error occurred while trying to setup the database');
             } else {
                 event.sender.send('database-setup-successful', stdout);
             }
