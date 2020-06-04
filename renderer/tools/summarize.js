@@ -54,7 +54,6 @@ ipcRenderer.on('summarize-result', (event, JSON_result) => {
     // because of JS promises the code between the curly brackets is
     // only executed when the function generateTable() is finished
     generateTable(JSON_obj).then( (result) => {
-        log.info(result);
         let selector = $('#table-' + result[1]);
 
         selector.append(result[0]).hide().fadeIn(800);
