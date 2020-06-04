@@ -22,27 +22,27 @@ ipcRenderer.on('error', (event, error_message, tool) => {
     switch (tool) {
     case 'summarize':
         variable_content.load('components/summarize.html');
-        ipcRenderer.send('resize-window', 750, 460);
+        ipcRenderer.send('resize-window', 750, 488);
         break;
     case 'timing':
         variable_content.load('components/timing.html');
-        ipcRenderer.send('resize-window', 800, 450);
+        ipcRenderer.send('resize-window', 800, 556);
         break;
     case 'availability':
         variable_content.load('components/availability.html');
-        ipcRenderer.send('resize-window', 800, 510);
+        ipcRenderer.send('resize-window', 800, 522);
         break;
     case 'validate':
         variable_content.load('components/validate.html');
-        ipcRenderer.send('resize-window', 800, 460);
+        ipcRenderer.send('resize-window', 800, 508);
         break;
     case 'extract':
         variable_content.load('components/extract.html');
-        ipcRenderer.send('resize-window', 800, 530);
+        ipcRenderer.send('resize-window', 800, 542);
         break;
     case 'combine':
         variable_content.load('components/combine.html');
-        ipcRenderer.send('resize-window', 750, 460);
+        ipcRenderer.send('resize-window', 750, 521);
         break;
     case 'classify':
         variable_content.load('components/classify.html');
