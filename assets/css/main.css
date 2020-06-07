@@ -794,6 +794,14 @@ h1 i {
     transform: translateX(-50%);
 }
 
+#extra-info-icon {
+    right: 10px;
+    transition: all 0.2s ease-out;
+    display: none;
+    position: absolute;
+    color: #059;
+}
+
 #toast-message {
     transition: all 0.2s ease-out;
 }

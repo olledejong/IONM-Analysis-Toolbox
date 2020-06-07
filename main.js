@@ -15,6 +15,7 @@ const log = require('electron-log');
 console.log = log.log;
 const fs = require('fs');
 const path = require('path');
+const open = require('open');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const ps = require('ps-node');
@@ -342,7 +343,7 @@ ipcMain.on('run-summarize', (event) => {
 
     // for every path in selectedFileHolder execute the command 'ionm.py summarize [filepath]'
     for(let i = 0; i < selectedFileHolder.length; i++) {
-        let command = `python ionm.py summarize "${selectedFileHolder[i]}"`;
+        let command = `python ionm.py smmarize "${selectedFileHolder[i]}"`;
         log.info(command);
         exec(command, {
             cwd: pythonSrcDirectory
@@ -1046,3 +1047,11 @@ const getMemoryUsageInterval = setInterval(() => {
     let percOfMemUsed = ((memoryUsed / systemMemoryInfo['total']) * 100);
     window.webContents.send('memory-usage', Math.round(percOfMemUsed));
 }, 1000);
+
+
+//==================================================================
+// Open logging file
+//==================================================================
+ipcMain.on('open-log-file', () => {
+    open(store.get('python-src-dir') + '\\electron-log.log')
+})

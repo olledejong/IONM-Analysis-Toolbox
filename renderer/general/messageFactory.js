@@ -76,7 +76,7 @@ function showNotification(type, message) {
 
     // add notification element to page according to type
     if (type === 'error') {
-        container_after_titlebar.append(`<div id="${r}" class="error-msg"><i class="fas fa-times-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Click to close</span></div>`);
+        container_after_titlebar.append(`<div id="${r}" class="error-msg"><i class="fas fa-times-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Click to close</span><i id="extra-info-icon" class="fas fa-info-circle"></i></div>`);
     } else if (type === 'info') {
         container_after_titlebar.append(`<div id="${r}" class="info-msg"><i class="fas fa-info-circle"></i><span id="toast-message">&nbsp;&nbsp;${message}</span><span id="close-toast">Click to close</span></div>`);
     } else if (type === 'success') {
@@ -143,6 +143,10 @@ bdy.on('click', '.success-msg', (e) => {
     removeNotification(e);
 });
 
+bdy.on('click', '#extra-info-icon', (e) => {
+    ipcRenderer.send('open-log-file');
+})
+
 //==================================================================
 // Removes the clicked notification
 //==================================================================
@@ -150,10 +154,13 @@ function removeNotification(e) {
     let parent = $(e.target).parent();
     let parentId = '#' + parent.attr('id');
     // if user clicks the notification div itself
-    if ( parent.attr('class') !== 'container-after-titlebar' ) {
+    log.info($(e.target).attr('id'))
+    log.info($(e.target).attr('id') !== 'extra-info-icon');
+    if ( parent.attr('class') !== 'container-after-titlebar' &&
+         $(e.target).attr('id') !== 'extra-info-icon') {
         fadeOutAndRemove($(parentId));
     // if user clicks any other element inside the notification div
-    } else {
+    } else if ($(e.target).attr('id') !== 'extra-info-icon') {
         let notificationId = '#' + $(e.target).attr('id')
         fadeOutAndRemove($(notificationId));
     }
@@ -188,8 +195,10 @@ bdy.on('mouseenter', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) =>
     noti.css('min-width', ((noti.width() + 20) + 'px'));
     noti.children( '#toast-message' ).css('opacity', '0.1');
     noti.children( '#close-toast' ).css('opacity', '1.0');
+    noti.children( '#extra-info-icon' ).show();
 }).on('mouseleave', '.error-msg, .warning-msg, .info-msg, .success-msg', (e) => {
     let noti = $('#' + e.target.id);
     noti.children( '#toast-message' ).css('opacity', '1.0');
     noti.children( '#close-toast' ).css('opacity', '0');
+    noti.children( '#extra-info-icon' ).hide();
 });
