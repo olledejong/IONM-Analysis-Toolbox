@@ -26,7 +26,7 @@ __maintainer__ = 'Olle de Jong';
 __contact__ = '[\'ol.de.jong@st.hanze.nl\', \'olledejong@gmail.com\', \'+31630583903\']';
 __credits__ = '[\'Gea Drost\', \'Fiete Lange\', \'Sebastiaan Dulfer\']';
 __version__ = require('electron').remote.app.getVersion();
-__status__ = 'DEVELOPMENT';
+__status__ = 'PRODUCTION';
 
 // jQuery Selectors
 let about_section_button = $('#about-section');
