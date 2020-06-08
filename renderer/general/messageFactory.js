@@ -154,8 +154,6 @@ function removeNotification(e) {
     let parent = $(e.target).parent();
     let parentId = '#' + parent.attr('id');
     // if user clicks the notification div itself
-    log.info($(e.target).attr('id'))
-    log.info($(e.target).attr('id') !== 'extra-info-icon');
     if ( parent.attr('class') !== 'container-after-titlebar' &&
          $(e.target).attr('id') !== 'extra-info-icon') {
         fadeOutAndRemove($(parentId));

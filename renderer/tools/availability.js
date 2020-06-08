@@ -95,7 +95,6 @@ var_con.on('click', '#run-availability', () => {
     let eeg_file = $('#a-eeg-select-btn').html();
     let trg_file = $('#a-trg-select-btn').html();
     let win_size = window_size_availability.val();
-    log.info(win_size);
     var_con.html('');
     ipcRenderer.send('run-availability', eeg_file, trg_file, win_size);
 });
