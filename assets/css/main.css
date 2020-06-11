@@ -795,11 +795,13 @@ h1 i {
 }
 
 #extra-info-icon {
+    background: #BEF;
     right: 10px;
     transition: all 0.2s ease-out;
     display: none;
     position: absolute;
-    color: #059;
+    color: #0097e6;
+    border-radius: 15px;
 }
 
 #toast-message {
