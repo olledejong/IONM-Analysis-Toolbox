@@ -71,7 +71,7 @@ function createWindow () {
         width: 1065,
         height: 728,
         title: 'IONM Analysis Toolbox',
-        icon: __dirname + './assets/images/app_icon.ico',
+        icon: __dirname + '\\assets\\images\\app_icon.ico',
         resizable: true,
         maximizable: true,
         frame: false,
