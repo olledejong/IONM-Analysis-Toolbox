@@ -309,12 +309,10 @@ function generateStatsParameterOptions() {
 
 
 //==================================================================
-// Tells main process to open the README
+// Opens the README in the machine its standard browser
 //==================================================================
 help_section_button.click( async () => {
-    // ipcRenderer.send('open-window', path.join(__dirname, '/README.pdf'));
     await open('https://github.com/olledejong/IONM-Analysis-Toolbox/#ionm-analysis-toolbox-2');
-    // ipcRenderer.send('create-help-window');
 });
 
 
