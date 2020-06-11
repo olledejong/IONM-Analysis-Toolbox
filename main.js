@@ -78,6 +78,7 @@ function createWindow () {
         webPreferences: {
             webSecurity: true,
             nodeIntegration: true,
+            enableRemoteModule: true,
             disableBlinkFeatures : 'Auxclick'
         }
     });
@@ -626,7 +627,7 @@ ipcMain.on('run-validate', (event, extracted_file) => {
     log.info('Executing the validate command');
     event.sender.send('set-title-and-preloader-validate');
 
-    let command = `python ionm.py validate -f ${extracted_file}`;
+    let command = `python ionm.py validate -f "${extracted_file}"`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
@@ -658,7 +659,7 @@ ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
     log.info('Executing the combine command');
     event.sender.send('set-title-and-preloader-combine');
 
-    let command = `python ionm.py combine -f ${extracted_file} -p ${patient_id}`;
+    let command = `python ionm.py combine -f "${extracted_file}" -p ${patient_id}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
