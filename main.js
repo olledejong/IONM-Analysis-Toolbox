@@ -42,8 +42,10 @@ try {
             log.info("The logging file has been successfully created");
         });
     }
-    log.transports.file.resolvePath = (variables) => {
-        return path.join(pythonSrcDirectory, '\\electron-log.log')
+    if (pythonSrcDirectory) {
+        log.transports.file.resolvePath = (variables) => {
+            return path.join(pythonSrcDirectory, '\\electron-log.log')
+        }
     }
     log.info('All logging will be transported to the following file:');
     log.info(pythonSrcDirectory + '\\electron-log.log')
@@ -655,11 +657,11 @@ ipcMain.on('run-validate', (event, extracted_file) => {
 // @param {string} extracted_file - path to the selected extracted file
 // @param {int} patient_id - identifier that points to a patient
 //============================================================================
-ipcMain.on('run-combine', (event, extracted_file, patient_id) => {
+ipcMain.on('run-combine', (event, file, patient_id) => {
     log.info('Executing the combine command');
     event.sender.send('set-title-and-preloader-combine');
 
-    let command = `python ionm.py combine -f "${extracted_file}" -p ${patient_id}`;
+    let command = `python ionm.py combine -f "${file}" -p ${patient_id}`;
     exec(command, {
         cwd: pythonSrcDirectory
     }, (error, stdout, stderr) => {
