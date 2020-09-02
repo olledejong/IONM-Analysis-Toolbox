@@ -33,22 +33,26 @@ let defaultFileSelectionDir = store.get('default-select-path');
 //==================================================================
 log.transports.console.format = '{h}:{i}:{s} [{level}] {text}';
 try {
-    // if logging file does not exist
-    if (!fs.existsSync(pythonSrcDirectory + '\\electron-log.log')) {
-        fs.writeFile(pythonSrcDirectory + '\\electron-log.log', '', (err) => {
-            if(err){
-                log.error("An error occurred creating the file "+ err.message)
-            }
-            log.info("The logging file has been successfully created");
-        });
-    }
+    // if pythonSrcDirectory has never been configured, do not try to set the log file to that directory
     if (pythonSrcDirectory) {
+        // if logging file does not exist
+        if (!fs.existsSync(pythonSrcDirectory + '\\electron-log.log')) {
+            fs.writeFile(pythonSrcDirectory + '\\electron-log.log', '', (err) => {
+                if (err) {
+                    log.error("An error occurred creating the file " + err.message)
+                }
+                log.info("The logging file has been successfully created");
+            });
+        }
         log.transports.file.resolvePath = (variables) => {
             return path.join(pythonSrcDirectory, '\\electron-log.log')
         }
+        log.info('All logging will be transported to the following file:');
+        log.info(pythonSrcDirectory + '\\electron-log.log')
+    } else {
+        log.info(`Location of logging file can not be changed to the python src directory. The python src
+        directory was not yet configured in the settings (new user)`);
     }
-    log.info('All logging will be transported to the following file:');
-    log.info(pythonSrcDirectory + '\\electron-log.log')
 } catch (e) {
     log.error('An error occurred while trying to create the logging file: \n ', e)
 }
